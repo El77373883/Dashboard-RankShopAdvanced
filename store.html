@@ -266,6 +266,9 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // ✅ DEFINIR speedMap AL INICIO
+        const speedMap = { slow: '5s', normal: '4s', fast: '2s' };
+
         // Obtener serverId de la URL
         const path = window.location.pathname;
         const parts = path.split('/').filter(p => p);
@@ -280,7 +283,7 @@
             }
 
             try{
-                // 🔥 LEER DE LA MISMA COLECCIÓN QUE GUARDA EL EDITOR: 'stores'
+                // 🔥 LEER DE LA COLECCIÓN 'stores'
                 const storeRef = doc(db, 'stores', serverId);
                 const storeSnap = await getDoc(storeRef);
 
@@ -330,7 +333,6 @@
                     header.classList.add(`anim-${bgAnim}`);
                     
                     // Velocidad de animación
-                    const speedMap = { slow: '5s', normal: '4s', fast: '2s' };
                     header.style.animationDuration = speedMap[data.animSpeed] || '4s';
                 }
 
