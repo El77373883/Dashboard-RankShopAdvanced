@@ -2,192 +2,257 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#6366f1" id="themeColorMeta">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cargando Tienda...</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         :root{
-            --primary:#6366f1;--primary-dark:#4f46e5;--secondary:#10b981;--accent:#f59e0b;
-            --bg:#0a0e1a;--bg-secondary:#111827;--bg-card:#1e293b;--bg-hover:#334155;
+            --primary:#6366f1;--primary-dark:#4f46e5;--secondary:#10b981;
+            --bg:#0a0e1a;--bg-secondary:#111827;--bg-card:#1e293b;
             --text:#f8fafc;--text-muted:#94a3b8;--border:#334155;
             --gradient:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#a855f7 100%);
             --shadow:0 10px 40px rgba(0,0,0,0.5)
         }
         body{
-            font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
-            background:var(--bg);color:var(--text);min-height:100vh;
-            line-height:1.6
+            font-family:'Inter',sans-serif;background:var(--bg);
+            color:var(--text);min-height:100vh;line-height:1.6
         }
         
-        /* Header */
+        /* Header con animaciones */
         .store-header{
-            background:var(--gradient);padding:40px 20px;text-align:center;
-            position:relative;overflow:hidden
+            padding:60px 20px;text-align:center;position:relative;overflow:hidden;
+            background:var(--gradient);transition:all 0.3s
         }
-        .store-header::before{
-            content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
-            background:radial-gradient(circle,rgba(255,255,255,0.1)0%,transparent 70%);
-            animation:rotate 20s linear infinite
+        
+        /* Animaciones de fondo */
+        .anim-glow{animation:glowPulse 4s ease-in-out infinite}
+        @keyframes glowPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.15)}}
+        
+        .anim-particles::before{
+            content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+            background-image:radial-gradient(circle at 20% 35%,rgba(255,255,255,0.1) 0%,transparent 50%),
+                           radial-gradient(circle at 80% 70%,rgba(255,255,255,0.08) 0%,transparent 50%);
+            animation:float 20s ease-in-out infinite
         }
-        @keyframes rotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
+        
+        .anim-waves::after{
+            content:'';position:absolute;bottom:-30%;left:0;right:0;height:150px;
+            background:radial-gradient(ellipse at center,rgba(255,255,255,0.1) 0%,transparent 70%);
+            animation:wave 6s ease-in-out infinite
+        }
+        @keyframes wave{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+        
+        .anim-shine{position:relative;overflow:hidden}
+        .anim-shine::before{
+            content:'';position:absolute;top:-100%;left:-100%;right:-100%;bottom:-100%;
+            background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,0.25) 50%,transparent 60%);
+            animation:shine 3s ease-in-out infinite
+        }
+        @keyframes shine{0%{transform:translateX(-100%) rotate(45deg)}100%{transform:translateX(100%) rotate(45deg)}}
+        
         .store-logo{
-            width:80px;height:80px;background:rgba(255,255,255,0.2);
-            border-radius:16px;display:flex;align-items:center;justify-content:center;
-            font-size:40px;margin:0 auto 16px;backdrop-filter:blur(10px)
+            width:100px;height:100px;background:rgba(255,255,255,0.15);
+            border-radius:20px;display:flex;align-items:center;justify-content:center;
+            margin:0 auto 20px;font-size:48px;backdrop-filter:blur(10px);
+            border:2px solid rgba(255,255,255,0.25)
         }
-        .store-name{font-size:32px;font-weight:700;margin-bottom:8px;position:relative}
-        .store-description{color:rgba(255,255,255,0.9);font-size:16px;position:relative;max-width:600px;margin:0 auto}
+        .store-logo img{width:100%;height:100%;object-fit:contain;border-radius:20px}
         
-        /* Loading */
-        .loading{
-            display:flex;flex-direction:column;align-items:center;justify-content:center;
-            min-height:60vh;padding:40px
+        .store-title{
+            font-size:36px;font-weight:800;margin-bottom:8px;color:var(--text);
+            text-shadow:0 2px 20px rgba(0,0,0,0.3)
         }
-        .spinner{
-            width:50px;height:50px;border:4px solid var(--border);
-            border-top-color:var(--primary);border-radius:50%;
-            animation:spin 1s linear infinite
-        }
-        @keyframes spin{to{transform:rotate(360deg)}}
-        .loading-text{margin-top:20px;color:var(--text-muted);font-size:16px}
         
-        /* Error */
-        .error{
-            background:rgba(239,68,68,0.1);border:2px solid var(--danger);
-            border-radius:16px;padding:40px;text-align:center;max-width:500px;margin:40px auto
+        /* Animaciones de título */
+        .title-anim-gradient{
+            background:linear-gradient(90deg,var(--text),var(--primary),var(--text));
+            background-size:200% auto;-webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;background-clip:text;
+            animation:gradientShift 3s linear infinite
         }
-        .error-icon{font-size:48px;color:var(--danger);margin-bottom:16px}
-        .error-title{font-size:24px;font-weight:600;margin-bottom:8px}
-        .error-message{color:var(--text-muted);margin-bottom:20px}
+        @keyframes gradientShift{0%{background-position:0% center}100%{background-position:200% center}}
         
-        /* Products Grid */
-        .products-container{max-width:1200px;margin:0 auto;padding:40px 20px}
-        .section-title{
-            font-size:28px;font-weight:700;margin-bottom:32px;text-align:center
+        .title-anim-glow{animation:textGlow 2s ease-in-out infinite alternate}
+        @keyframes textGlow{
+            from{text-shadow:0 0 10px rgba(99,102,241,0.5)}
+            to{text-shadow:0 0 25px rgba(99,102,241,0.9),0 0 45px rgba(99,102,241,0.5)}
         }
-        .products-grid{
-            display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px
-        }
-        @media(max-width:640px){.products-grid{grid-template-columns:1fr}}
         
-        /* Product Card */
+        .title-anim-pulse{animation:titlePulse 2s ease-in-out infinite}
+        @keyframes titlePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+        
+        .published-by{
+            font-size:14px;color:rgba(255,255,255,0.85);margin:8px 0 12px;font-weight:500
+        }
+        .published-by i{margin-right:6px;color:var(--primary)}
+        
+        .store-desc{font-size:16px;color:rgba(255,255,255,0.9);max-width:550px;margin:0 auto}
+        
+        /* Botones personalizados */
+        .custom-buttons{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:20px}
+        .custom-btn{
+            padding:12px 24px;border-radius:12px;font-size:14px;font-weight:600;
+            text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+            transition:all 0.3s;border:none;cursor:pointer
+        }
+        .custom-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.3)}
+        
+        /* Productos */
+        .products-section{padding:40px 20px;max-width:1200px;margin:0 auto}
+        .products-title{font-size:28px;font-weight:700;margin-bottom:30px;text-align:center}
+        .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+        
         .product-card{
             background:var(--bg-card);border:1px solid var(--border);
-            border-radius:20px;overflow:hidden;transition:all 0.3s
+            border-radius:16px;overflow:hidden;transition:all 0.3s
         }
-        .product-card:hover{
-            transform:translateY(-8px);border-color:var(--primary);
-            box-shadow:0 10px 40px rgba(99,102,241,0.3)
-        }
-        .product-icon{
-            width:100%;height:150px;background:var(--bg-secondary);
-            display:flex;align-items:center;justify-content:center;
-            font-size:64px;position:relative;overflow:hidden
-        }
-        .product-icon img{width:80%;height:80%;object-fit:contain}
-        .product-badge{
-            position:absolute;top:12px;right:12px;background:var(--gradient);
-            color:white;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600
-        }
-        .product-info{padding:24px}
-        .product-name{font-size:20px;font-weight:600;margin-bottom:8px}
-        .product-description{color:var(--text-muted);font-size:14px;margin-bottom:16px;line-height:1.5}
-        .product-command{
-            background:var(--bg);padding:8px 12px;border-radius:8px;
-            font-family:monospace;font-size:12px;color:var(--text-muted);
-            margin-bottom:16px;word-break:break-all
-        }
-        .product-footer{
-            display:flex;justify-content:space-between;align-items:center;
-            padding-top:16px;border-top:1px solid var(--border)
-        }
-        .product-price{font-size:28px;font-weight:700;color:var(--primary)}
-        .buy-btn{
-            background:var(--gradient);color:white;padding:12px 24px;
-            border:none;border-radius:12px;font-size:15px;font-weight:600;
-            cursor:pointer;transition:all 0.3s;display:flex;align-items:center;gap:8px
-        }
-        .buy-btn:hover{transform:scale(1.05);box-shadow:0 6px 20px rgba(99,102,241,0.4)}
-        .buy-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none}
+        .product-card:hover{transform:translateY(-5px);border-color:var(--primary);box-shadow:0 12px 35px rgba(0,0,0,0.4)}
         
-        /* Empty State */
-        .empty-state{
-            text-align:center;padding:60px 20px;color:var(--text-muted)
+        .product-icon{
+            width:100%;height:120px;background:var(--bg-secondary);
+            display:flex;align-items:center;justify-content:center;font-size:48px
         }
-        .empty-state i{font-size:64px;margin-bottom:16px;opacity:0.5}
-        .empty-state p{font-size:16px;margin-bottom:20px}
+        .product-icon img{max-width:70%;max-height:70%;object-fit:contain}
+        
+        .product-info{padding:20px}
+        .product-name{font-size:18px;font-weight:600;margin-bottom:6px}
+        .product-desc{font-size:13px;color:var(--text-muted);margin-bottom:14px;line-height:1.4}
+        .product-footer{display:flex;justify-content:space-between;align-items:center;padding-top:14px;border-top:1px solid var(--border)}
+        .product-price{font-size:24px;font-weight:700;color:var(--primary)}
+        .buy-btn{
+            background:var(--gradient);color:white;padding:10px 20px;
+            border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer
+        }
+        .buy-btn:hover{transform:scale(1.03)}
+        
+        /* Gift Cards */
+        .giftcards-section{padding:40px 20px;background:var(--bg-secondary)}
+        .giftcards-title{font-size:28px;font-weight:700;margin-bottom:12px;text-align:center}
+        .giftcards-desc{text-align:center;color:var(--text-muted);margin-bottom:25px}
+        .giftcards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;max-width:800px;margin:0 auto}
+        
+        .giftcard{
+            background:var(--gradient);border-radius:14px;padding:20px;
+            text-align:center;cursor:pointer;transition:all 0.3s;
+            border:2px solid rgba(255,255,255,0.2)
+        }
+        .giftcard:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,0,0,0.3)}
+        .giftcard-amount{font-size:32px;font-weight:700;color:white;margin-bottom:4px}
+        .giftcard-label{font-size:13px;color:rgba(255,255,255,0.9)}
+        
+        /* Redeem Code */
+        .redeem-section{padding:40px 20px;background:var(--bg-card)}
+        .redeem-container{max-width:450px;margin:0 auto;text-align:center}
+        .redeem-title{font-size:24px;font-weight:700;margin-bottom:10px}
+        .redeem-desc{color:var(--text-muted);margin-bottom:20px;font-size:14px}
+        .redeem-form{display:flex;gap:10px}
+        .redeem-input{
+            flex:1;padding:12px 16px;background:var(--bg);border:2px solid var(--border);
+            border-radius:10px;color:var(--text);font-size:14px
+        }
+        .redeem-input:focus{outline:none;border-color:var(--primary)}
+        .redeem-btn{
+            padding:12px 24px;background:var(--gradient);color:white;
+            border:none;border-radius:10px;font-weight:600;cursor:pointer
+        }
         
         /* Footer */
         .store-footer{
-            background:var(--bg-secondary);padding:40px 20px;text-align:center;
-            margin-top:60px;border-top:1px solid var(--border)
+            background:var(--bg-secondary);padding:30px 20px;
+            text-align:center;border-top:1px solid var(--border)
         }
-        .footer-text{color:var(--text-muted);font-size:14px}
-        .footer-link{color:var(--primary);text-decoration:none;font-weight:600}
+        .footer-text{font-size:14px;color:var(--text-muted);margin-bottom:15px}
+        .social-links{display:flex;justify-content:center;gap:18px}
+        .social-links a{
+            width:40px;height:40px;background:var(--bg);border-radius:10px;
+            display:flex;align-items:center;justify-content:center;
+            font-size:18px;color:var(--text-muted);transition:all 0.3s;text-decoration:none
+        }
+        .social-links a:hover{background:var(--primary);color:white;transform:translateY(-3px)}
         
-        /* Toast Notification */
-        .toast{
-            position:fixed;bottom:20px;right:20px;background:var(--bg-card);
-            border:1px solid var(--border);padding:16px 24px;border-radius:12px;
-            box-shadow:var(--shadow);transform:translateY(100px);transition:transform 0.3s;
-            z-index:1000;display:flex;align-items:center;gap:12px
+        /* Loading & Error */
+        .loading,.error{text-align:center;padding:80px 20px}
+        .spinner{
+            width:40px;height:40px;border:4px solid var(--border);
+            border-top-color:var(--primary);border-radius:50%;
+            animation:spin 1s linear infinite;margin:0 auto 20px
         }
-        .toast.show{transform:translateY(0)}
-        .toast.success{border-color:var(--secondary)}
-        .toast.error{border-color:var(--danger)}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        
+        .error{color:var(--danger)}
+        .error i{font-size:48px;margin-bottom:16px}
+        
+        /* Responsive */
+        @media(max-width:640px){
+            .store-title{font-size:28px}
+            .products-grid{grid-template-columns:1fr}
+            .redeem-form{flex-direction:column}
+        }
     </style>
 </head>
 <body>
-    <!-- Loading State -->
-    <div class="loading" id="loadingState">
+    <!-- Loading -->
+    <div class="loading" id="loading">
         <div class="spinner"></div>
-        <div class="loading-text">Cargando tienda...</div>
+        <p>Cargando tienda...</p>
     </div>
 
-    <!-- Error State -->
-    <div class="error" id="errorState" style="display:none">
-        <div class="error-icon"><i class="fas fa-exclamation-triangle"></i></div>
-        <div class="error-title">Tienda No Encontrada</div>
-        <div class="error-message" id="errorMessage">No pudimos cargar esta tienda</div>
+    <!-- Error -->
+    <div class="error" id="error" style="display:none">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h2>Tienda No Encontrada</h2>
+        <p id="errorMsg">Este servidor no existe o fue eliminado.</p>
     </div>
 
     <!-- Store Content -->
     <div id="storeContent" style="display:none">
         <!-- Header -->
         <header class="store-header" id="storeHeader">
-            <div class="store-logo" id="storeLogo">🛒</div>
-            <h1 class="store-name" id="storeName">Cargando...</h1>
-            <p class="store-description" id="storeDescription">Cargando descripción...</p>
+            <div class="store-logo" id="storeLogo"><i class="fas fa-shopping-cart"></i></div>
+            <h1 class="store-title" id="storeTitle">Mi Tienda</h1>
+            <p class="published-by" id="publishedBy"><i class="fas fa-user-check"></i>Publicado por <span id="publisherName">Tu Nombre</span></p>
+            <p class="store-desc" id="storeDesc">Bienvenido a nuestra tienda oficial</p>
+            <div class="custom-buttons" id="customButtons"></div>
         </header>
 
         <!-- Products -->
-        <div class="products-container">
-            <h2 class="section-title"><i class="fas fa-box-open"></i> Productos Disponibles</h2>
-            <div class="products-grid" id="productsGrid">
-                <!-- Products loaded dynamically -->
+        <section class="products-section" id="productsSection">
+            <h2 class="products-title" id="productsTitle">Productos Disponibles</h2>
+            <div class="products-grid" id="productsGrid"></div>
+        </section>
+
+        <!-- Gift Cards -->
+        <section class="giftcards-section" id="giftcardsSection" style="display:none">
+            <h2 class="giftcards-title">🎁 Gift Cards</h2>
+            <p class="giftcards-desc">Regala saldo para que tus amigos compren en la tienda</p>
+            <div class="giftcards-grid" id="giftcardsGrid"></div>
+        </section>
+
+        <!-- Redeem Code -->
+        <section class="redeem-section" id="redeemSection" style="display:none">
+            <div class="redeem-container">
+                <h2 class="redeem-title">🎫 Canjear Código</h2>
+                <p class="redeem-desc">¿Tienes un código promocional? Canjéalo aquí</p>
+                <form class="redeem-form" onsubmit="redeemCode(event)">
+                    <input type="text" class="redeem-input" id="redeemInput" placeholder="Ingresa tu código" required>
+                    <button type="submit" class="redeem-btn">Canjear</button>
+                </form>
             </div>
-        </div>
+        </section>
 
         <!-- Footer -->
         <footer class="store-footer">
-            <p class="footer-text">
-                Powered by <a href="#" target="_blank" class="footer-link">BuyCrafting</a> • 
-                <span id="currentYear"></span>
-            </p>
+            <p class="footer-text" id="footerText">Powered by BuyCrafting</p>
+            <div class="social-links" id="socialLinks"></div>
         </footer>
-    </div>
-
-    <!-- Toast Notification -->
-    <div class="toast" id="toast">
-        <i class="fas fa-check-circle" id="toastIcon"></i>
-        <span id="toastMessage"></span>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, getDoc, query, where } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCIGXn0zND_8A_nD6NPxx1txYFQzrhM9hg",
@@ -201,212 +266,218 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Debug mode
-        console.log('🚀 Store HTML loaded');
-        console.log('📍 Current URL:', window.location.href);
-        console.log('📂 Pathname:', window.location.pathname);
+        // Obtener serverId de la URL
+        const path = window.location.pathname;
+        const parts = path.split('/').filter(p => p);
+        const serverId = parts[parts.indexOf('store') + 1] || localStorage.getItem('buycrafting_serverId');
 
-        // Get serverId from URL - IMPROVED
-        function extractServerId(){
-            const pathname = window.location.pathname;
-            console.log('📍 Pathname:', pathname);
-            
-            // Try multiple methods
-            // Method 1: Split by /
-            const parts = pathname.split('/').filter(p => p.length > 0);
-            console.log('📦 Parts:', parts);
-            
-            // If URL is /store/server_abc123
-            if(parts.length >= 2 && parts[0] === 'store'){
-                return parts[1];
+        console.log('🛒 Loading store:', serverId);
+
+        async function loadStore(){
+            if(!serverId){
+                showError('URL inválida');
+                return;
             }
-            
-            // Method 2: Look for server_ pattern
-            const serverMatch = pathname.match(/server_[a-zA-Z0-9]+/);
-            if(serverMatch){
-                return serverMatch[0];
-            }
-            
-            // Method 3: Get last part
-            if(parts.length > 0){
-                return parts[parts.length - 1];
-            }
-            
-            return null;
-        }
 
-        const serverId = extractServerId();
-        console.log('🔑 ServerId encontrado:', serverId);
-
-        if(!serverId){
-            showError('URL inválida. Ejemplo: tudominio.vercel.app/store/server_abc123');
-        } else {
-            loadStore(serverId);
-        }
-
-        // Load store data
-        async function loadStore(serverId){
             try{
-                console.log('📡 Loading store:', serverId);
-                
-                // Load server config
-                const serverRef = doc(db, 'servers', serverId);
-                const serverSnap = await getDoc(serverRef);
-                
-                if(!serverSnap.exists()){
-                    console.error('❌ Server not found:', serverId);
+                // 🔥 LEER DE LA MISMA COLECCIÓN QUE GUARDA EL EDITOR: 'stores'
+                const storeRef = doc(db, 'stores', serverId);
+                const storeSnap = await getDoc(storeRef);
+
+                if(!storeSnap.exists()){
                     showError('Este servidor no existe o fue eliminado.');
                     return;
                 }
 
-                const serverData = serverSnap.data();
-                console.log('✅ Server data:', serverData);
+                const data = storeSnap.data();
+                console.log('✅ Store loaded:', data);
 
-                // Load store config
-                const storeRef = doc(db, 'stores', serverId);
-                const storeSnap = await getDoc(storeRef);
-                const storeData = storeSnap.exists() ? storeSnap.data() : {};
-                console.log('✅ Store data:', storeData);
+                // === APLICAR COLORES (CSS VARIABLES) ===
+                const root = document.documentElement;
+                if(data.primaryColor) root.style.setProperty('--primary', data.primaryColor);
+                if(data.backgroundColor) root.style.setProperty('--bg', data.backgroundColor);
+                if(data.cardColor) root.style.setProperty('--bg-card', data.cardColor);
+                if(data.textColor) root.style.setProperty('--text', data.textColor);
+                
+                // Gradient dinámico
+                const primary = data.primaryColor || '#6366f1';
+                root.style.setProperty('--gradient', `linear-gradient(135deg,${primary} 0%,${primary}dd 50%,${primary}aa 100%)`);
 
-                // Load products
+                // === APLICAR TEXTO ===
+                document.getElementById('storeTitle').textContent = data.name || 'Mi Tienda';
+                document.getElementById('storeDesc').textContent = data.description || 'Bienvenido a nuestra tienda oficial';
+                document.getElementById('publisherName').textContent = data.publishedBy || 'Tu Nombre';
+                document.getElementById('productsTitle').textContent = data.heroTitle || 'Productos Disponibles';
+                document.getElementById('footerText').textContent = data.footerText || 'Powered by BuyCrafting';
+
+                // === LOGO ===
+                const logoEl = document.getElementById('storeLogo');
+                if(data.logo){
+                    logoEl.innerHTML = `<img src="${data.logo}" alt="Logo">`;
+                }
+
+                // === HEADER CON ANIMACIÓN ===
+                const header = document.getElementById('storeHeader');
+                header.className = 'store-header';
+                
+                if(data.backgroundImage){
+                    header.style.backgroundImage = `url(${data.backgroundImage})`;
+                    header.style.backgroundSize = 'cover';
+                    header.style.backgroundPosition = 'center';
+                } else {
+                    // Aplicar animación de fondo
+                    const bgAnim = data.bgAnimation || 'glow';
+                    header.classList.add(`anim-${bgAnim}`);
+                    
+                    // Velocidad de animación
+                    const speedMap = { slow: '5s', normal: '4s', fast: '2s' };
+                    header.style.animationDuration = speedMap[data.animSpeed] || '4s';
+                }
+
+                // === ANIMACIÓN DE TÍTULO ===
+                const title = document.getElementById('storeTitle');
+                const titleAnim = data.titleAnimation || 'gradient';
+                title.classList.add(`title-anim-${titleAnim}`);
+                title.style.animationDuration = speedMap[data.animSpeed] || '3s';
+                
+                // Intensidad
+                if(data.animIntensity){
+                    title.style.filter = `brightness(${data.animIntensity})`;
+                }
+
+                // === FUENTE Y BORDES ===
+                if(data.fontFamily) document.body.style.fontFamily = data.fontFamily;
+                if(data.fontSize) document.body.style.fontSize = data.fontSize;
+                if(data.borderRadius){
+                    document.querySelectorAll('.product-card,.buy-btn,.custom-btn,.giftcard').forEach(el => {
+                        el.style.borderRadius = data.borderRadius;
+                    });
+                }
+
+                // === BOTONES PERSONALIZADOS ===
+                const btnContainer = document.getElementById('customButtons');
+                if(data.customButtons && Array.isArray(data.customButtons)){
+                    btnContainer.innerHTML = data.customButtons.map(btn => `
+                        <a href="${btn.url}" target="_blank" class="custom-btn" style="background:${btn.color};color:white">
+                            ${btn.icon ? `<i class="${btn.icon}"></i>` : ''}${btn.text}
+                        </a>
+                    `).join('');
+                }
+
+                // === REDES SOCIALES ===
+                const socials = document.getElementById('socialLinks');
+                if(data.discordUrl) socials.innerHTML += `<a href="${data.discordUrl}" target="_blank"><i class="fab fa-discord"></i></a>`;
+                if(data.twitterUrl) socials.innerHTML += `<a href="${data.twitterUrl}" target="_blank"><i class="fab fa-twitter"></i></a>`;
+                if(data.instagramUrl) socials.innerHTML += `<a href="${data.instagramUrl}" target="_blank"><i class="fab fa-instagram"></i></a>`;
+                if(data.youtubeUrl) socials.innerHTML += `<a href="${data.youtubeUrl}" target="_blank"><i class="fab fa-youtube"></i></a>`;
+
+                // === VISIBILIDAD DE SECCIONES ===
+                if(data.sections?.products === false) document.getElementById('productsSection').style.display = 'none';
+                if(data.sections?.giftcards){
+                    document.getElementById('giftcardsSection').style.display = 'block';
+                    if(data.giftCards?.length) renderGiftCards(data.giftCards);
+                }
+                if(data.sections?.redeem){
+                    document.getElementById('redeemSection').style.display = 'block';
+                }
+
+                // === CARGAR PRODUCTOS ===
+                await loadProducts(serverId);
+
+                // === MOSTRAR TIENDA ===
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('storeContent').style.display = 'block';
+                
+                // Actualizar título de página
+                document.title = `${data.name || 'Tienda'} - BuyCrafting`;
+
+            } catch(err){
+                console.error('❌ Error:', err);
+                showError('Error al cargar: ' + err.message);
+            }
+        }
+
+        // Cargar productos desde Firebase
+        async function loadProducts(serverId){
+            try{
                 const productsRef = collection(db, 'products');
                 const q = query(productsRef, where('serverId', '==', serverId));
-                const productsSnap = await getDocs(q);
-                const products = [];
-                productsSnap.forEach(doc => {
-                    products.push({ id: doc.id, ...doc.data() });
-                });
-                console.log('✅ Products loaded:', products.length);
+                const snap = await getDocs(q);
 
-                // Render store
-                renderStore(serverData, storeData, products);
+                const grid = document.getElementById('productsGrid');
                 
-            } catch(error){
-                console.error('❌ Error loading store:', error);
-                showError('Error al cargar la tienda: ' + error.message);
-            }
-        }
+                if(snap.empty){
+                    grid.innerHTML = `<p style="grid-column:1/-1;text-align:center;color:var(--text-muted)">No hay productos aún</p>`;
+                    return;
+                }
 
-        // Render store
-        function renderStore(serverData, storeData, products){
-            // Hide loading, show content
-            document.getElementById('loadingState').style.display = 'none';
-            document.getElementById('storeContent').style.display = 'block';
-
-            // Set theme color
-            const themeColor = storeData.color || '#6366f1';
-            document.documentElement.style.setProperty('--primary', themeColor);
-            document.getElementById('themeColorMeta').setAttribute('content', themeColor);
-
-            // Set store info
-            document.getElementById('storeName').textContent = storeData.name || serverData.serverName || 'Tienda';
-            document.getElementById('storeDescription').textContent = storeData.description || 'Bienvenido a nuestra tienda oficial';
-            
-            // Set logo
-            const logoEl = document.getElementById('storeLogo');
-            if(storeData.logo){
-                logoEl.innerHTML = `<img src="${storeData.logo}" alt="Logo" style="width:100%;height:100%;object-fit:contain" onerror="this.parentElement.innerHTML='🛒'">`;
-            } else {
-                logoEl.innerHTML = '🛒';
-            }
-
-            // Set year
-            document.getElementById('currentYear').textContent = new Date().getFullYear();
-
-            // Render products
-            const grid = document.getElementById('productsGrid');
-            if(products.length === 0){
-                grid.innerHTML = `
-                    <div class="empty-state" style="grid-column:1/-1">
-                        <i class="fas fa-box-open"></i>
-                        <p>No hay productos disponibles aún</p>
-                    </div>
-                `;
-            } else {
-                products.forEach(product => {
-                    const card = createProductCard(product);
+                snap.forEach(doc => {
+                    const p = doc.data();
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    
+                    let icon = p.image ? `<img src="${p.image}" alt="${p.name}">` : 
+                               p.material ? getMaterialIcon(p.material) : 
+                               `<i class="fas fa-box" style="font-size:40px;color:var(--text-muted)"></i>`;
+                    
+                    card.innerHTML = `
+                        <div class="product-icon">${icon}</div>
+                        <div class="product-info">
+                            <h3 class="product-name">${p.name}</h3>
+                            <p class="product-desc">${p.description || ''}</p>
+                            <div class="product-footer">
+                                <span class="product-price">$${(p.price||0).toFixed(2)}</span>
+                                <button class="buy-btn" onclick="buyProduct('${p.id}','${p.name}',${p.price})">Comprar</button>
+                            </div>
+                        </div>
+                    `;
                     grid.appendChild(card);
                 });
-            }
-
-            // Update title
-            document.title = `${storeData.name || serverData.serverName || 'Tienda'} - BuyCrafting`;
+            } catch(e){ console.error('Error loading products:', e); }
         }
 
-        // Create product card
-        function createProductCard(product){
-            const div = document.createElement('div');
-            div.className = 'product-card';
-            
-            // Get icon
-            let iconHtml = '';
-            if(product.image){
-                iconHtml = `<img src="${product.image}" alt="${product.name}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-box\\' style=\\'font-size:48px;color:var(--text-muted)\\'></i>'">`;
-            } else if(product.material){
-                const materialIcons = {
-                    'DIAMOND': '💎', 'EMERALD': '💚', 'GOLD_INGOT': '🥇',
-                    'IRON_INGOT': '⚙️', 'NETHER_STAR': '⭐', 'PLAYER_HEAD': '👤',
-                    'CHEST': '📦', 'BOOK': '📚', 'PAPER': '📄', 'APPLE': '🍎',
-                    'DIAMOND_SWORD': '⚔️', 'SHIELD': '🛡️'
-                };
-                const icon = materialIcons[product.material] || '📦';
-                iconHtml = `<div style="font-size:48px">${icon}</div>`;
-            } else {
-                iconHtml = `<i class="fas fa-box" style="font-size:48px;color:var(--text-muted)"></i>`;
-            }
-
-            // Category badge
-            const categoryBadge = product.category ? 
-                `<span class="product-badge">${product.category.toUpperCase()}</span>` : '';
-
-            div.innerHTML = `
-                <div class="product-icon">
-                    ${iconHtml}
-                    ${categoryBadge}
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">${product.name}</h3>
-                    <p class="product-description">${product.description || 'Sin descripción'}</p>
-                    <div class="product-command">${product.command}</div>
-                    <div class="product-footer">
-                        <div class="product-price">$${(product.price || 0).toFixed(2)}</div>
-                        <button class="buy-btn" onclick="buyProduct('${product.id}', '${product.name}', ${product.price})">
-                            <i class="fas fa-shopping-cart"></i>
-                            Comprar
-                        </button>
-                    </div>
-                </div>
-            `;
-
-            return div;
+        // Iconos de materiales Minecraft
+        function getMaterialIcon(mat){
+            const icons = {
+                'DIAMOND':'💎','EMERALD':'💚','GOLD_INGOT':'🥇','IRON_INGOT':'⚙️',
+                'NETHER_STAR':'⭐','PLAYER_HEAD':'👤','CHEST':'📦','BOOK':'📚',
+                'PAPER':'📄','APPLE':'🍎','DIAMOND_SWORD':'⚔️','SHIELD':'🛡️'
+            };
+            return `<div style="font-size:40px">${icons[mat]||'📦'}</div>`;
         }
 
-        // Buy product (placeholder)
-        window.buyProduct = function(productId, productName, price){
-            showToast(`Próximamente: Compra de ${productName} - $${price.toFixed(2)}`, 'info');
-            // Here you'll integrate PayPal/Stripe later
+        // Renderizar Gift Cards
+        function renderGiftCards(cards){
+            const grid = document.getElementById('giftcardsGrid');
+            grid.innerHTML = cards.map(gc => `
+                <div class="giftcard" style="background:linear-gradient(135deg,${gc.color} 0%,${gc.color}dd 100%)">
+                    <div class="giftcard-amount">$${gc.value?.toFixed(2)||'0.00'}</div>
+                    <div class="giftcard-label">${gc.desc||'Crédito'}</div>
+                </div>
+            `).join('');
+        }
+
+        // Canjear código (placeholder)
+        window.redeemCode = function(e){
+            e.preventDefault();
+            const code = document.getElementById('redeemInput').value.toUpperCase();
+            alert(`Código "${code}" enviado para validación (funcionalidad próximamente)`);
         };
 
-        // Show error
-        function showError(message){
-            document.getElementById('loadingState').style.display = 'none';
-            document.getElementById('errorState').style.display = 'block';
-            document.getElementById('errorMessage').textContent = message;
+        // Comprar producto (placeholder)
+        window.buyProduct = function(id, name, price){
+            alert(`Próximamente: Compra de "${name}" - $${price.toFixed(2)}\n\nIntegración con PayPal/Stripe en desarrollo.`);
+        };
+
+        // Mostrar error
+        function showError(msg){
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error').style.display = 'block';
+            document.getElementById('errorMsg').textContent = msg;
         }
 
-        // Show toast
-        function showToast(message, type = 'success'){
-            const toast = document.getElementById('toast');
-            const icon = document.getElementById('toastIcon');
-            document.getElementById('toastMessage').textContent = message;
-            
-            toast.className = 'toast show ' + type;
-            icon.className = type === 'error' ? 'fas fa-exclamation-circle' : 'fas fa-check-circle';
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 4000);
-        }
+        // Iniciar
+        loadStore();
     </script>
 </body>
 </html>
