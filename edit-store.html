@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Editor de Tienda - BuyCrafting</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         :root{
@@ -18,13 +18,11 @@
         }
         body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
         
-        /* Scrollbar */
         ::-webkit-scrollbar{width:8px}
         ::-webkit-scrollbar-track{background:var(--bg-secondary)}
         ::-webkit-scrollbar-thumb{background:var(--primary);border-radius:4px}
         ::-webkit-scrollbar-thumb:hover{background:var(--primary-dark)}
 
-        /* Header */
         .editor-header{
             background:var(--bg-secondary);border-bottom:1px solid var(--border);
             padding:16px 24px;display:flex;justify-content:space-between;align-items:center;
@@ -35,7 +33,6 @@
         .editor-title h1{font-size:20px;font-weight:600}
         .editor-actions{display:flex;gap:12px}
         
-        /* Buttons */
         .btn{
             padding:12px 24px;border-radius:12px;border:none;font-size:14px;
             font-weight:600;cursor:pointer;transition:all 0.3s;display:inline-flex;
@@ -51,20 +48,17 @@
         .btn-danger:hover{background:#dc2626}
         .btn-sm{padding:8px 16px;font-size:13px}
         
-        /* Main Layout */
         .editor-container{display:grid;grid-template-columns:400px 1fr;gap:0;min-height:calc(100vh - 70px)}
         @media(max-width:1024px){.editor-container{grid-template-columns:1fr}}
         
-        /* Sidebar */
         .editor-sidebar{
             background:var(--bg-secondary);border-right:1px solid var(--border);
             padding:24px;overflow-y:auto;height:calc(100vh - 70px)
         }
         .sidebar-section{margin-bottom:32px;background:var(--bg-card);border-radius:16px;padding:20px;border:1px solid var(--border)}
-        .sidebar-title{font-size:14px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+        .sidebar-title{font-size:13px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
         .sidebar-title i{color:var(--primary)}
         
-        /* Form Elements */
         .form-group{margin-bottom:16px}
         .form-group label{display:block;margin-bottom:8px;font-size:13px;color:var(--text-muted);font-weight:500}
         .form-group input,.form-group select,.form-group textarea{
@@ -79,7 +73,6 @@
         .form-group input[type="color"]{height:44px;padding:4px;cursor:pointer}
         .form-group input[type="file"]{padding:8px}
         
-        /* Image Upload */
         .image-upload{
             border:2px dashed var(--border);border-radius:12px;padding:20px;
             text-align:center;cursor:pointer;transition:all 0.3s;background:var(--bg)
@@ -102,16 +95,13 @@
         }
         @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
         
-        /* Color Picker */
         .color-picker-group{display:flex;gap:8px;align-items:center}
         .color-picker-group input[type="color"]{width:50px;height:44px;padding:0;border-radius:8px;cursor:pointer}
         .color-picker-group input[type="text"]{flex:1}
         
-        /* Preview Area */
         .editor-preview{padding:0;overflow-y:auto;height:calc(100vh - 70px);background:var(--bg)}
         .preview-container{max-width:1400px;margin:0 auto;padding:40px 20px}
         
-        /* Store Preview Styles */
         .store-preview{background:var(--preview-bg,#0a0e1a);border-radius:20px;overflow:hidden;min-height:600px;transition:all 0.3s}
         .store-preview-header{
             background:var(--preview-gradient,linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#a855f7 100%));
@@ -132,7 +122,6 @@
         .store-preview-title{font-size:42px;font-weight:700;margin-bottom:12px;color:var(--preview-text,#ffffff);text-shadow:0 2px 20px rgba(0,0,0,0.3)}
         .store-preview-desc{font-size:17px;color:rgba(255,255,255,0.9);max-width:600px;margin:0 auto;line-height:1.6}
         
-        /* Custom Buttons */
         .custom-buttons-container{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:24px}
         .custom-btn-preview{
             padding:14px 28px;border-radius:12px;font-size:14px;font-weight:600;
@@ -167,7 +156,6 @@
         }
         .buy-btn-preview:hover{transform:scale(1.05);box-shadow:0 6px 20px rgba(99,102,241,0.4)}
         
-        /* Gift Cards Section */
         .gift-cards-section{padding:50px 20px;background:var(--preview-bg-secondary,#111827)}
         .gift-cards-section h2{font-size:32px;font-weight:700;margin-bottom:16px;text-align:center;color:var(--preview-text,#ffffff)}
         .gift-cards-section p{font-size:15px;color:var(--preview-text-muted,#94a3b8);text-align:center;margin-bottom:32px;max-width:600px;margin-left:auto;margin-right:auto}
@@ -181,7 +169,6 @@
         .gift-card-amount{font-size:36px;font-weight:700;color:white;margin-bottom:8px}
         .gift-card-label{font-size:14px;color:rgba(255,255,255,0.9)}
         
-        /* Redeem Code Section */
         .redeem-section{padding:50px 20px;background:var(--preview-card,#1e293b)}
         .redeem-container{max-width:500px;margin:0 auto;text-align:center}
         .redeem-container h2{font-size:28px;font-weight:700;margin-bottom:12px;color:var(--preview-text,#ffffff)}
@@ -208,7 +195,6 @@
         }
         .store-preview-socials a:hover{background:var(--preview-primary);color:white;transform:translateY(-3px)}
         
-        /* Tabs */
         .tabs{display:flex;gap:4px;margin-bottom:24px;background:var(--bg);padding:6px;border-radius:14px}
         .tab{
             padding:12px 16px;border-radius:10px;font-size:13px;font-weight:500;
@@ -217,7 +203,6 @@
         .tab:hover{color:var(--text);background:var(--bg-hover)}
         .tab.active{background:var(--gradient);color:white}
         
-        /* Section Toggle */
         .section-toggle{
             display:flex;justify-content:space-between;align-items:center;
             padding:14px;background:var(--bg);border-radius:12px;margin-bottom:10px;cursor:pointer;transition:all 0.3s
@@ -236,7 +221,6 @@
         .toggle-switch.active{background:var(--primary)}
         .toggle-switch.active::after{left:27px}
         
-        /* Notification */
         .notification{
             position:fixed;bottom:24px;right:24px;padding:16px 24px;
             background:var(--bg-card);border:1px solid var(--border);
@@ -249,26 +233,6 @@
         .notification.error{border-color:var(--danger);background:rgba(239,68,68,0.1)}
         .notification.info{border-color:var(--info);background:rgba(59,130,246,0.1)}
         
-        /* Loading */
-        .loading{display:flex;align-items:center;justify-content:center;padding:40px}
-        .spinner{
-            width:40px;height:40px;border:4px solid var(--border);
-            border-top-color:var(--primary);border-radius:50%;
-            animation:spin 1s linear infinite
-        }
-        @keyframes spin{to{transform:rotate(360deg)}}
-        
-        /* Add Item Card */
-        .add-item-card{
-            background:var(--bg);border:2px dashed var(--border);
-            border-radius:12px;padding:20px;text-align:center;cursor:pointer;
-            transition:all 0.3s
-        }
-        .add-item-card:hover{border-color:var(--primary);background:var(--bg-hover)}
-        .add-item-card i{font-size:32px;color:var(--text-muted);margin-bottom:8px}
-        .add-item-card p{font-size:13px;color:var(--text-muted)}
-        
-        /* Item List */
         .item-list{display:flex;flex-direction:column;gap:8px}
         .item-card{
             background:var(--bg);border:1px solid var(--border);
@@ -291,36 +255,27 @@
         .btn-edit{background:var(--info);color:white}
         .btn-delete{background:var(--danger);color:white}
         
-        /* Tips Box */
         .tips-box{
             background:rgba(99,102,241,0.1);border:1px solid var(--primary);
             border-radius:12px;padding:16px;margin-top:16px
         }
-        .tips-box-title{display:flex;align-items:center;gap:8px;margin-bottom:12px;color:var(--primary);font-weight:600;font-size:14px}
+        .tips-box-title{display:flex;align-items:center;gap:8px;margin-bottom:12px;color:var(--primary);font-weight:600;font-size:13px}
+        .tips-box-title i{font-size:14px}
         .tips-box ul{margin-left:24px;font-size:13px;color:var(--text-muted);line-height:1.8}
         
-        /* Modal */
-        .modal-overlay{
-            position:fixed;top:0;left:0;right:0;bottom:0;
-            background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);
-            display:none;align-items:center;justify-content:center;z-index:1000
+        .payment-methods{display:grid;gap:12px}
+        .payment-method{
+            display:flex;align-items:center;gap:12px;padding:16px;
+            background:var(--bg);border:2px solid var(--border);
+            border-radius:12px;cursor:pointer;transition:all 0.3s
         }
-        .modal-overlay.active{display:flex}
-        .modal{
-            background:var(--bg-card);border:1px solid var(--border);
-            border-radius:20px;padding:32px;max-width:500px;width:90%;
-            max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg)
-        }
-        .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
-        .modal-title{font-size:20px;font-weight:600}
-        .modal-close{
-            width:36px;height:36px;border-radius:10px;border:none;
-            background:var(--bg-hover);color:var(--text);cursor:pointer;
-            display:flex;align-items:center;justify-content:center;transition:all 0.3s
-        }
-        .modal-close:hover{background:var(--danger);color:white}
+        .payment-method:hover{border-color:var(--primary)}
+        .payment-method.active{border-color:var(--primary);background:rgba(99,102,241,0.1)}
+        .payment-method i{font-size:24px;color:var(--primary)}
+        .payment-method-info{flex:1}
+        .payment-method-title{font-weight:600;font-size:14px}
+        .payment-method-desc{font-size:12px;color:var(--text-muted)}
         
-        /* Responsive */
         @media(max-width:768px){
             .editor-header{padding:12px 16px}
             .editor-title h1{font-size:16px}
@@ -332,11 +287,10 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="editor-header">
         <div class="editor-title">
             <i class="fas fa-paint-brush"></i>
-            <h1>Editor de Tienda Profesional</h1>
+            <h1>Editor de Tienda</h1>
         </div>
         <div class="editor-actions">
             <button class="btn btn-secondary" onclick="previewFull()"><i class="fas fa-external-link-alt"></i>Vista en Vivo</button>
@@ -344,24 +298,20 @@
         </div>
     </header>
 
-    <!-- Main Container -->
     <div class="editor-container">
-        <!-- Sidebar -->
         <aside class="editor-sidebar">
-            <!-- Tabs -->
             <div class="tabs">
-                <div class="tab active" data-tab="general" onclick="switchTab('general')">🏠 General</div>
-                <div class="tab" data-tab="design" onclick="switchTab('design')">🎨 Diseño</div>
-                <div class="tab" data-tab="buttons" onclick="switchTab('buttons')">🔘 Botones</div>
-                <div class="tab" data-tab="giftcards" onclick="switchTab('giftcards')">🎁 Gift Cards</div>
-                <div class="tab" data-tab="redeem" onclick="switchTab('redeem')">🎫 Códigos</div>
-                <div class="tab" data-tab="payment" onclick="switchTab('payment')">💳 Pagos</div>
+                <div class="tab active" data-tab="general" onclick="switchTab('general')">General</div>
+                <div class="tab" data-tab="design" onclick="switchTab('design')">Diseño</div>
+                <div class="tab" data-tab="buttons" onclick="switchTab('buttons')">Botones</div>
+                <div class="tab" data-tab="giftcards" onclick="switchTab('giftcards')">Gift Cards</div>
+                <div class="tab" data-tab="redeem" onclick="switchTab('redeem')">Códigos</div>
+                <div class="tab" data-tab="payment" onclick="switchTab('payment')">Pagos</div>
             </div>
 
-            <!-- General Tab -->
             <div id="tab-general">
                 <div class="sidebar-section">
-                    <div class="sidebar-title"><i class="fas fa-store"></i> Información Básica</div>
+                    <div class="sidebar-title"><i class="fas fa-store"></i>Información Básica</div>
                     
                     <div class="form-group">
                         <label>Nombre de la Tienda</label>
@@ -397,7 +347,7 @@
                         <input type="url" id="bgUrl" placeholder="O pega URL de imagen/GIF" style="margin-top:8px" onchange="updatePreview()">
                         
                         <div class="tips-box">
-                            <div class="tips-box-title"><i class="fas fa-info-circle"></i> Consejos para GIFs:</div>
+                            <div class="tips-box-title"><i class="fas fa-info-circle"></i>Consejos para GIFs:</div>
                             <ul>
                                 <li>Usa GIFs de máximo 5-10MB para carga rápida</li>
                                 <li>Dimensiones recomendadas: 1920x600px (banner)</li>
@@ -409,7 +359,7 @@
                 </div>
 
                 <div class="sidebar-section">
-                    <div class="sidebar-title"><i class="fas fa-text-height"></i> Textos</div>
+                    <div class="sidebar-title"><i class="fas fa-text-height"></i>Textos</div>
                     
                     <div class="form-group">
                         <label>Título de Productos</label>
@@ -423,75 +373,74 @@
                 </div>
 
                 <div class="sidebar-section">
-                    <div class="sidebar-title"><i class="fas fa-toggle-on"></i> Secciones</div>
+                    <div class="sidebar-title"><i class="fas fa-toggle-on"></i>Secciones</div>
                     
                     <div class="section-toggle" onclick="toggleSection('hero')">
-                        <div class="section-toggle-title"><i class="fas fa-image"></i> Header/Hero</div>
+                        <div class="section-toggle-title"><i class="fas fa-image"></i>Header/Hero</div>
                         <div class="toggle-switch active" id="toggle-hero"></div>
                     </div>
                     
                     <div class="section-toggle" onclick="toggleSection('products')">
-                        <div class="section-toggle-title"><i class="fas fa-box"></i> Productos</div>
+                        <div class="section-toggle-title"><i class="fas fa-box"></i>Productos</div>
                         <div class="toggle-switch active" id="toggle-products"></div>
                     </div>
                     
                     <div class="section-toggle" onclick="toggleSection('giftcards')">
-                        <div class="section-toggle-title"><i class="fas fa-gift"></i> Gift Cards</div>
+                        <div class="section-toggle-title"><i class="fas fa-gift"></i>Gift Cards</div>
                         <div class="toggle-switch" id="toggle-giftcards"></div>
                     </div>
                     
                     <div class="section-toggle" onclick="toggleSection('redeem')">
-                        <div class="section-toggle-title"><i class="fas fa-ticket-alt"></i> Canjear Códigos</div>
+                        <div class="section-toggle-title"><i class="fas fa-ticket-alt"></i>Canjear Códigos</div>
                         <div class="toggle-switch" id="toggle-redeem"></div>
                     </div>
                     
                     <div class="section-toggle" onclick="toggleSection('footer')">
-                        <div class="section-toggle-title"><i class="fas fa-info-circle"></i> Footer</div>
+                        <div class="section-toggle-title"><i class="fas fa-info-circle"></i>Footer</div>
                         <div class="toggle-switch active" id="toggle-footer"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Design Tab -->
             <div id="tab-design" style="display:none">
                 <div class="sidebar-section">
-                    <div class="sidebar-title"><i class="fas fa-palette"></i> Colores</div>
+                    <div class="sidebar-title"><i class="fas fa-palette"></i>Colores</div>
                     
                     <div class="form-group">
                         <label>Color Principal</label>
                         <div class="color-picker-group">
-                            <input type="color" id="primaryColor" value="#6366f1" oninput="updatePreview()">
-                            <input type="text" id="primaryColorText" value="#6366f1" oninput="updatePreview()">
+                            <input type="color" id="primaryColor" value="#6366f1" oninput="syncColor('primary')">
+                            <input type="text" id="primaryColorText" value="#6366f1" oninput="syncColor('primary')">
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <label>Color de Fondo</label>
                         <div class="color-picker-group">
-                            <input type="color" id="bgColor" value="#0a0e1a" oninput="updatePreview()">
-                            <input type="text" id="bgColorText" value="#0a0e1a" oninput="updatePreview()">
+                            <input type="color" id="bgColor" value="#0a0e1a" oninput="syncColor('bg')">
+                            <input type="text" id="bgColorText" value="#0a0e1a" oninput="syncColor('bg')">
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <label>Color de Tarjetas</label>
                         <div class="color-picker-group">
-                            <input type="color" id="cardColor" value="#1e293b" oninput="updatePreview()">
-                            <input type="text" id="cardColorText" value="#1e293b" oninput="updatePreview()">
+                            <input type="color" id="cardColor" value="#1e293b" oninput="syncColor('card')">
+                            <input type="text" id="cardColorText" value="#1e293b" oninput="syncColor('card')">
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <label>Color de Texto</label>
                         <div class="color-picker-group">
-                            <input type="color" id="textColor" value="#f8fafc" oninput="updatePreview()">
-                            <input type="text" id="textColorText" value="#f8fafc" oninput="updatePreview()">
+                            <input type="color" id="textColor" value="#f8fafc" oninput="syncColor('text')">
+                            <input type="text" id="textColorText" value="#f8fafc" oninput="syncColor('text')">
                         </div>
                     </div>
                 </div>
 
                 <div class="sidebar-section">
-                    <div class="sidebar-title"><i class="fas fa-font"></i> Tipografía</div>
+                    <div class="sidebar-title"><i class="fas fa-font"></i>Tipografía</div>
                     
                     <div class="form-group">
                         <label>Fuente Principal</label>
@@ -516,7 +465,7 @@
                 </div>
 
                 <div class="sidebar-section">
-                    <div class="sidebar-title"><i class="fas fa-border-all"></i> Bordes</div>
+                    <div class="sidebar-title"><i class="fas fa-border-all"></i>Bordes</div>
                     
                     <div class="form-group">
                         <label>Radio de Bordes</label>
@@ -530,10 +479,9 @@
                 </div>
             </div>
 
-            <!-- Buttons Tab -->
             <div id="tab-buttons" style="display:none">
                 <div class="sidebar-section">
-                    <div class="sidebar-title"><i class="fas fa-plus-circle"></i> Agregar Botón</div>
+                    <div class="sidebar-title"><i class="fas fa-plus-circle"></i>Agregar Botón</div>
                     
                     <div class="form-group">
                         <label>Texto del Botón</label>
@@ -546,7 +494,7 @@
                     </div>
                     
                     <div class="form-group">
-                        <label>Icono (opcional)</label>
+                        <label>Icono</label>
                         <select id="btnIcon">
                             <option value="">Sin icono</option>
                             <option value="fab fa-discord">Discord</option>
@@ -564,31 +512,29 @@
                     <div class="form-group">
                         <label>Color del Botón</label>
                         <div class="color-picker-group">
-                            <input type="color" id="btnColor" value="#6366f1">
-                            <input type="text" id="btnColorText" value="#6366f1">
+                            <input type="color" id="btnColor" value="#6366f1" oninput="syncColor('btn')">
+                            <input type="text" id="btnColorText" value="#6366f1" oninput="syncColor('btn')">
                         </div>
                     </div>
                     
                     <button class="btn btn-primary" onclick="addCustomButton()" style="width:100%">
-                        <i class="fas fa-plus"></i> Agregar Botón
+                        <i class="fas fa-plus"></i>Agregar Botón
                     </button>
                 </div>
 
                 <div class="sidebar-section">
-                    <div class="sidebar-title"><i class="fas fa-list"></i> Botones Existentes</div>
+                    <div class="sidebar-title"><i class="fas fa-list"></i>Botones Existentes</div>
                     <div class="item-list" id="buttonsList">
-                        <div class="add-item-card" onclick="showNotification('Agrega botones desde arriba')">
-                            <i class="fas fa-plus"></i>
+                        <div class="item-card" style="justify-content:center;color:var(--text-muted)">
                             <p>No hay botones aún</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Gift Cards Tab -->
             <div id="tab-giftcards" style="display:none">
                 <div class="sidebar-section">
-                    <div class="sidebar-title"><i class="fas fa-plus-circle"></i> Crear Gift Card</div>
+                    <div class="sidebar-title"><i class="fas fa-plus-circle"></i>Crear Gift Card</div>
                     
                     <div class="form-group">
                         <label>Valor ($)</label>
@@ -603,41 +549,29 @@
                     <div class="form-group">
                         <label>Color</label>
                         <div class="color-picker-group">
-                            <input type="color" id="gcColor" value="#6366f1">
-                            <input type="text" id="gcColorText" value="#6366f1">
+                            <input type="color" id="gcColor" value="#6366f1" oninput="syncColor('gc')">
+                            <input type="text" id="gcColorText" value="#6366f1" oninput="syncColor('gc')">
                         </div>
                     </div>
                     
                     <button class="btn btn-primary" onclick="addGiftCard()" style="width:100%">
-                        <i class="fas fa-plus"></i> Crear Gift Card
+                        <i class="fas fa-plus"></i>Crear Gift Card
                     </button>
                 </div>
 
                 <div class="sidebar-section">
-                    <div class="sidebar-title"><i class="fas fa-list"></i> Gift Cards Creadas</div>
+                    <div class="sidebar-title"><i class="fas fa-list"></i>Gift Cards Creadas</div>
                     <div class="item-list" id="giftCardsList">
-                        <div class="add-item-card">
-                            <i class="fas fa-gift"></i>
+                        <div class="item-card" style="justify-content:center;color:var(--text-muted)">
                             <p>No hay gift cards aún</p>
                         </div>
                     </div>
                 </div>
-
-                <div class="tips-box">
-                    <div class="tips-box-title"><i class="fas fa-info-circle"></i> ¿Cómo funcionan?</div>
-                    <ul>
-                        <li>Los jugadores compran gift cards por dinero real</li>
-                        <li>Reciben un código único por email</li>
-                        <li>Canjean el código en tu tienda</li>
-                        <li>El saldo se aplica a su cuenta</li>
-                    </ul>
-                </div>
             </div>
 
-            <!-- Redeem Codes Tab -->
             <div id="tab-redeem" style="display:none">
                 <div class="sidebar-section">
-                    <div class="sidebar-title"><i class="fas fa-plus-circle"></i> Crear Código de Canje</div>
+                    <div class="sidebar-title"><i class="fas fa-plus-circle"></i>Crear Código de Canje</div>
                     
                     <div class="form-group">
                         <label>Código</label>
@@ -676,25 +610,23 @@
                     </div>
                     
                     <button class="btn btn-primary" onclick="addRedeemCode()" style="width:100%">
-                        <i class="fas fa-plus"></i> Crear Código
+                        <i class="fas fa-plus"></i>Crear Código
                     </button>
                 </div>
 
                 <div class="sidebar-section">
-                    <div class="sidebar-title"><i class="fas fa-list"></i> Códigos Activos</div>
+                    <div class="sidebar-title"><i class="fas fa-list"></i>Códigos Activos</div>
                     <div class="item-list" id="redeemCodesList">
-                        <div class="add-item-card">
-                            <i class="fas fa-ticket-alt"></i>
+                        <div class="item-card" style="justify-content:center;color:var(--text-muted)">
                             <p>No hay códigos aún</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Payment Tab -->
             <div id="tab-payment" style="display:none">
                 <div class="sidebar-section">
-                    <div class="sidebar-title"><i class="fas fa-credit-card"></i> Métodos de Pago</div>
+                    <div class="sidebar-title"><i class="fas fa-credit-card"></i>Métodos de Pago</div>
                     
                     <div class="payment-methods">
                         <div class="payment-method active" onclick="selectPayment('paypal', this)">
@@ -724,7 +656,7 @@
                 </div>
 
                 <div class="sidebar-section">
-                    <div class="sidebar-title"><i class="fas fa-user"></i> Configuración de PayPal</div>
+                    <div class="sidebar-title"><i class="fas fa-user"></i>Configuración de PayPal</div>
                     
                     <div class="form-group">
                         <label>Email de PayPal</label>
@@ -746,80 +678,75 @@
                 </div>
 
                 <div class="sidebar-section">
-                    <div class="sidebar-title"><i class="fas fa-link"></i> Enlaces Adicionales</div>
+                    <div class="sidebar-title"><i class="fas fa-link"></i>Enlaces Adicionales</div>
                     
                     <div class="form-group">
                         <label>Discord</label>
-                        <input type="url" id="discordUrl" placeholder="https://discord.gg/tu-servidor">
+                        <input type="url" id="discordUrl" placeholder="https://discord.gg/tu-servidor" onchange="updatePreview()">
                     </div>
                     
                     <div class="form-group">
                         <label>Twitter/X</label>
-                        <input type="url" id="twitterUrl" placeholder="https://twitter.com/tu-servidor">
+                        <input type="url" id="twitterUrl" placeholder="https://twitter.com/tu-servidor" onchange="updatePreview()">
                     </div>
                     
                     <div class="form-group">
                         <label>Instagram</label>
-                        <input type="url" id="instagramUrl" placeholder="https://instagram.com/tu-servidor">
+                        <input type="url" id="instagramUrl" placeholder="https://instagram.com/tu-servidor" onchange="updatePreview()">
                     </div>
                     
                     <div class="form-group">
                         <label>YouTube</label>
-                        <input type="url" id="youtubeUrl" placeholder="https://youtube.com/@tu-servidor">
+                        <input type="url" id="youtubeUrl" placeholder="https://youtube.com/@tu-servidor" onchange="updatePreview()">
                     </div>
                     
                     <div class="form-group">
                         <label>TikTok</label>
-                        <input type="url" id="tiktokUrl" placeholder="https://tiktok.com/@tu-servidor">
+                        <input type="url" id="tiktokUrl" placeholder="https://tiktok.com/@tu-servidor" onchange="updatePreview()">
                     </div>
                     
                     <div class="form-group">
                         <label>Términos y Condiciones (URL)</label>
-                        <input type="url" id="termsUrl" placeholder="https://tusitio.com/terminos">
+                        <input type="url" id="termsUrl" placeholder="https://tusitio.com/terminos" onchange="updatePreview()">
                     </div>
                     
                     <div class="form-group">
                         <label>Política de Reembolsos (URL)</label>
-                        <input type="url" id="refundUrl" placeholder="https://tusitio.com/reembolsos">
+                        <input type="url" id="refundUrl" placeholder="https://tusitio.com/reembolsos" onchange="updatePreview()">
                     </div>
                 </div>
             </div>
         </aside>
 
-        <!-- Preview Area -->
         <main class="editor-preview">
             <div class="preview-container">
                 <div class="store-preview" id="storePreview">
-                    <!-- Header -->
                     <div class="store-preview-header" id="previewHeader">
-                        <div class="store-preview-logo" id="previewLogo">🛒</div>
+                        <div class="store-preview-logo" id="previewLogo"><i class="fas fa-shopping-cart"></i></div>
                         <h1 class="store-preview-title" id="previewTitle">Mi Tienda</h1>
                         <p class="store-preview-desc" id="previewDesc">Bienvenido a nuestra tienda oficial</p>
                         <div class="custom-buttons-container" id="previewCustomButtons"></div>
                     </div>
 
-                    <!-- Products -->
                     <div class="store-preview-products" id="previewProducts">
                         <h2 id="previewProductsTitle">Productos Disponibles</h2>
                         <div class="products-grid" id="previewProductsGrid">
-                            <div class="empty-state" style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text-muted)">
+                            <div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text-muted)">
                                 <i class="fas fa-box-open" style="font-size:64px;margin-bottom:16px;opacity:0.5"></i>
                                 <p>No hay productos aún. Agrega productos desde el dashboard.</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Gift Cards -->
                     <div class="gift-cards-section" id="previewGiftCards" style="display:none">
-                        <h2>🎁 Gift Cards</h2>
+                        <h2>Gift Cards</h2>
                         <p>Regala saldo para que tus amigos compren en la tienda</p>
                         <div class="gift-cards-grid" id="previewGiftCardsGrid"></div>
                     </div>
 
-                    <!-- Redeem Code -->
                     <div class="redeem-section" id="previewRedeem" style="display:none">
                         <div class="redeem-container">
-                            <h2>🎫 Canjear Código</h2>
+                            <h2>Canjear Código</h2>
                             <p>¿Tienes un código promocional? Canjéalo aquí</p>
                             <div class="redeem-input-group">
                                 <input type="text" class="redeem-input" placeholder="Ingresa tu código">
@@ -828,7 +755,6 @@
                         </div>
                     </div>
 
-                    <!-- Footer -->
                     <footer class="store-preview-footer" id="previewFooter">
                         <p id="previewFooterText">Powered by BuyCrafting • 2026</p>
                         <div class="store-preview-footer-links" id="previewFooterLinks"></div>
@@ -839,21 +765,9 @@
         </main>
     </div>
 
-    <!-- Notification -->
     <div class="notification" id="notification">
         <i class="fas fa-check-circle" id="notificationIcon"></i>
         <span id="notificationText"></span>
-    </div>
-
-    <!-- Modal for Edit -->
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 class="modal-title" id="modalTitle">Editar</h3>
-                <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
-            </div>
-            <div id="modalContent"></div>
-        </div>
     </div>
 
     <script type="module">
@@ -872,22 +786,19 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // State
         let customButtons = [];
         let giftCards = [];
         let redeemCodes = [];
         let serverId = null;
 
-        // Get serverId
         const pathParts = window.location.pathname.split('/');
         serverId = pathParts[pathParts.indexOf('store') + 1];
         if(!serverId){
             serverId = localStorage.getItem('buycrafting_serverId');
         }
 
-        console.log('🎨 Editor loaded for server:', serverId);
+        console.log('Editor loaded for server:', serverId);
 
-        // Load existing store config
         async function loadStoreConfig(){
             if(!serverId){
                 showNotification('Error: No se encontró el servidor', 'error');
@@ -900,9 +811,8 @@
 
                 if(storeSnap.exists()){
                     const data = storeSnap.data();
-                    console.log('✅ Store config loaded:', data);
+                    console.log('Store config loaded:', data);
 
-                    // General
                     document.getElementById('storeName').value = data.name || '';
                     document.getElementById('storeDescription').value = data.description || '';
                     document.getElementById('logoUrl').value = data.logo || '';
@@ -910,7 +820,6 @@
                     document.getElementById('heroTitle').value = data.heroTitle || 'Productos Disponibles';
                     document.getElementById('footerText').value = data.footerText || 'Powered by BuyCrafting';
 
-                    // Design
                     document.getElementById('primaryColor').value = data.primaryColor || '#6366f1';
                     document.getElementById('primaryColorText').value = data.primaryColor || '#6366f1';
                     document.getElementById('bgColor').value = data.backgroundColor || '#0a0e1a';
@@ -923,7 +832,6 @@
                     document.getElementById('fontSize').value = data.fontSize || '16px';
                     document.getElementById('borderRadius').value = data.borderRadius || '12px';
 
-                    // Payment
                     document.getElementById('paypalEmail').value = data.paypalEmail || '';
                     document.getElementById('currency').value = data.currency || 'USD';
                     document.getElementById('discordUrl').value = data.discordUrl || '';
@@ -934,7 +842,6 @@
                     document.getElementById('termsUrl').value = data.termsUrl || '';
                     document.getElementById('refundUrl').value = data.refundUrl || '';
 
-                    // Sections
                     if(data.sections){
                         if(!data.sections.hero) document.getElementById('toggle-hero').classList.remove('active');
                         if(!data.sections.products) document.getElementById('toggle-products').classList.remove('active');
@@ -943,41 +850,43 @@
                         if(!data.sections.footer) document.getElementById('toggle-footer').classList.remove('active');
                     }
 
-                    // Custom buttons
                     if(data.customButtons && data.customButtons.length > 0){
                         customButtons = data.customButtons;
                         renderButtonsList();
                     }
 
-                    // Gift cards
                     if(data.giftCards && data.giftCards.length > 0){
                         giftCards = data.giftCards;
                         renderGiftCardsList();
                     }
 
-                    // Redeem codes
                     if(data.redeemCodes && data.redeemCodes.length > 0){
                         redeemCodes = data.redeemCodes;
                         renderRedeemCodesList();
                     }
 
+                    if(data.logo){
+                        document.getElementById('logoPreview').innerHTML = `<img src="${data.logo}" style="max-width:100%;max-height:100%">`;
+                    }
+                    if(data.backgroundImage){
+                        document.getElementById('bgPreview').innerHTML = `<img src="${data.backgroundImage}" style="max-width:100%;max-height:100%">`;
+                    }
+
                     updatePreview();
                     showNotification('Configuración cargada', 'success');
                 } else {
-                    console.log('ℹ️ No store config found, using defaults');
+                    console.log('No store config found, using defaults');
                     updatePreview();
                 }
 
-                // Load products
                 await loadProducts();
 
             } catch(error){
-                console.error('❌ Error loading store config:', error);
+                console.error('Error loading store config:', error);
                 showNotification('Error al cargar: ' + error.message, 'error');
             }
         }
 
-        // Load products
         async function loadProducts(){
             try{
                 const productsRef = collection(db, 'products');
@@ -1003,7 +912,6 @@
                     grid.appendChild(card);
                 });
 
-                // Populate redeem product dropdown
                 const productSelect = document.getElementById('redeemProduct');
                 productsSnap.forEach(doc => {
                     const option = document.createElement('option');
@@ -1017,14 +925,13 @@
             }
         }
 
-        // Create product card
         function createProductCard(product){
             const div = document.createElement('div');
             div.className = 'product-card-preview';
 
             let iconHtml = '';
             if(product.image){
-                iconHtml = `<img src="${product.image}" alt="${product.name}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-box\\' style=\\'font-size:48px;color:var(--text-muted)\\'></i>'">`;
+                iconHtml = `<img src="${product.image}" alt="${product.name}">`;
             } else if(product.material){
                 const icons = {
                     'DIAMOND': '💎', 'EMERALD': '💚', 'GOLD_INGOT': '🥇',
@@ -1051,9 +958,20 @@
             return div;
         }
 
-        // Update preview
+        window.syncColor = function(type){
+            const color = document.getElementById(type + 'Color').value;
+            const text = document.getElementById(type + 'ColorText').value;
+            
+            if(event.target.type === 'color'){
+                document.getElementById(type + 'ColorText').value = color;
+            } else {
+                document.getElementById(type + 'Color').value = text;
+            }
+            
+            updatePreview();
+        };
+
         window.updatePreview = function(){
-            // Get values
             const storeName = document.getElementById('storeName').value || 'Mi Tienda';
             const storeDesc = document.getElementById('storeDescription').value || 'Bienvenido a nuestra tienda oficial';
             const logoUrl = document.getElementById('logoUrl').value;
@@ -1061,7 +979,6 @@
             const heroTitle = document.getElementById('heroTitle').value || 'Productos Disponibles';
             const footerText = document.getElementById('footerText').value || 'Powered by BuyCrafting';
 
-            // Colors
             const primaryColor = document.getElementById('primaryColor').value;
             const bgColor = document.getElementById('bgColor').value;
             const cardColor = document.getElementById('cardColor').value;
@@ -1070,7 +987,6 @@
             const fontSize = document.getElementById('fontSize').value;
             const borderRadius = document.getElementById('borderRadius').value;
 
-            // Social links
             const discordUrl = document.getElementById('discordUrl').value;
             const twitterUrl = document.getElementById('twitterUrl').value;
             const instagramUrl = document.getElementById('instagramUrl').value;
@@ -1079,40 +995,29 @@
             const termsUrl = document.getElementById('termsUrl').value;
             const refundUrl = document.getElementById('refundUrl').value;
 
-            // Apply to preview
             document.getElementById('previewTitle').textContent = storeName;
             document.getElementById('previewDesc').textContent = storeDesc;
             document.getElementById('previewProductsTitle').textContent = heroTitle;
             document.getElementById('previewFooterText').textContent = footerText;
 
-            // Logo
             const logoEl = document.getElementById('previewLogo');
             if(logoUrl){
-                logoEl.innerHTML = `<img src="${logoUrl}" alt="Logo" onerror="this.parentElement.innerHTML='🛒'">`;
+                logoEl.innerHTML = `<img src="${logoUrl}" alt="Logo">`;
             } else {
-                logoEl.innerHTML = '🛒';
+                logoEl.innerHTML = '<i class="fas fa-shopping-cart"></i>';
             }
 
-            // Background
             const headerEl = document.getElementById('previewHeader');
             if(bgUrl){
-                // Check if it's a GIF
-                if(bgUrl.includes('.gif') || bgUrl.includes('image/gif')){
-                    headerEl.style.backgroundImage = `url(${bgUrl})`;
-                    headerEl.style.backgroundSize = 'cover';
-                    headerEl.style.backgroundPosition = 'center';
-                    headerEl.style.backgroundRepeat = 'no-repeat';
-                } else {
-                    headerEl.style.backgroundImage = `url(${bgUrl})`;
-                    headerEl.style.backgroundSize = 'cover';
-                    headerEl.style.backgroundPosition = 'center';
-                }
+                headerEl.style.backgroundImage = `url(${bgUrl})`;
+                headerEl.style.backgroundSize = 'cover';
+                headerEl.style.backgroundPosition = 'center';
+                headerEl.style.backgroundRepeat = 'no-repeat';
             } else {
                 headerEl.style.backgroundImage = 'none';
                 headerEl.style.background = `linear-gradient(135deg,${primaryColor} 0%,${primaryColor}dd 50%,${primaryColor}aa 100%)`;
             }
 
-            // Colors
             const previewEl = document.getElementById('storePreview');
             previewEl.style.setProperty('--preview-bg', bgColor);
             previewEl.style.setProperty('--preview-primary', primaryColor);
@@ -1120,22 +1025,16 @@
             previewEl.style.setProperty('--preview-text', textColor);
             previewEl.style.setProperty('--preview-gradient', `linear-gradient(135deg,${primaryColor} 0%,${primaryColor}dd 50%,${primaryColor}aa 100%)`);
 
-            // Font
             previewEl.style.fontFamily = fontFamily;
             previewEl.style.fontSize = fontSize;
 
-            // Border radius
             document.querySelectorAll('.product-card-preview, .buy-btn-preview, .custom-btn-preview, .gift-card-preview').forEach(el => {
                 el.style.borderRadius = borderRadius;
             });
 
-            // Custom buttons
             renderCustomButtonsPreview();
-
-            // Gift cards
             renderGiftCardsPreview();
 
-            // Social links
             const socialsEl = document.getElementById('previewSocials');
             socialsEl.innerHTML = '';
             if(discordUrl) socialsEl.innerHTML += `<a href="${discordUrl}" target="_blank"><i class="fab fa-discord"></i></a>`;
@@ -1144,19 +1043,11 @@
             if(youtubeUrl) socialsEl.innerHTML += `<a href="${youtubeUrl}" target="_blank"><i class="fab fa-youtube"></i></a>`;
             if(tiktokUrl) socialsEl.innerHTML += `<a href="${tiktokUrl}" target="_blank"><i class="fab fa-tiktok"></i></a>`;
 
-            // Footer links
             const footerLinksEl = document.getElementById('previewFooterLinks');
             footerLinksEl.innerHTML = '';
             if(termsUrl) footerLinksEl.innerHTML += `<a href="${termsUrl}" target="_blank">Términos y Condiciones</a>`;
             if(refundUrl) footerLinksEl.innerHTML += `<a href="${refundUrl}" target="_blank">Política de Reembolsos</a>`;
 
-            // Sync color inputs
-            document.getElementById('primaryColorText').value = primaryColor;
-            document.getElementById('bgColorText').value = bgColor;
-            document.getElementById('cardColorText').value = cardColor;
-            document.getElementById('textColorText').value = textColor;
-
-            // Section visibility
             document.getElementById('previewHeader').style.display = document.getElementById('toggle-hero').classList.contains('active') ? 'block' : 'none';
             document.getElementById('previewProducts').style.display = document.getElementById('toggle-products').classList.contains('active') ? 'block' : 'none';
             document.getElementById('previewGiftCards').style.display = document.getElementById('toggle-giftcards').classList.contains('active') ? 'block' : 'none';
@@ -1164,19 +1055,16 @@
             document.getElementById('previewFooter').style.display = document.getElementById('toggle-footer').classList.contains('active') ? 'block' : 'none';
         };
 
-        // Upload image (with GIF support)
         window.uploadImage = async function(type, input){
             const file = input.files[0];
             if(!file) return;
 
-            // Check file type
             const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
             if(!validTypes.includes(file.type)){
                 showNotification('Formato no válido. Usa PNG, JPG o GIF', 'error');
                 return;
             }
 
-            // Check size (10MB for GIFs, 5MB for others)
             const maxSize = file.type === 'image/gif' ? 10 * 1024 * 1024 : 5 * 1024 * 1024;
             if(file.size > maxSize){
                 const mb = file.type === 'image/gif' ? '10MB' : '5MB';
@@ -1186,16 +1074,14 @@
 
             showNotification('Subiendo imagen...');
 
-            // Read file
             const reader = new FileReader();
             reader.onload = function(e){
                 const preview = document.getElementById(type + 'Preview');
                 
-                // Check if it's a GIF
                 if(file.type === 'image/gif'){
                     preview.innerHTML = `
-                        <img src="${e.target.result}" style="max-width:100%;max-height:100%" alt="GIF animado">
-                        <div class="gif-badge">🎬 GIF</div>
+                        <img src="${e.target.result}" style="max-width:100%;max-height:100%">
+                        <div class="gif-badge">GIF</div>
                     `;
                 } else {
                     preview.innerHTML = `<img src="${e.target.result}" style="max-width:100%;max-height:100%">`;
@@ -1203,7 +1089,7 @@
                 
                 document.getElementById(type + 'Url').value = e.target.result;
                 updatePreview();
-                showNotification('¡Imagen cargada! 🎉', 'success');
+                showNotification('Imagen cargada', 'success');
             };
             reader.onerror = function(){
                 showNotification('Error al cargar la imagen', 'error');
@@ -1211,7 +1097,6 @@
             reader.readAsDataURL(file);
         };
 
-        // Tab switching
         window.switchTab = function(tab){
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
@@ -1225,20 +1110,17 @@
             document.getElementById(`tab-${tab}`).style.display = 'block';
         };
 
-        // Section toggle
         window.toggleSection = function(section){
             const toggle = document.getElementById(`toggle-${section}`);
             toggle.classList.toggle('active');
             updatePreview();
         };
 
-        // Payment selection
         window.selectPayment = function(method, element){
             document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
             element.classList.add('active');
         };
 
-        // Custom Buttons
         window.addCustomButton = function(){
             const text = document.getElementById('btnText').value;
             const url = document.getElementById('btnUrl').value;
@@ -1254,7 +1136,6 @@
             renderButtonsList();
             updatePreview();
 
-            // Clear inputs
             document.getElementById('btnText').value = '';
             document.getElementById('btnUrl').value = '';
             document.getElementById('btnIcon').value = '';
@@ -1264,21 +1145,16 @@
             showNotification('Botón agregado', 'success');
         };
 
-        function renderButtonsList(){
+        window.renderButtonsList = function(){
             const list = document.getElementById('buttonsList');
             if(customButtons.length === 0){
-                list.innerHTML = `
-                    <div class="add-item-card">
-                        <i class="fas fa-plus"></i>
-                        <p>No hay botones aún</p>
-                    </div>
-                `;
+                list.innerHTML = `<div class="item-card" style="justify-content:center;color:var(--text-muted)"><p>No hay botones aún</p></div>`;
                 return;
             }
 
             list.innerHTML = customButtons.map(btn => `
                 <div class="item-card">
-                    <div class="item-card-icon" style="background:${btnColor}20;color:${btn.color}">
+                    <div class="item-card-icon" style="background:${btn.color}20;color:${btn.color}">
                         <i class="${btn.icon || 'fas fa-link'}"></i>
                     </div>
                     <div class="item-card-info">
@@ -1286,21 +1162,20 @@
                         <div class="item-card-desc">${btn.url}</div>
                     </div>
                     <div class="item-card-actions">
-                        <button class="btn-edit" onclick="editButton(${btn.id})"><i class="fas fa-pen"></i></button>
                         <button class="btn-delete" onclick="deleteButton(${btn.id})"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>
             `).join('');
-        }
+        };
 
-        function renderCustomButtonsPreview(){
+        window.renderCustomButtonsPreview = function(){
             const container = document.getElementById('previewCustomButtons');
             container.innerHTML = customButtons.map(btn => `
                 <a href="${btn.url}" target="_blank" class="custom-btn-preview" style="background:${btn.color};color:white">
                     ${btn.icon ? `<i class="${btn.icon}"></i>` : ''}${btn.text}
                 </a>
             `).join('');
-        }
+        };
 
         window.deleteButton = function(id){
             customButtons = customButtons.filter(b => b.id !== id);
@@ -1309,7 +1184,6 @@
             showNotification('Botón eliminado', 'success');
         };
 
-        // Gift Cards
         window.addGiftCard = function(){
             const value = parseFloat(document.getElementById('gcValue').value);
             const desc = document.getElementById('gcDesc').value;
@@ -1332,15 +1206,10 @@
             showNotification('Gift Card creada', 'success');
         };
 
-        function renderGiftCardsList(){
+        window.renderGiftCardsList = function(){
             const list = document.getElementById('giftCardsList');
             if(giftCards.length === 0){
-                list.innerHTML = `
-                    <div class="add-item-card">
-                        <i class="fas fa-gift"></i>
-                        <p>No hay gift cards aún</p>
-                    </div>
-                `;
+                list.innerHTML = `<div class="item-card" style="justify-content:center;color:var(--text-muted)"><p>No hay gift cards aún</p></div>`;
                 return;
             }
 
@@ -1358,9 +1227,9 @@
                     </div>
                 </div>
             `).join('');
-        }
+        };
 
-        function renderGiftCardsPreview(){
+        window.renderGiftCardsPreview = function(){
             const section = document.getElementById('previewGiftCards');
             const grid = document.getElementById('previewGiftCardsGrid');
             
@@ -1376,7 +1245,7 @@
                     <div class="gift-card-label">${gc.desc}</div>
                 </div>
             `).join('');
-        }
+        };
 
         window.deleteGiftCard = function(id){
             giftCards = giftCards.filter(gc => gc.id !== id);
@@ -1385,7 +1254,6 @@
             showNotification('Gift Card eliminada', 'success');
         };
 
-        // Redeem Codes
         window.addRedeemCode = function(){
             const code = document.getElementById('redeemCode').value.toUpperCase();
             const type = document.getElementById('redeemType').value;
@@ -1420,15 +1288,10 @@
             showNotification('Código creado', 'success');
         };
 
-        function renderRedeemCodesList(){
+        window.renderRedeemCodesList = function(){
             const list = document.getElementById('redeemCodesList');
             if(redeemCodes.length === 0){
-                list.innerHTML = `
-                    <div class="add-item-card">
-                        <i class="fas fa-ticket-alt"></i>
-                        <p>No hay códigos aún</p>
-                    </div>
-                `;
+                list.innerHTML = `<div class="item-card" style="justify-content:center;color:var(--text-muted)"><p>No hay códigos aún</p></div>`;
                 return;
             }
 
@@ -1446,7 +1309,7 @@
                     </div>
                 </div>
             `).join('');
-        }
+        };
 
         window.deleteRedeemCode = function(id){
             redeemCodes = redeemCodes.filter(rc => rc.id !== id);
@@ -1454,7 +1317,6 @@
             showNotification('Código eliminado', 'success');
         };
 
-        // Save store config
         window.saveStore = async function(){
             if(!serverId){
                 showNotification('Error: No se encontró el servidor', 'error');
@@ -1501,7 +1363,7 @@
 
                 await setDoc(doc(db, 'stores', serverId), config, { merge: true });
 
-                showNotification('¡Tienda guardada exitosamente! ✅', 'success');
+                showNotification('Tienda guardada exitosamente', 'success');
 
             } catch(error){
                 console.error('Error saving store:', error);
@@ -1509,18 +1371,11 @@
             }
         };
 
-        // Preview full screen
         window.previewFull = function(){
             const url = `/store/${serverId}`;
             window.open(url, '_blank');
         };
 
-        // Modal functions
-        window.closeModal = function(){
-            document.getElementById('modalOverlay').classList.remove('active');
-        };
-
-        // Show notification
         window.showNotification = function(message, type = 'success'){
             const notification = document.getElementById('notification');
             const icon = document.getElementById('notificationIcon');
@@ -1534,7 +1389,6 @@
             }, 4000);
         };
 
-        // Initialize
         loadStoreConfig();
     </script>
 </body>
