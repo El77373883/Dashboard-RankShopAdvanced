@@ -266,10 +266,8 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // ✅ DEFINIR speedMap AL INICIO
         const speedMap = { slow: '5s', normal: '4s', fast: '2s' };
 
-        // Obtener serverId de la URL
         const path = window.location.pathname;
         const parts = path.split('/').filter(p => p);
         const serverId = parts[parts.indexOf('store') + 1] || localStorage.getItem('buycrafting_serverId');
@@ -283,30 +281,42 @@
             }
 
             try{
-                // 🔥 LEER DE LA COLECCIÓN 'stores'
                 const storeRef = doc(db, 'stores', serverId);
                 const storeSnap = await getDoc(storeRef);
 
                 if(!storeSnap.exists()){
+                    console.error('❌ Store doc not found in collection "stores"');
                     showError('Este servidor no existe o fue eliminado.');
                     return;
                 }
 
                 const data = storeSnap.data();
                 console.log('✅ Store loaded:', data);
+                
+                // 🔥 DEBUG: Mostrar qué se cargó
+                console.log('🎨 Colors:', {
+                    primary: data.primaryColor,
+                    bg: data.backgroundColor,
+                    card: data.cardColor,
+                    text: data.textColor
+                });
+                console.log('🖼️ Background:', {
+                    hasImage: !!data.backgroundImage,
+                    isBase64: data.backgroundImage?.startsWith(''),
+                    length: data.backgroundImage?.length
+                });
 
-                // === APLICAR COLORES (CSS VARIABLES) ===
+                // === APLICAR COLORES ===
                 const root = document.documentElement;
                 if(data.primaryColor) root.style.setProperty('--primary', data.primaryColor);
                 if(data.backgroundColor) root.style.setProperty('--bg', data.backgroundColor);
                 if(data.cardColor) root.style.setProperty('--bg-card', data.cardColor);
                 if(data.textColor) root.style.setProperty('--text', data.textColor);
                 
-                // Gradient dinámico
                 const primary = data.primaryColor || '#6366f1';
                 root.style.setProperty('--gradient', `linear-gradient(135deg,${primary} 0%,${primary}dd 50%,${primary}aa 100%)`);
 
-                // === APLICAR TEXTO ===
+                // === TEXTOS ===
                 document.getElementById('storeTitle').textContent = data.name || 'Mi Tienda';
                 document.getElementById('storeDesc').textContent = data.description || 'Bienvenido a nuestra tienda oficial';
                 document.getElementById('publisherName').textContent = data.publishedBy || 'Tu Nombre';
@@ -316,23 +326,31 @@
                 // === LOGO ===
                 const logoEl = document.getElementById('storeLogo');
                 if(data.logo){
-                    logoEl.innerHTML = `<img src="${data.logo}" alt="Logo">`;
+                    console.log('🖼️ Loading logo:', data.logo.substring(0, 50) + '...');
+                    logoEl.innerHTML = `<img src="${data.logo}" alt="Logo" onerror="console.error('Logo failed to load'); this.parentElement.innerHTML='<i class=\\'fas fa-shopping-cart\\'></i>'">`;
                 }
 
-                // === HEADER CON ANIMACIÓN ===
+                // === HEADER CON FONDO/GIF ===
                 const header = document.getElementById('storeHeader');
                 header.className = 'store-header';
                 
                 if(data.backgroundImage){
+                    console.log('🎬 Applying background image');
+                    // Manejar tanto URLs normales como base64
                     header.style.backgroundImage = `url(${data.backgroundImage})`;
                     header.style.backgroundSize = 'cover';
                     header.style.backgroundPosition = 'center';
+                    header.style.backgroundRepeat = 'no-repeat';
+                    
+                    // Si es GIF, asegurar que se reproduzca
+                    if(data.backgroundImage.includes('.gif') || data.backgroundImage.startsWith('data:image/gif')){
+                        console.log('🎬 GIF detected, ensuring animation plays');
+                        header.style.animation = 'none'; // Quitar animación CSS para que el GIF se vea
+                    }
                 } else {
-                    // Aplicar animación de fondo
+                    console.log('🎨 Using animation instead of image');
                     const bgAnim = data.bgAnimation || 'glow';
                     header.classList.add(`anim-${bgAnim}`);
-                    
-                    // Velocidad de animación
                     header.style.animationDuration = speedMap[data.animSpeed] || '4s';
                 }
 
@@ -342,7 +360,6 @@
                 title.classList.add(`title-anim-${titleAnim}`);
                 title.style.animationDuration = speedMap[data.animSpeed] || '3s';
                 
-                // Intensidad
                 if(data.animIntensity){
                     title.style.filter = `brightness(${data.animIntensity})`;
                 }
@@ -373,7 +390,7 @@
                 if(data.instagramUrl) socials.innerHTML += `<a href="${data.instagramUrl}" target="_blank"><i class="fab fa-instagram"></i></a>`;
                 if(data.youtubeUrl) socials.innerHTML += `<a href="${data.youtubeUrl}" target="_blank"><i class="fab fa-youtube"></i></a>`;
 
-                // === VISIBILIDAD DE SECCIONES ===
+                // === SECCIONES ===
                 if(data.sections?.products === false) document.getElementById('productsSection').style.display = 'none';
                 if(data.sections?.giftcards){
                     document.getElementById('giftcardsSection').style.display = 'block';
@@ -383,29 +400,25 @@
                     document.getElementById('redeemSection').style.display = 'block';
                 }
 
-                // === CARGAR PRODUCTOS ===
+                // === PRODUCTOS ===
                 await loadProducts(serverId);
 
-                // === MOSTRAR TIENDA ===
+                // === MOSTRAR ===
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('storeContent').style.display = 'block';
-                
-                // Actualizar título de página
                 document.title = `${data.name || 'Tienda'} - BuyCrafting`;
 
             } catch(err){
-                console.error('❌ Error:', err);
-                showError('Error al cargar: ' + err.message);
+                console.error('❌ Error loading store:', err);
+                showError('Error: ' + err.message);
             }
         }
 
-        // Cargar productos desde Firebase
         async function loadProducts(serverId){
             try{
                 const productsRef = collection(db, 'products');
                 const q = query(productsRef, where('serverId', '==', serverId));
                 const snap = await getDocs(q);
-
                 const grid = document.getElementById('productsGrid');
                 
                 if(snap.empty){
@@ -418,7 +431,7 @@
                     const card = document.createElement('div');
                     card.className = 'product-card';
                     
-                    let icon = p.image ? `<img src="${p.image}" alt="${p.name}">` : 
+                    let icon = p.image ? `<img src="${p.image}" alt="${p.name}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-box\\' style=\\'font-size:40px;color:var(--text-muted)\\'></i>'">` : 
                                p.material ? getMaterialIcon(p.material) : 
                                `<i class="fas fa-box" style="font-size:40px;color:var(--text-muted)"></i>`;
                     
@@ -438,7 +451,6 @@
             } catch(e){ console.error('Error loading products:', e); }
         }
 
-        // Iconos de materiales Minecraft
         function getMaterialIcon(mat){
             const icons = {
                 'DIAMOND':'💎','EMERALD':'💚','GOLD_INGOT':'🥇','IRON_INGOT':'⚙️',
@@ -448,7 +460,6 @@
             return `<div style="font-size:40px">${icons[mat]||'📦'}</div>`;
         }
 
-        // Renderizar Gift Cards
         function renderGiftCards(cards){
             const grid = document.getElementById('giftcardsGrid');
             grid.innerHTML = cards.map(gc => `
@@ -459,26 +470,22 @@
             `).join('');
         }
 
-        // Canjear código (placeholder)
         window.redeemCode = function(e){
             e.preventDefault();
             const code = document.getElementById('redeemInput').value.toUpperCase();
-            alert(`Código "${code}" enviado para validación (funcionalidad próximamente)`);
+            alert(`Código "${code}" enviado para validación`);
         };
 
-        // Comprar producto (placeholder)
         window.buyProduct = function(id, name, price){
-            alert(`Próximamente: Compra de "${name}" - $${price.toFixed(2)}\n\nIntegración con PayPal/Stripe en desarrollo.`);
+            alert(`Próximamente: "${name}" - $${price.toFixed(2)}`);
         };
 
-        // Mostrar error
         function showError(msg){
             document.getElementById('loading').style.display = 'none';
             document.getElementById('error').style.display = 'block';
             document.getElementById('errorMsg').textContent = msg;
         }
 
-        // Iniciar
         loadStore();
     </script>
 </body>
