@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#6366f1" id="themeColorMeta">
+    <title>Cargando Tienda...</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --primary:#6366f1;--primary-dark:#4f46e5;--secondary:#10b981;--accent:#f59e0b;
+            --bg:#0a0e1a;--bg-secondary:#111827;--bg-card:#1e293b;--bg-hover:#334155;
+            --text:#f8fafc;--text-muted:#94a3b8;--border:#334155;
+            --gradient:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#a855f7 100%);
+            --shadow:0 10px 40px rgba(0,0,0,0.5)
+        }
+        body{
+            font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+            background:var(--bg);color:var(--text);min-height:100vh;
+            line-height:1.6
+        }
+        
+        /* Header */
+        .store-header{
+            background:var(--gradient);padding:40px 20px;text-align:center;
+            position:relative;overflow:hidden
+        }
+        .store-header::before{
+            content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+            background:radial-gradient(circle,rgba(255,255,255,0.1)0%,transparent 70%);
+            animation:rotate 20s linear infinite
+        }
+        @keyframes rotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+        .store-logo{
+            width:80px;height:80px;background:rgba(255,255,255,0.2);
+            border-radius:16px;display:flex;align-items:center;justify-content:center;
+            font-size:40px;margin:0 auto 16px;backdrop-filter:blur(10px)
+        }
+        .store-name{font-size:32px;font-weight:700;margin-bottom:8px;position:relative}
+        .store-description{color:rgba(255,255,255,0.9);font-size:16px;position:relative;max-width:600px;margin:0 auto}
+        
+        /* Loading */
+        .loading{
+            display:flex;flex-direction:column;align-items:center;justify-content:center;
+            min-height:60vh;padding:40px
+        }
+        .spinner{
+            width:50px;height:50px;border:4px solid var(--border);
+            border-top-color:var(--primary);border-radius:50%;
+            animation:spin 1s linear infinite
+        }
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .loading-text{margin-top:20px;color:var(--text-muted);font-size:16px}
+        
+        /* Error */
+        .error{
+            background:rgba(239,68,68,0.1);border:2px solid var(--danger);
+            border-radius:16px;padding:40px;text-align:center;max-width:500px;margin:40px auto
+        }
+        .error-icon{font-size:48px;color:var(--danger);margin-bottom:16px}
+        .error-title{font-size:24px;font-weight:600;margin-bottom:8px}
+        .error-message{color:var(--text-muted);margin-bottom:20px}
+        
+        /* Products Grid */
+        .products-container{max-width:1200px;margin:0 auto;padding:40px 20px}
+        .section-title{
+            font-size:28px;font-weight:700;margin-bottom:32px;text-align:center
+        }
+        .products-grid{
+            display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px
+        }
+        @media(max-width:640px){.products-grid{grid-template-columns:1fr}}
+        
+        /* Product Card */
+        .product-card{
+            background:var(--bg-card);border:1px solid var(--border);
+            border-radius:20px;overflow:hidden;transition:all 0.3s
+        }
+        .product-card:hover{
+            transform:translateY(-8px);border-color:var(--primary);
+            box-shadow:0 10px 40px rgba(99,102,241,0.3)
+        }
+        .product-icon{
+            width:100%;height:150px;background:var(--bg-secondary);
+            display:flex;align-items:center;justify-content:center;
+            font-size:64px;position:relative;overflow:hidden
+        }
+        .product-icon img{width:80%;height:80%;object-fit:contain}
+        .product-badge{
+            position:absolute;top:12px;right:12px;background:var(--gradient);
+            color:white;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600
+        }
+        .product-info{padding:24px}
+        .product-name{font-size:20px;font-weight:600;margin-bottom:8px}
+        .product-description{color:var(--text-muted);font-size:14px;margin-bottom:16px;line-height:1.5}
+        .product-command{
+            background:var(--bg);padding:8px 12px;border-radius:8px;
+            font-family:monospace;font-size:12px;color:var(--text-muted);
+            margin-bottom:16px;word-break:break-all
+        }
+        .product-footer{
+            display:flex;justify-content:space-between;align-items:center;
+            padding-top:16px;border-top:1px solid var(--border)
+        }
+        .product-price{font-size:28px;font-weight:700;color:var(--primary)}
+        .buy-btn{
+            background:var(--gradient);color:white;padding:12px 24px;
+            border:none;border-radius:12px;font-size:15px;font-weight:600;
+            cursor:pointer;transition:all 0.3s;display:flex;align-items:center;gap:8px
+        }
+        .buy-btn:hover{transform:scale(1.05);box-shadow:0 6px 20px rgba(99,102,241,0.4)}
+        .buy-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none}
+        
+        /* Empty State */
+        .empty-state{
+            text-align:center;padding:60px 20px;color:var(--text-muted)
+        }
+        .empty-state i{font-size:64px;margin-bottom:16px;opacity:0.5}
+        .empty-state p{font-size:16px;margin-bottom:20px}
+        
+        /* Footer */
+        .store-footer{
+            background:var(--bg-secondary);padding:40px 20px;text-align:center;
+            margin-top:60px;border-top:1px solid var(--border)
+        }
+        .footer-text{color:var(--text-muted);font-size:14px}
+        .footer-link{color:var(--primary);text-decoration:none;font-weight:600}
+        
+        /* Toast Notification */
+        .toast{
+            position:fixed;bottom:20px;right:20px;background:var(--bg-card);
+            border:1px solid var(--border);padding:16px 24px;border-radius:12px;
+            box-shadow:var(--shadow);transform:translateY(100px);transition:transform 0.3s;
+            z-index:1000;display:flex;align-items:center;gap:12px
+        }
+        .toast.show{transform:translateY(0)}
+        .toast.success{border-color:var(--secondary)}
+        .toast.error{border-color:var(--danger)}
+    </style>
+</head>
+<body>
+    <!-- Loading State -->
+    <div class="loading" id="loadingState">
+        <div class="spinner"></div>
+        <div class="loading-text">Cargando tienda...</div>
+    </div>
+
+    <!-- Error State -->
+    <div class="error" id="errorState" style="display:none">
+        <div class="error-icon"><i class="fas fa-exclamation-triangle"></i></div>
+        <div class="error-title">Tienda No Encontrada</div>
+        <div class="error-message" id="errorMessage">No pudimos cargar esta tienda</div>
+    </div>
+
+    <!-- Store Content -->
+    <div id="storeContent" style="display:none">
+        <!-- Header -->
+        <header class="store-header" id="storeHeader">
+            <div class="store-logo" id="storeLogo">🛒</div>
+            <h1 class="store-name" id="storeName">Cargando...</h1>
+            <p class="store-description" id="storeDescription">Cargando descripción...</p>
+        </header>
+
+        <!-- Products -->
+        <div class="products-container">
+            <h2 class="section-title"><i class="fas fa-box-open"></i> Productos Disponibles</h2>
+            <div class="products-grid" id="productsGrid">
+                <!-- Products loaded dynamically -->
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="store-footer">
+            <p class="footer-text">
+                Powered by <a href="#" target="_blank" class="footer-link">BuyCrafting</a> • 
+                <span id="currentYear"></span>
+            </p>
+        </footer>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle" id="toastIcon"></i>
+        <span id="toastMessage"></span>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, query, where } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCIGXn0zND_8A_nD6NPxx1txYFQzrhM9hg",
+            authDomain: "rankshop-9c9d3.firebaseapp.com",
+            projectId: "rankshop-9c9d3",
+            storageBucket: "rankshop-9c9d3.firebasestorage.app",
+            messagingSenderId: "556660639350",
+            appId: "1:556660639350:web:23734d089097e50c9ec157"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Debug mode
+        console.log('🚀 Store HTML loaded');
+        console.log('📍 Current URL:', window.location.href);
+        console.log('📂 Pathname:', window.location.pathname);
+
+        // Get serverId from URL - IMPROVED
+        function extractServerId(){
+            const pathname = window.location.pathname;
+            console.log('📍 Pathname:', pathname);
+            
+            // Try multiple methods
+            // Method 1: Split by /
+            const parts = pathname.split('/').filter(p => p.length > 0);
+            console.log('📦 Parts:', parts);
+            
+            // If URL is /store/server_abc123
+            if(parts.length >= 2 && parts[0] === 'store'){
+                return parts[1];
+            }
+            
+            // Method 2: Look for server_ pattern
+            const serverMatch = pathname.match(/server_[a-zA-Z0-9]+/);
+            if(serverMatch){
+                return serverMatch[0];
+            }
+            
+            // Method 3: Get last part
+            if(parts.length > 0){
+                return parts[parts.length - 1];
+            }
+            
+            return null;
+        }
+
+        const serverId = extractServerId();
+        console.log('🔑 ServerId encontrado:', serverId);
+
+        if(!serverId){
+            showError('URL inválida. Ejemplo: tudominio.vercel.app/store/server_abc123');
+        } else {
+            loadStore(serverId);
+        }
+
+        // Load store data
+        async function loadStore(serverId){
+            try{
+                console.log('📡 Loading store:', serverId);
+                
+                // Load server config
+                const serverRef = doc(db, 'servers', serverId);
+                const serverSnap = await getDoc(serverRef);
+                
+                if(!serverSnap.exists()){
+                    console.error('❌ Server not found:', serverId);
+                    showError('Este servidor no existe o fue eliminado.');
+                    return;
+                }
+
+                const serverData = serverSnap.data();
+                console.log('✅ Server data:', serverData);
+
+                // Load store config
+                const storeRef = doc(db, 'stores', serverId);
+                const storeSnap = await getDoc(storeRef);
+                const storeData = storeSnap.exists() ? storeSnap.data() : {};
+                console.log('✅ Store data:', storeData);
+
+                // Load products
+                const productsRef = collection(db, 'products');
+                const q = query(productsRef, where('serverId', '==', serverId));
+                const productsSnap = await getDocs(q);
+                const products = [];
+                productsSnap.forEach(doc => {
+                    products.push({ id: doc.id, ...doc.data() });
+                });
+                console.log('✅ Products loaded:', products.length);
+
+                // Render store
+                renderStore(serverData, storeData, products);
+                
+            } catch(error){
+                console.error('❌ Error loading store:', error);
+                showError('Error al cargar la tienda: ' + error.message);
+            }
+        }
+
+        // Render store
+        function renderStore(serverData, storeData, products){
+            // Hide loading, show content
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('storeContent').style.display = 'block';
+
+            // Set theme color
+            const themeColor = storeData.color || '#6366f1';
+            document.documentElement.style.setProperty('--primary', themeColor);
+            document.getElementById('themeColorMeta').setAttribute('content', themeColor);
+
+            // Set store info
+            document.getElementById('storeName').textContent = storeData.name || serverData.serverName || 'Tienda';
+            document.getElementById('storeDescription').textContent = storeData.description || 'Bienvenido a nuestra tienda oficial';
+            
+            // Set logo
+            const logoEl = document.getElementById('storeLogo');
+            if(storeData.logo){
+                logoEl.innerHTML = `<img src="${storeData.logo}" alt="Logo" style="width:100%;height:100%;object-fit:contain" onerror="this.parentElement.innerHTML='🛒'">`;
+            } else {
+                logoEl.innerHTML = '🛒';
+            }
+
+            // Set year
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+            // Render products
+            const grid = document.getElementById('productsGrid');
+            if(products.length === 0){
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column:1/-1">
+                        <i class="fas fa-box-open"></i>
+                        <p>No hay productos disponibles aún</p>
+                    </div>
+                `;
+            } else {
+                products.forEach(product => {
+                    const card = createProductCard(product);
+                    grid.appendChild(card);
+                });
+            }
+
+            // Update title
+            document.title = `${storeData.name || serverData.serverName || 'Tienda'} - BuyCrafting`;
+        }
+
+        // Create product card
+        function createProductCard(product){
+            const div = document.createElement('div');
+            div.className = 'product-card';
+            
+            // Get icon
+            let iconHtml = '';
+            if(product.image){
+                iconHtml = `<img src="${product.image}" alt="${product.name}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-box\\' style=\\'font-size:48px;color:var(--text-muted)\\'></i>'">`;
+            } else if(product.material){
+                const materialIcons = {
+                    'DIAMOND': '💎', 'EMERALD': '💚', 'GOLD_INGOT': '🥇',
+                    'IRON_INGOT': '⚙️', 'NETHER_STAR': '⭐', 'PLAYER_HEAD': '👤',
+                    'CHEST': '📦', 'BOOK': '📚', 'PAPER': '📄', 'APPLE': '🍎',
+                    'DIAMOND_SWORD': '⚔️', 'SHIELD': '🛡️'
+                };
+                const icon = materialIcons[product.material] || '📦';
+                iconHtml = `<div style="font-size:48px">${icon}</div>`;
+            } else {
+                iconHtml = `<i class="fas fa-box" style="font-size:48px;color:var(--text-muted)"></i>`;
+            }
+
+            // Category badge
+            const categoryBadge = product.category ? 
+                `<span class="product-badge">${product.category.toUpperCase()}</span>` : '';
+
+            div.innerHTML = `
+                <div class="product-icon">
+                    ${iconHtml}
+                    ${categoryBadge}
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">${product.name}</h3>
+                    <p class="product-description">${product.description || 'Sin descripción'}</p>
+                    <div class="product-command">${product.command}</div>
+                    <div class="product-footer">
+                        <div class="product-price">$${(product.price || 0).toFixed(2)}</div>
+                        <button class="buy-btn" onclick="buyProduct('${product.id}', '${product.name}', ${product.price})">
+                            <i class="fas fa-shopping-cart"></i>
+                            Comprar
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            return div;
+        }
+
+        // Buy product (placeholder)
+        window.buyProduct = function(productId, productName, price){
+            showToast(`Próximamente: Compra de ${productName} - $${price.toFixed(2)}`, 'info');
+            // Here you'll integrate PayPal/Stripe later
+        };
+
+        // Show error
+        function showError(message){
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('errorState').style.display = 'block';
+            document.getElementById('errorMessage').textContent = message;
+        }
+
+        // Show toast
+        function showToast(message, type = 'success'){
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toastIcon');
+            document.getElementById('toastMessage').textContent = message;
+            
+            toast.className = 'toast show ' + type;
+            icon.className = type === 'error' ? 'fas fa-exclamation-circle' : 'fas fa-check-circle';
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
