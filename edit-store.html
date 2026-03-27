@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Editor de Tienda - BuyCrafting</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         :root{
@@ -102,8 +102,48 @@
         .store-preview{background:var(--preview-bg,#0a0e1a);border-radius:20px;overflow:hidden;min-height:600px;transition:all 0.3s}
         .store-preview-header{
             background:var(--preview-gradient,linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#a855f7 100%));
-            padding:80px 20px;text-align:center;position:relative;transition:all 0.3s
+            padding:80px 20px;text-align:center;position:relative;transition:all 0.3s;overflow:hidden
         }
+        
+        /* Animations Background */
+        .anim-none{background:var(--preview-gradient)}
+        
+        .anim-particles::before{
+            content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+            background-image:radial-gradient(circle at 20% 35%,rgba(255,255,255,0.1) 0%,transparent 50%),
+                           radial-gradient(circle at 80% 70%,rgba(255,255,255,0.08) 0%,transparent 50%),
+                           radial-gradient(circle at 50% 50%,rgba(255,255,255,0.05) 0%,transparent 60%);
+            animation:float 20s ease-in-out infinite
+        }
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+        
+        .anim-waves{
+            background:linear-gradient(135deg,var(--preview-primary) 0%,var(--preview-primary)dd 50%,var(--preview-primary)aa 100%)
+        }
+        .anim-waves::after{
+            content:'';position:absolute;bottom:-50%;left:0;right:0;height:200px;
+            background:radial-gradient(ellipse at center,rgba(255,255,255,0.15) 0%,transparent 70%);
+            animation:wave 8s ease-in-out infinite
+        }
+        @keyframes wave{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-10px) scale(1.05)}}
+        
+        .anim-glow{
+            background:var(--preview-gradient);
+            animation:glowPulse 4s ease-in-out infinite
+        }
+        @keyframes glowPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.2)}}
+        
+        .anim-shine{
+            background:var(--preview-gradient);
+            position:relative;overflow:hidden
+        }
+        .anim-shine::before{
+            content:'';position:absolute;top:-100%;left:-100%;right:-100%;bottom:-100%;
+            background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,0.3) 50%,transparent 60%);
+            animation:shine 3s ease-in-out infinite
+        }
+        @keyframes shine{0%{transform:translateX(-100%) rotate(45deg)}100%{transform:translateX(100%) rotate(45deg)}}
+        
         .store-preview-logo{
             width:120px;height:120px;background:rgba(255,255,255,0.2);
             border-radius:24px;display:flex;align-items:center;justify-content:center;
@@ -111,7 +151,48 @@
             border:2px solid rgba(255,255,255,0.3);box-shadow:0 10px 40px rgba(0,0,0,0.3)
         }
         .store-preview-logo img{width:100%;height:100%;object-fit:contain;border-radius:24px}
-        .store-preview-title{font-size:42px;font-weight:700;margin-bottom:12px;color:var(--preview-text,#ffffff);text-shadow:0 2px 20px rgba(0,0,0,0.3)}
+        
+        .store-preview-title{
+            font-size:42px;font-weight:800;margin-bottom:12px;color:var(--preview-text,#ffffff);
+            text-shadow:0 2px 20px rgba(0,0,0,0.3);position:relative;display:inline-block
+        }
+        
+        /* Title Animations */
+        .title-anim-none{}
+        
+        .title-anim-gradient{
+            background:linear-gradient(90deg,var(--preview-text),var(--preview-primary),var(--preview-text));
+            background-size:200% auto;
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+            background-clip:text;
+            animation:gradientShift 3s linear infinite
+        }
+        @keyframes gradientShift{0%{background-position:0% center}100%{background-position:200% center}}
+        
+        .title-anim-glow{
+            animation:textGlow 2s ease-in-out infinite alternate
+        }
+        @keyframes textGlow{from{text-shadow:0 0 10px rgba(99,102,241,0.5),0 0 20px rgba(99,102,241,0.3)}to{text-shadow:0 0 20px rgba(99,102,241,0.8),0 0 40px rgba(99,102,241,0.5),0 0 60px rgba(99,102,241,0.3)}}
+        
+        .title-anim-pulse{
+            animation:titlePulse 2s ease-in-out infinite
+        }
+        @keyframes titlePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+        
+        .title-anim-typewriter{
+            border-right:3px solid var(--preview-text);
+            white-space:nowrap;overflow:hidden;
+            animation:typewriter 2s steps(30) 1s forwards,blink 0.75s step-end infinite
+        }
+        @keyframes typewriter{from{width:0}to{width:100%}}
+        @keyframes blink{50%{border-color:transparent}}
+        
+        .published-by{
+            font-size:14px;color:rgba(255,255,255,0.8);margin-top:8px;font-weight:500
+        }
+        .published-by i{margin-right:6px;color:var(--preview-primary)}
+        
         .store-preview-desc{font-size:17px;color:rgba(255,255,255,0.9);max-width:600px;margin:0 auto;line-height:1.6}
         
         .custom-buttons-container{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:24px}
@@ -268,6 +349,17 @@
         .payment-method-title{font-weight:600;font-size:14px}
         .payment-method-desc{font-size:12px;color:var(--text-muted)}
         
+        .animation-preview{
+            display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px
+        }
+        .anim-option{
+            padding:12px;border:2px solid var(--border);border-radius:10px;
+            cursor:pointer;transition:all 0.3s;text-align:center;font-size:12px
+        }
+        .anim-option:hover{border-color:var(--primary);background:var(--bg-hover)}
+        .anim-option.active{border-color:var(--primary);background:rgba(99,102,241,0.1)}
+        .anim-option i{display:block;font-size:20px;margin-bottom:6px;color:var(--primary)}
+        
         @media(max-width:768px){
             .editor-header{padding:12px 16px}
             .editor-title h1{font-size:16px}
@@ -275,6 +367,7 @@
             .preview-container{padding:20px 12px}
             .store-preview-title{font-size:28px}
             .redeem-input-group{flex-direction:column}
+            .animation-preview{grid-template-columns:1fr}
         }
     </style>
 </head>
@@ -295,6 +388,7 @@
             <div class="tabs">
                 <div class="tab active" data-tab="general" onclick="window.switchTab('general')">General</div>
                 <div class="tab" data-tab="design" onclick="window.switchTab('design')">Diseño</div>
+                <div class="tab" data-tab="animations" onclick="window.switchTab('animations')">Animaciones</div>
                 <div class="tab" data-tab="buttons" onclick="window.switchTab('buttons')">Botones</div>
                 <div class="tab" data-tab="giftcards" onclick="window.switchTab('giftcards')">Gift Cards</div>
                 <div class="tab" data-tab="payment" onclick="window.switchTab('payment')">Pagos</div>
@@ -312,6 +406,12 @@
                     <div class="form-group">
                         <label>Descripción</label>
                         <textarea id="storeDescription" placeholder="Bienvenido a nuestra tienda oficial..." oninput="window.updatePreview()"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Publicado por</label>
+                        <input type="text" id="publishedBy" placeholder="Tu nombre o marca" oninput="window.updatePreview()">
+                        <small style="color:var(--text-muted);display:block;margin-top:4px">Se mostrará debajo del título de la tienda</small>
                     </div>
                     
                     <div class="form-group">
@@ -459,6 +559,81 @@
                             <option value="20px">Redondo (20px)</option>
                             <option value="30px">Muy Redondo (30px)</option>
                         </select>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-animations" style="display:none">
+                <div class="sidebar-section">
+                    <div class="sidebar-title"><i class="fas fa-magic"></i>Animación del Fondo</div>
+                    
+                    <div class="animation-preview">
+                        <div class="anim-option" data-anim="none" onclick="window.setBgAnimation('none')">
+                            <i class="fas fa-ban"></i>
+                            <span>Sin animación</span>
+                        </div>
+                        <div class="anim-option" data-anim="particles" onclick="window.setBgAnimation('particles')">
+                            <i class="fas fa-sparkles"></i>
+                            <span>Partículas</span>
+                        </div>
+                        <div class="anim-option" data-anim="waves" onclick="window.setBgAnimation('waves')">
+                            <i class="fas fa-water"></i>
+                            <span>Ondas</span>
+                        </div>
+                        <div class="anim-option active" data-anim="glow" onclick="window.setBgAnimation('glow')">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>Brillo</span>
+                        </div>
+                        <div class="anim-option" data-anim="shine" onclick="window.setBgAnimation('shine')">
+                            <i class="fas fa-star"></i>
+                            <span>Destello</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-title"><i class="fas fa-font"></i>Animación del Título</div>
+                    
+                    <div class="animation-preview">
+                        <div class="anim-option" data-title-anim="none" onclick="window.setTitleAnimation('none')">
+                            <i class="fas fa-font"></i>
+                            <span>Normal</span>
+                        </div>
+                        <div class="anim-option active" data-title-anim="gradient" onclick="window.setTitleAnimation('gradient')">
+                            <i class="fas fa-palette"></i>
+                            <span>Gradiente</span>
+                        </div>
+                        <div class="anim-option" data-title-anim="glow" onclick="window.setTitleAnimation('glow')">
+                            <i class="fas fa-glowing-star"></i>
+                            <span>Resplandor</span>
+                        </div>
+                        <div class="anim-option" data-title-anim="pulse" onclick="window.setTitleAnimation('pulse')">
+                            <i class="fas fa-heartbeat"></i>
+                            <span>Pulso</span>
+                        </div>
+                        <div class="anim-option" data-title-anim="typewriter" onclick="window.setTitleAnimation('typewriter')">
+                            <i class="fas fa-keyboard"></i>
+                            <span>Máquina</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-title"><i class="fas fa-sliders-h"></i>Opciones de Animación</div>
+                    
+                    <div class="form-group">
+                        <label>Velocidad de Animación</label>
+                        <select id="animSpeed" onchange="window.updatePreview()">
+                            <option value="slow">Lenta</option>
+                            <option value="normal" selected>Normal</option>
+                            <option value="fast">Rápida</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Intensidad del Efecto</label>
+                        <input type="range" id="animIntensity" min="0.5" max="2" step="0.1" value="1" oninput="window.updatePreview()">
+                        <small style="color:var(--text-muted)">Valor: <span id="animIntensityValue">1.0</span>x</small>
                     </div>
                 </div>
             </div>
@@ -631,9 +806,10 @@
         <main class="editor-preview">
             <div class="preview-container">
                 <div class="store-preview" id="storePreview">
-                    <div class="store-preview-header" id="previewHeader">
+                    <div class="store-preview-header anim-glow" id="previewHeader">
                         <div class="store-preview-logo" id="previewLogo"><i class="fas fa-shopping-cart"></i></div>
-                        <h1 class="store-preview-title" id="previewTitle">Mi Tienda</h1>
+                        <h1 class="store-preview-title title-anim-gradient" id="previewTitle">Mi Tienda</h1>
+                        <p class="published-by" id="previewPublishedBy"><i class="fas fa-user-check"></i>Publicado por <span id="publishedByName">Tu Nombre</span></p>
                         <p class="store-preview-desc" id="previewDesc">Bienvenido a nuestra tienda oficial</p>
                         <div class="custom-buttons-container" id="previewCustomButtons"></div>
                     </div>
@@ -687,6 +863,8 @@
         let customButtons = [];
         let giftCards = [];
         let serverId = null;
+        let bgAnimation = 'glow';
+        let titleAnimation = 'gradient';
 
         const pathParts = window.location.pathname.split('/');
         serverId = pathParts[pathParts.indexOf('store') + 1];
@@ -696,7 +874,6 @@
 
         console.log('Editor loaded for server:', serverId);
 
-        // Cargar configuración
         async function loadStoreConfig(){
             if(!serverId){
                 window.showNotification('Error: No se encontró el servidor', 'error');
@@ -711,15 +888,14 @@
                     const data = storeSnap.data();
                     console.log('Store config loaded:', data);
 
-                    // General
                     document.getElementById('storeName').value = data.name || '';
                     document.getElementById('storeDescription').value = data.description || '';
+                    document.getElementById('publishedBy').value = data.publishedBy || '';
                     document.getElementById('logoUrl').value = data.logo || '';
                     document.getElementById('bgUrl').value = data.backgroundImage || '';
                     document.getElementById('heroTitle').value = data.heroTitle || 'Productos Disponibles';
                     document.getElementById('footerText').value = data.footerText || 'Powered by BuyCrafting';
 
-                    // Colores
                     document.getElementById('primaryColor').value = data.primaryColor || '#6366f1';
                     document.getElementById('primaryColorText').value = data.primaryColor || '#6366f1';
                     document.getElementById('bgColor').value = data.backgroundColor || '#0a0e1a';
@@ -732,7 +908,6 @@
                     document.getElementById('fontSize').value = data.fontSize || '16px';
                     document.getElementById('borderRadius').value = data.borderRadius || '12px';
 
-                    // PayPal
                     document.getElementById('paypalEmail').value = data.paypalEmail || '';
                     document.getElementById('currency').value = data.currency || 'USD';
                     document.getElementById('discordUrl').value = data.discordUrl || '';
@@ -740,7 +915,19 @@
                     document.getElementById('instagramUrl').value = data.instagramUrl || '';
                     document.getElementById('youtubeUrl').value = data.youtubeUrl || '';
 
-                    // Previews de imágenes
+                    // Animaciones
+                    bgAnimation = data.bgAnimation || 'glow';
+                    titleAnimation = data.titleAnimation || 'gradient';
+                    document.getElementById('animSpeed').value = data.animSpeed || 'normal';
+                    document.getElementById('animIntensity').value = data.animIntensity || '1';
+                    document.getElementById('animIntensityValue').textContent = data.animIntensity || '1';
+
+                    // Actualizar selección de animaciones
+                    document.querySelectorAll('.anim-option[data-anim]').forEach(opt => opt.classList.remove('active'));
+                    document.querySelector(`[data-anim="${bgAnimation}"]`)?.classList.add('active');
+                    document.querySelectorAll('.anim-option[data-title-anim]').forEach(opt => opt.classList.remove('active'));
+                    document.querySelector(`[data-title-anim="${titleAnimation}"]`)?.classList.add('active');
+
                     if(data.logo){
                         document.getElementById('logoPreview').innerHTML = `<img src="${data.logo}" style="max-width:100%;max-height:100%">`;
                     }
@@ -752,13 +939,11 @@
                         `;
                     }
 
-                    // Botones
                     if(data.customButtons && data.customButtons.length > 0){
                         customButtons = data.customButtons;
                         window.renderButtonsList();
                     }
 
-                    // Gift Cards
                     if(data.giftCards && data.giftCards.length > 0){
                         giftCards = data.giftCards;
                         window.renderGiftCardsList();
@@ -779,7 +964,6 @@
             }
         }
 
-        // Cargar productos
         async function loadProducts(){
             try{
                 const productsRef = collection(db, 'products');
@@ -836,7 +1020,6 @@
             return div;
         }
 
-        // Sincronizar colores
         window.syncColor = function(type){
             const colorInput = document.getElementById(type + 'Color');
             const textInput = document.getElementById(type + 'ColorText');
@@ -846,14 +1029,27 @@
             } else {
                 colorInput.value = textInput.value;
             }
-            
             window.updatePreview();
         };
 
-        // Actualizar vista previa
+        window.setBgAnimation = function(anim){
+            bgAnimation = anim;
+            document.querySelectorAll('.anim-option[data-anim]').forEach(opt => opt.classList.remove('active'));
+            document.querySelector(`[data-anim="${anim}"]`)?.classList.add('active');
+            window.updatePreview();
+        };
+
+        window.setTitleAnimation = function(anim){
+            titleAnimation = anim;
+            document.querySelectorAll('.anim-option[data-title-anim]').forEach(opt => opt.classList.remove('active'));
+            document.querySelector(`[data-title-anim="${anim}"]`)?.classList.add('active');
+            window.updatePreview();
+        };
+
         window.updatePreview = function(){
             const storeName = document.getElementById('storeName').value || 'Mi Tienda';
             const storeDesc = document.getElementById('storeDescription').value || 'Bienvenido a nuestra tienda oficial';
+            const publishedBy = document.getElementById('publishedBy').value || 'Tu Nombre';
             const logoUrl = document.getElementById('logoUrl').value;
             const bgUrl = document.getElementById('bgUrl').value;
             const heroTitle = document.getElementById('heroTitle').value || 'Productos Disponibles';
@@ -872,11 +1068,16 @@
             const instagramUrl = document.getElementById('instagramUrl').value;
             const youtubeUrl = document.getElementById('youtubeUrl').value;
 
+            const animSpeed = document.getElementById('animSpeed').value;
+            const animIntensity = parseFloat(document.getElementById('animIntensity').value);
+            document.getElementById('animIntensityValue').textContent = animIntensity.toFixed(1);
+
             // Textos
             document.getElementById('previewTitle').textContent = storeName;
             document.getElementById('previewDesc').textContent = storeDesc;
             document.getElementById('previewProductsTitle').textContent = heroTitle;
             document.getElementById('previewFooterText').textContent = footerText;
+            document.getElementById('publishedByName').textContent = publishedBy;
 
             // Logo
             const logoEl = document.getElementById('previewLogo');
@@ -886,8 +1087,10 @@
                 logoEl.innerHTML = '<i class="fas fa-shopping-cart"></i>';
             }
 
-            // Fondo
+            // Fondo y animación
             const headerEl = document.getElementById('previewHeader');
+            headerEl.className = 'store-preview-header';
+            
             if(bgUrl){
                 headerEl.style.backgroundImage = `url(${bgUrl})`;
                 headerEl.style.backgroundSize = 'cover';
@@ -895,8 +1098,21 @@
                 headerEl.style.backgroundRepeat = 'no-repeat';
             } else {
                 headerEl.style.backgroundImage = 'none';
-                headerEl.style.background = `linear-gradient(135deg,${primaryColor} 0%,${primaryColor}dd 50%,${primaryColor}aa 100%)`;
+                headerEl.classList.add(`anim-${bgAnimation}`);
             }
+
+            // Animación del título
+            const titleEl = document.getElementById('previewTitle');
+            titleEl.className = 'store-preview-title';
+            titleEl.classList.add(`title-anim-${titleAnimation}`);
+
+            // Velocidad de animación
+            const speedMap = { slow: '3s', normal: '2s', fast: '1s' };
+            headerEl.style.animationDuration = speedMap[animSpeed] || '2s';
+            titleEl.style.animationDuration = speedMap[animSpeed] || '2s';
+
+            // Intensidad
+            titleEl.style.filter = `brightness(${animIntensity})`;
 
             // Colores CSS
             const previewEl = document.getElementById('storePreview');
@@ -906,22 +1122,16 @@
             previewEl.style.setProperty('--preview-text', textColor);
             previewEl.style.setProperty('--preview-gradient', `linear-gradient(135deg,${primaryColor} 0%,${primaryColor}dd 50%,${primaryColor}aa 100%)`);
 
-            // Fuente
             previewEl.style.fontFamily = fontFamily;
             previewEl.style.fontSize = fontSize;
 
-            // Bordes
             document.querySelectorAll('.product-card-preview, .buy-btn-preview, .custom-btn-preview, .gift-card-preview').forEach(el => {
                 el.style.borderRadius = borderRadius;
             });
 
-            // Botones personalizados
             window.renderCustomButtonsPreview();
-
-            // Gift Cards
             window.renderGiftCardsPreview();
 
-            // Redes sociales
             const socialsEl = document.getElementById('previewSocials');
             socialsEl.innerHTML = '';
             if(discordUrl) socialsEl.innerHTML += `<a href="${discordUrl}" target="_blank"><i class="fab fa-discord"></i></a>`;
@@ -929,14 +1139,12 @@
             if(instagramUrl) socialsEl.innerHTML += `<a href="${instagramUrl}" target="_blank"><i class="fab fa-instagram"></i></a>`;
             if(youtubeUrl) socialsEl.innerHTML += `<a href="${youtubeUrl}" target="_blank"><i class="fab fa-youtube"></i></a>`;
 
-            // Visibilidad de secciones
             document.getElementById('previewHeader').style.display = document.getElementById('toggle-hero').classList.contains('active') ? 'block' : 'none';
             document.getElementById('previewProducts').style.display = document.getElementById('toggle-products').classList.contains('active') ? 'block' : 'none';
             document.getElementById('previewGiftCards').style.display = document.getElementById('toggle-giftcards').classList.contains('active') ? 'block' : 'none';
             document.getElementById('previewFooter').style.display = document.getElementById('toggle-footer').classList.contains('active') ? 'block' : 'none';
         };
 
-        // Subir imagen
         window.uploadImage = async function(type, input){
             const file = input.files[0];
             if(!file){
@@ -983,33 +1191,30 @@
             reader.readAsDataURL(file);
         };
 
-        // Cambiar tab
         window.switchTab = function(tab){
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
 
             document.getElementById('tab-general').style.display = 'none';
             document.getElementById('tab-design').style.display = 'none';
+            document.getElementById('tab-animations').style.display = 'none';
             document.getElementById('tab-buttons').style.display = 'none';
             document.getElementById('tab-giftcards').style.display = 'none';
             document.getElementById('tab-payment').style.display = 'none';
             document.getElementById(`tab-${tab}`).style.display = 'block';
         };
 
-        // Toggle sección
         window.toggleSection = function(section){
             const toggle = document.getElementById(`toggle-${section}`);
             toggle.classList.toggle('active');
             window.updatePreview();
         };
 
-        // Seleccionar pago
         window.selectPayment = function(method, element){
             document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
             element.classList.add('active');
         };
 
-        // Agregar botón
         window.addCustomButton = function(){
             const text = document.getElementById('btnText').value;
             const url = document.getElementById('btnUrl').value;
@@ -1075,7 +1280,6 @@
             window.showNotification('Botón eliminado', 'success');
         };
 
-        // Gift Cards
         window.addGiftCard = function(){
             const value = parseFloat(document.getElementById('gcValue').value);
             const desc = document.getElementById('gcDesc').value;
@@ -1144,7 +1348,6 @@
             window.showNotification('Gift Card eliminada', 'success');
         };
 
-        // Guardar tienda
         window.saveStore = async function(){
             if(!serverId){
                 window.showNotification('Error: No se encontró el servidor', 'error');
@@ -1156,6 +1359,7 @@
                     serverId: serverId,
                     name: document.getElementById('storeName').value,
                     description: document.getElementById('storeDescription').value,
+                    publishedBy: document.getElementById('publishedBy').value,
                     logo: document.getElementById('logoUrl').value,
                     backgroundImage: document.getElementById('bgUrl').value,
                     heroTitle: document.getElementById('heroTitle').value,
@@ -1167,6 +1371,10 @@
                     fontFamily: document.getElementById('fontFamily').value,
                     fontSize: document.getElementById('fontSize').value,
                     borderRadius: document.getElementById('borderRadius').value,
+                    bgAnimation: bgAnimation,
+                    titleAnimation: titleAnimation,
+                    animSpeed: document.getElementById('animSpeed').value,
+                    animIntensity: parseFloat(document.getElementById('animIntensity').value),
                     paypalEmail: document.getElementById('paypalEmail').value,
                     currency: document.getElementById('currency').value,
                     discordUrl: document.getElementById('discordUrl').value,
@@ -1194,13 +1402,11 @@
             }
         };
 
-        // Vista completa
         window.previewFull = function(){
             const url = `/store/${serverId}`;
             window.open(url, '_blank');
         };
 
-        // Notificación
         window.showNotification = function(message, type = 'success'){
             const notification = document.getElementById('notification');
             const icon = document.getElementById('notificationIcon');
@@ -1214,7 +1420,6 @@
             }, 4000);
         };
 
-        // Inicializar
         loadStoreConfig();
     </script>
 </body>
