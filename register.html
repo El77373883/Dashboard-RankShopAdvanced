@@ -2,93 +2,336 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>BuyCrafting - Registro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        :root{--primary:#6366f1;--bg:#0a0e1a;--bg-card:#1e293b;--text:#f8fafc;--text-muted:#94a3b8;--border:#334155;--gradient:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#a855f7 100%)}
-        body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        :root{
+            --primary:#6366f1;--primary-dark:#4f46e5;--secondary:#10b981;--accent:#f59e0b;--danger:#ef4444;
+            --bg:#0a0e1a;--bg-secondary:#111827;--bg-card:#1e293b;--bg-hover:#334155;
+            --text:#f8fafc;--text-muted:#94a3b8;--border:#334155;--border-light:#475569;
+            --gradient:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#a855f7 100%);
+            --shadow:0 20px 60px rgba(0,0,0,0.5);--shadow-glow:0 0 60px rgba(99,102,241,0.4)
+        }
+        html,body{height:100%}
+        body{
+            font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+            background:var(--bg);color:var(--text);
+            display:flex;flex-direction:column;align-items:center;justify-content:center;
+            padding:20px;min-height:100vh;position:relative;overflow-x:hidden
+        }
+        
+        /* Fondo Animado */
+        .bg-animation{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;overflow:hidden;pointer-events:none}
+        .bg-animation::before{
+            content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+            background:radial-gradient(circle,rgba(99,102,241,0.15)0%,transparent 70%);
+            animation:rotate 30s linear infinite
+        }
+        .bg-animation::after{
+            content:'';position:absolute;top:-50%;right:-50%;width:200%;height:200%;
+            background:radial-gradient(circle,rgba(139,92,246,0.15)0%,transparent 70%);
+            animation:rotate 25s linear infinite reverse
+        }
+        @keyframes rotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+        
+        /* Partículas */
+        .particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none}
+        .particle{
+            position:absolute;width:4px;height:4px;background:var(--primary);
+            border-radius:50%;opacity:0.3;animation:floatParticle 15s infinite
+        }
+        @keyframes floatParticle{
+            0%,100%{transform:translateY(100vh) rotate(0deg);opacity:0}
+            10%{opacity:0.4}90%{opacity:0.4}
+            100%{transform:translateY(-100vh) rotate(720deg);opacity:0}
+        }
+        
         @keyframes gradient{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
         @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-        @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-        .brand{text-align:center;margin-bottom:30px}
-        .logo-icon{width:70px;height:70px;background:var(--gradient);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 15px;animation:gradient 3s ease infinite,float 3s ease-in-out infinite}
-        .logo-text{font-size:28px;font-weight:700;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:gradient 3s ease infinite}
-        .register-card{background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:30px;width:100%;max-width:450px;animation:slideUp 0.5s ease}
-        .register-header{text-align:center;margin-bottom:25px}
-        .register-title{font-size:22px;font-weight:600;margin-bottom:5px}
+        @keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        
+        /* Contenido Principal */
+        .main-content{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;z-index:2}
+        
+        .brand{text-align:center;margin-bottom:28px;animation:fadeIn 0.6s}
+        
+        .logo-icon{
+            width:76px;height:76px;background:var(--gradient);background-size:200% 200%;
+            border-radius:20px;display:flex;align-items:center;justify-content:center;
+            font-size:34px;margin:0 auto 16px;animation:gradient 3s ease infinite,float 3s ease-in-out infinite;
+            box-shadow:var(--shadow-glow)
+        }
+        .logo-text{
+            font-size:30px;font-weight:700;background:var(--gradient);background-size:200% 200%;
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+            animation:gradient 3s ease infinite;letter-spacing:-1px
+        }
+        .logo-subtitle{color:var(--text-muted);font-size:14px;margin-top:6px}
+        
+        .register-card{
+            background:var(--bg-card);border:1px solid var(--border);border-radius:24px;
+            padding:36px 32px;width:100%;max-width:440px;box-shadow:var(--shadow);
+            animation:slideUp 0.6s cubic-bezier(0.4,0,0.2,1);
+            position:relative;overflow:hidden
+        }
+        .register-card::before{
+            content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gradient)
+        }
+        
+        .register-header{text-align:center;margin-bottom:24px}
+        .register-title{font-size:24px;font-weight:700;margin-bottom:6px}
         .register-subtitle{color:var(--text-muted);font-size:14px}
-        .form-group{margin-bottom:18px}
-        label{display:block;margin-bottom:6px;font-size:13px;color:var(--text-muted)}
+        
+        .form-group{margin-bottom:18px;position:relative}
+        .form-group label{
+            display:block;margin-bottom:8px;font-size:13px;color:var(--text-muted);
+            font-weight:500;display:flex;align-items:center;gap:8px
+        }
         .input-wrapper{position:relative}
-        .input-wrapper i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted)}
-        input{width:100%;padding:12px 14px 12px 40px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:15px}
-        input:focus{outline:none;border-color:var(--primary)}
-        .btn{width:100%;padding:14px;background:var(--gradient);color:white;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px}
-        .btn:hover{opacity:0.95}
-        .btn:disabled{opacity:0.6;cursor:not-allowed}
-        .error{color:#ef4444;font-size:13px;margin-top:10px;display:none}
-        .error.show{display:block}
-        .success{color:#10b981;font-size:13px;margin-top:10px;display:none;text-align:center}
+        .input-wrapper i{
+            position:absolute;left:14px;top:50%;transform:translateY(-50%);
+            color:var(--text-muted);font-size:17px;transition:color 0.3s;pointer-events:none
+        }
+        .form-group input{
+            width:100%;padding:14px 14px 14px 48px;background:var(--bg);
+            border:1px solid var(--border);border-radius:12px;color:var(--text);
+            font-size:15px;transition:all 0.3s;font-family:inherit
+        }
+        .form-group input:focus{
+            outline:none;border-color:var(--primary);
+            box-shadow:0 0 0 3px rgba(99,102,241,0.15)
+        }
+        .input-wrapper:focus-within i{color:var(--primary)}
+        
+        .password-toggle{
+            position:absolute;right:14px;top:50%;transform:translateY(-50%);
+            background:none;border:none;color:var(--text-muted);cursor:pointer;
+            font-size:17px;transition:color 0.3s;padding:4px;z-index:1
+        }
+        .password-toggle:hover{color:var(--primary)}
+        
+        .terms{
+            display:flex;align-items:flex-start;gap:10px;margin:16px 0;font-size:13px;color:var(--text-muted)
+        }
+        .terms input[type="checkbox"]{
+            width:17px;height:17px;accent-color:var(--primary);cursor:pointer;margin-top:2px
+        }
+        .terms a{color:var(--primary);text-decoration:none;font-weight:500}
+        .terms a:hover{text-decoration:underline}
+        
+        .btn{
+            width:100%;padding:15px;background:var(--gradient);color:white;
+            border:none;border-radius:12px;font-size:15px;font-weight:600;
+            cursor:pointer;transition:all 0.3s;display:flex;align-items:center;
+            justify-content:center;gap:10px;box-shadow:0 4px 20px rgba(99,102,241,0.4)
+        }
+        .btn:hover{transform:translateY(-2px);box-shadow:0 6px 30px rgba(99,102,241,0.6)}
+        .btn:active{transform:translateY(0)}
+        .btn:disabled{opacity:0.6;cursor:not-allowed;transform:none}
+        
+        .spinner{
+            width:19px;height:19px;border:3px solid rgba(255,255,255,0.3);
+            border-top-color:white;border-radius:50%;animation:spin 0.8s linear infinite;display:none
+        }
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .btn.loading .spinner{display:block}
+        .btn.loading .btn-text{display:none}
+        
+        .error{
+            color:var(--danger);font-size:13px;margin-top:14px;display:none;
+            padding:10px 14px;background:rgba(239,68,68,0.1);border:1px solid var(--danger);
+            border-radius:10px;display:flex;align-items:center;gap:10px
+        }
+        .error.show{display:flex}
+        .success{
+            color:var(--secondary);font-size:13px;margin-top:14px;display:none;
+            padding:10px 14px;background:rgba(16,185,129,0.1);border:1px solid var(--secondary);
+            border-radius:10px;display:flex;align-items:center;gap:10px;text-align:center
+        }
         .success.show{display:block}
-        .info{background:rgba(99,102,241,0.15);border:1px solid var(--primary);border-radius:10px;padding:12px;margin-top:15px;font-size:13px;color:var(--text-muted)}
-        .login-link{text-align:center;margin-top:20px;color:var(--text-muted);font-size:14px}
+        
+        .info{
+            background:rgba(99,102,241,0.12);border:1px solid var(--primary);
+            border-radius:12px;padding:14px;margin-top:18px;font-size:13px;color:var(--text-muted)
+        }
+        .info code{
+            background:var(--bg);padding:3px 8px;border-radius:6px;
+            color:var(--primary);font-family:monospace;font-size:12px
+        }
+        
+        .login-link{
+            text-align:center;color:var(--text-muted);font-size:14px;
+            margin-top:24px;padding-top:18px;border-top:1px solid var(--border)
+        }
         .login-link a{color:var(--primary);text-decoration:none;font-weight:600}
+        .login-link a:hover{color:var(--primary-dark);text-decoration:underline}
+        
+        .token-display{
+            background:var(--bg);padding:12px 14px;border-radius:10px;
+            font-family:monospace;font-size:13px;color:var(--primary);
+            border:1px solid var(--primary);margin:10px 0;word-break:break-all;
+            display:flex;align-items:center;justify-content:space-between;gap:8px
+        }
+        .token-display button{
+            background:var(--bg-hover);border:none;color:var(--text);
+            padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer
+        }
+        .token-display button:hover{background:var(--primary);color:white}
+        
+        /* Footer con Copyright */
+        .footer{
+            width:100%;text-align:center;padding:20px 16px;
+            color:var(--text-muted);font-size:12px;z-index:2;flex-shrink:0
+        }
+        .footer a{color:var(--primary);text-decoration:none;font-weight:600}
+        .footer a:hover{text-decoration:underline}
+        .footer-heart{color:var(--danger);animation:pulse 2s infinite}
+        
+        /* Responsive iPhone */
+        @media(max-width:480px){
+            body{padding:16px}
+            .logo-icon{width:70px;height:70px;font-size:30px}
+            .logo-text{font-size:26px}
+            .register-card{padding:32px 24px;border-radius:20px}
+            .register-title{font-size:22px}
+            .form-group input{padding:13px 13px 13px 46px;font-size:14px}
+            .btn{padding:14px;font-size:14px}
+            .terms{flex-direction:column;align-items:flex-start}
+            .footer{padding:16px 12px;font-size:11px}
+        }
+        
+        /* Responsive PC */
+        @media(min-width:1024px){
+            .register-card{max-width:460px;padding:40px 36px}
+            .logo-icon{width:80px;height:80px;font-size:36px}
+            .logo-text{font-size:32px}
+        }
+        
+        /* Safe Area para iPhone X+ */
+        @supports(padding: max(0px)){
+            body{padding-left:max(20px, env(safe-area-inset-left));padding-right:max(20px, env(safe-area-inset-right))}
+            .footer{padding-bottom:max(20px, env(safe-area-inset-bottom))}
+        }
+        
+        .form-group.error input{border-color:var(--danger)}
+        .error-message{
+            color:var(--danger);font-size:12px;margin-top:6px;display:none
+        }
+        .form-group.error .error-message{display:block}
     </style>
 </head>
 <body>
-    <div class="brand">
-        <div class="logo-icon"><i class="fas fa-bolt"></i></div>
-        <div class="logo-text">BuyCrafting</div>
-    </div>
-    <div class="register-card">
-        <div class="register-header">
-            <div class="register-title">Crear Tu Tienda</div>
-            <div class="register-subtitle">Registra tu servidor de Minecraft</div>
+    <!-- Fondo Animado -->
+    <div class="bg-animation"></div>
+    <!-- Partículas -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Contenido Principal -->
+    <div class="main-content">
+        <!-- Logo -->
+        <div class="brand">
+            <div class="logo-icon"><i class="fas fa-bolt"></i></div>
+            <div class="logo-text">BuyCrafting</div>
+            <div class="logo-subtitle">Crea tu Tienda</div>
         </div>
-        <form onsubmit="handleRegister(event)">
-            <div class="form-group">
-                <label>Nombre del Servidor</label>
-                <div class="input-wrapper">
-                    <input type="text" id="serverName" placeholder="Ej: MiServer SMP" required>
-                    <i class="fas fa-server"></i>
+
+        <!-- Register Card -->
+        <div class="register-card">
+            <div class="register-header">
+                <h1 class="register-title">Crear Nueva Tienda</h1>
+                <p class="register-subtitle">Registra tu servidor de Minecraft gratis</p>
+            </div>
+
+            <form id="registerForm" onsubmit="handleRegister(event)">
+                <div class="form-group" id="serverNameGroup">
+                    <label for="serverName"><i class="fas fa-server"></i> Nombre del Servidor</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="serverName" placeholder="Ej: MiServer SMP" required minlength="3" maxlength="50">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <div class="error-message">Nombre debe tener 3-50 caracteres</div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label>Email</label>
-                <div class="input-wrapper">
-                    <input type="email" id="email" placeholder="admin@miserver.com" required>
-                    <i class="fas fa-envelope"></i>
+
+                <div class="form-group" id="emailGroup">
+                    <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="email" placeholder="admin@miserver.com" autocomplete="email" required>
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="error-message">Por favor ingresa un email válido</div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label>Contraseña</label>
-                <div class="input-wrapper">
-                    <input type="password" id="password" placeholder="••••••••" required minlength="6">
-                    <i class="fas fa-lock"></i>
+
+                <div class="form-group" id="passwordGroup">
+                    <label for="password"><i class="fas fa-lock"></i> Contraseña</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" placeholder="••••••••" autocomplete="new-password" required minlength="6">
+                        <i class="fas fa-key"></i>
+                        <button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Mostrar contraseña">
+                            <i class="fas fa-eye" id="eyeIcon"></i>
+                        </button>
+                    </div>
+                    <div class="error-message">La contraseña debe tener al menos 6 caracteres</div>
                 </div>
+
+                <label class="terms">
+                    <input type="checkbox" id="terms" required>
+                    <span>Acepto los <a href="#" onclick="return false">Términos</a> y <a href="#" onclick="return false">Privacidad</a></span>
+                </label>
+
+                <button type="submit" class="btn" id="registerBtn">
+                    <span class="spinner"></span>
+                    <span class="btn-text">
+                        <i class="fas fa-user-plus"></i>
+                        Crear Mi Tienda
+                    </span>
+                </button>
+                
+                <div class="error" id="errorMsg">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="errorText"></span>
+                </div>
+                <div class="success" id="successMsg">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>¡Registro exitoso!</strong><br>
+                        Tu token único:<br>
+                        <div class="token-display">
+                            <code id="generatedToken">sk_xxxxxx</code>
+                            <button type="button" onclick="copyToken()"><i class="fas fa-copy"></i></button>
+                        </div>
+                        <small>Guárdalo para tu config.yml</small>
+                    </div>
+                </div>
+            </form>
+
+            <div class="info">
+                <i class="fas fa-info-circle"></i> 
+                <strong>¿Qué recibes?</strong> Token único, dashboard personalizado, y sincronización automática con tu plugin.
             </div>
-            <button type="submit" class="btn" id="registerBtn"><i class="fas fa-user-plus"></i> Crear Tienda</button>
-            <div class="error" id="errorMsg"></div>
-            <div class="success" id="successMsg">
-                ✅ ¡Registro exitoso!<br>
-                Tu token: <strong id="generatedToken" style="color:var(--primary);font-family:monospace;font-size:16px"></strong><br>
-                <small>Guárdalo en el config.yml del plugin</small>
+
+            <div class="login-link">
+                ¿Ya tienes cuenta? <a href="login.html">Inicia sesión aquí</a>
             </div>
-        </form>
-        <div class="info">
-            <i class="fas fa-info-circle"></i> 
-            Al registrarte, recibirás un token único para conectar tu plugin.
-        </div>
-        <div class="login-link">
-            ¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a>
         </div>
     </div>
 
+    <!-- Footer con Copyright -->
+    <footer class="footer">
+        <p>
+            © Todos los derechos reservados. Hecho con <span class="footer-heart">❤</span> por 
+            <a href="https://youtube.com/@soyadrianyt001" target="_blank" rel="noopener">soyadrianyt001</a> 2026
+        </p>
+    </footer>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, doc, setDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCIGXn0zND_8A_nD6NPxx1txYFQzrhM9hg",
@@ -102,29 +345,132 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        function showError(msg){ const el = document.getElementById('errorMsg'); el.innerText = '⚠ '+msg; el.classList.add('show'); }
-        function showSuccess(msg){ const el = document.getElementById('successMsg'); el.classList.add('show'); }
+        let isRegistering = false;
 
+        // Crear Partículas
+        function createParticles(){
+            const container = document.getElementById('particles');
+            if(!container) return;
+            for(let i=0;i<20;i++){
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random()*100+'%';
+                p.style.animationDelay = Math.random()*15+'s';
+                p.style.animationDuration = (Math.random()*10+10)+'s';
+                container.appendChild(p);
+            }
+        }
+
+        // Toggle Password
+        window.togglePassword = function(){
+            const input = document.getElementById('password');
+            const icon = document.getElementById('eyeIcon');
+            if(input.type === 'password'){
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        };
+
+        // Validar Formulario
+        function validateForm(){
+            let valid = true;
+            const serverName = document.getElementById('serverName');
+            const email = document.getElementById('email');
+            const password = document.getElementById('password');
+            const terms = document.getElementById('terms');
+            
+            // Server name
+            if(serverName.value.length < 3 || serverName.value.length > 50){
+                document.getElementById('serverNameGroup').classList.add('error');
+                valid = false;
+            } else {
+                document.getElementById('serverNameGroup').classList.remove('error');
+            }
+            
+            // Email
+            if(!email.value.includes('@')){
+                document.getElementById('emailGroup').classList.add('error');
+                valid = false;
+            } else {
+                document.getElementById('emailGroup').classList.remove('error');
+            }
+            
+            // Password
+            if(password.value.length < 6){
+                document.getElementById('passwordGroup').classList.add('error');
+                valid = false;
+            } else {
+                document.getElementById('passwordGroup').classList.remove('error');
+            }
+            
+            // Terms
+            if(!terms.checked){
+                showNotification('Debes aceptar los términos');
+                valid = false;
+            }
+            
+            return valid;
+        }
+
+        // Notificaciones
+        window.showNotification = function(msg, type='error'){
+            const el = type==='error' ? document.getElementById('errorMsg') : document.getElementById('successMsg');
+            if(type === 'error'){
+                document.getElementById('errorText').textContent = msg;
+                document.getElementById('errorMsg').className = 'error show';
+                setTimeout(()=>{document.getElementById('errorMsg').className = 'error'},5000);
+            }
+        };
+
+        // Generar Token Único
         function generateToken(){
             return 'sk_' + Math.random().toString(36).substring(2, 8) + Math.random().toString(36).substring(2, 8);
         }
 
+        // Copiar Token
+        window.copyToken = function(){
+            const token = document.getElementById('generatedToken').textContent;
+            navigator.clipboard.writeText(token);
+            showNotification('Token copiado', 'success');
+        };
+
+        // Manejar Registro
         window.handleRegister = async function(e){
             e.preventDefault();
+            
+            if(isRegistering) return;
+            
+            if(!validateForm()){
+                return;
+            }
+
             const serverName = document.getElementById('serverName').value.trim();
-            const email = document.getElementById('email').value.trim();
+            const email = document.getElementById('email').value.trim().toLowerCase();
             const password = document.getElementById('password').value.trim();
             const btn = document.getElementById('registerBtn');
-            const err = document.getElementById('errorMsg');
-            const succ = document.getElementById('successMsg');
-
-            err.classList.remove('show');
-            succ.classList.remove('show');
+            
+            isRegistering = true;
+            btn.classList.add('loading');
             btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando...';
 
             try{
-                // Generar ID único y token
+                // Verificar si el email ya existe
+                const serversRef = collection(db, 'servers');
+                const existingQuery = query(serversRef, where('ownerEmail', '==', email));
+                const existingSnap = await getDocs(existingQuery);
+                
+                if(!existingSnap.empty){
+                    showNotification('Este email ya está registrado');
+                    isRegistering = false;
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+                    return;
+                }
+
+                // Generar ID y token únicos
                 const serverId = 'server_' + Math.random().toString(36).substring(2, 10);
                 const token = generateToken();
 
@@ -132,10 +478,11 @@
                 await setDoc(doc(db, 'servers', serverId), {
                     serverName: serverName,
                     ownerEmail: email,
-                    password: password, // ⚠️ En producción, usar Firebase Auth
+                    password: password,
                     token: token,
                     createdAt: new Date(),
-                    active: true
+                    active: true,
+                    plan: 'free'
                 });
 
                 // Crear config inicial
@@ -147,25 +494,49 @@
                 });
 
                 // Mostrar token generado
-                document.getElementById('generatedToken').innerText = token;
-                showSuccess();
+                document.getElementById('generatedToken').textContent = token;
+                document.getElementById('successMsg').className = 'success show';
                 btn.innerHTML = '<i class="fas fa-check"></i> ¡Registrado!';
                 
-                // Guardar en localStorage para login automático
+                // Guardar sesión para auto-login
                 localStorage.setItem('buycrafting_auth', 'true');
                 localStorage.setItem('buycrafting_serverId', serverId);
                 localStorage.setItem('buycrafting_token', token);
+                localStorage.setItem('buycrafting_serverName', serverName);
+                localStorage.setItem('buycrafting_email', email);
 
                 // Redirigir al dashboard después de 3 segundos
-                setTimeout(() => { window.location.href = 'index.html'; }, 3000);
+                setTimeout(() => {
+                    window.location.replace('index.html');
+                }, 3000);
 
             } catch(error){
                 console.error('Register error:', error);
-                showError('Error: '+error.message);
+                showNotification('Error: ' + error.message);
+                isRegistering = false;
+                btn.classList.remove('loading');
                 btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-user-plus"></i> Crear Tienda';
+                btn.innerHTML = '<span class="btn-text"><i class="fas fa-user-plus"></i> Crear Mi Tienda</span>';
             }
         };
+
+        // Limpiar errores al escribir
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', function(){
+                this.closest('.form-group')?.classList.remove('error');
+                document.getElementById('errorMsg')?.classList.remove('show');
+            });
+        });
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function(){
+            createParticles();
+            
+            // Focus en el primer input (con delay para iOS)
+            setTimeout(() => {
+                document.getElementById('serverName')?.focus();
+            }, 300);
+        });
     </script>
 </body>
 </html>
