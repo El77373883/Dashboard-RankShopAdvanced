@@ -2,72 +2,306 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>BuyCrafting - Acceso</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        :root{--primary:#6366f1;--bg:#0a0e1a;--bg-card:#1e293b;--text:#f8fafc;--text-muted:#94a3b8;--border:#334155;--gradient:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#a855f7 100%)}
-        body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        :root{
+            --primary:#6366f1;--primary-dark:#4f46e5;--secondary:#10b981;--accent:#f59e0b;--danger:#ef4444;
+            --bg:#0a0e1a;--bg-secondary:#111827;--bg-card:#1e293b;--bg-hover:#334155;
+            --text:#f8fafc;--text-muted:#94a3b8;--border:#334155;
+            --gradient:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#a855f7 100%);
+            --shadow:0 20px 60px rgba(0,0,0,0.5);--shadow-glow:0 0 60px rgba(99,102,241,0.4)
+        }
+        body{
+            font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+            background:var(--bg);color:var(--text);min-height:100vh;
+            display:flex;align-items:center;justify-content:center;padding:20px;
+            overflow:hidden;position:relative
+        }
+        
+        /* Fondo Animado */
+        .bg-animation{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;overflow:hidden}
+        .bg-animation::before{
+            content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+            background:radial-gradient(circle,rgba(99,102,241,0.15)0%,transparent 70%);
+            animation:rotate 30s linear infinite
+        }
+        .bg-animation::after{
+            content:'';position:absolute;top:-50%;right:-50%;width:200%;height:200%;
+            background:radial-gradient(circle,rgba(139,92,246,0.15)0%,transparent 70%);
+            animation:rotate 25s linear infinite reverse
+        }
+        @keyframes rotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+        
+        /* Partículas */
+        .particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none}
+        .particle{
+            position:absolute;width:4px;height:4px;background:var(--primary);
+            border-radius:50%;opacity:0.3;animation:floatParticle 15s infinite
+        }
+        @keyframes floatParticle{
+            0%,100%{transform:translateY(100vh) rotate(0deg);opacity:0}
+            10%{opacity:0.4}90%{opacity:0.4}
+            100%{transform:translateY(-100vh) rotate(720deg);opacity:0}
+        }
+        
         @keyframes gradient{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
         @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-        @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-        .brand{text-align:center;margin-bottom:30px}
-        .logo-icon{width:70px;height:70px;background:var(--gradient);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 15px;animation:gradient 3s ease infinite,float 3s ease-in-out infinite}
-        .logo-text{font-size:28px;font-weight:700;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:gradient 3s ease infinite}
-        .login-card{background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:30px;width:100%;max-width:400px;animation:slideUp 0.5s ease}
-        .login-header{text-align:center;margin-bottom:25px}
-        .login-title{font-size:22px;font-weight:600;margin-bottom:5px}
-        .login-subtitle{color:var(--text-muted);font-size:14px}
-        .form-group{margin-bottom:18px}
-        label{display:block;margin-bottom:6px;font-size:13px;color:var(--text-muted)}
+        @keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+        
+        .brand{text-align:center;margin-bottom:40px;z-index:2;animation:fadeIn 0.6s}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        
+        .logo-icon{
+            width:80px;height:80px;background:var(--gradient);background-size:200% 200%;
+            border-radius:20px;display:flex;align-items:center;justify-content:center;
+            font-size:36px;margin:0 auto 20px;animation:gradient 3s ease infinite,float 3s ease-in-out infinite;
+            box-shadow:var(--shadow-glow)
+        }
+        .logo-text{
+            font-size:32px;font-weight:700;background:var(--gradient);background-size:200% 200%;
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+            animation:gradient 3s ease infinite;letter-spacing:-1px
+        }
+        .logo-subtitle{color:var(--text-muted);font-size:15px;margin-top:8px}
+        
+        .login-card{
+            background:var(--bg-card);border:1px solid var(--border);border-radius:24px;
+            padding:40px;width:100%;max-width:440px;box-shadow:var(--shadow);
+            z-index:2;animation:slideUp 0.6s cubic-bezier(0.4,0,0.2,1);
+            position:relative;overflow:hidden
+        }
+        .login-card::before{
+            content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gradient)
+        }
+        
+        .login-header{text-align:center;margin-bottom:32px}
+        .login-title{font-size:26px;font-weight:700;margin-bottom:8px}
+        .login-subtitle{color:var(--text-muted);font-size:15px}
+        
+        .form-group{margin-bottom:24px;position:relative}
+        .form-group label{
+            display:block;margin-bottom:10px;font-size:14px;color:var(--text-muted);
+            font-weight:500;display:flex;align-items:center;gap:8px
+        }
         .input-wrapper{position:relative}
-        .input-wrapper i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted)}
-        input{width:100%;padding:12px 14px 12px 40px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:15px}
-        input:focus{outline:none;border-color:var(--primary)}
-        .password-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer}
-        .btn{width:100%;padding:14px;background:var(--gradient);color:white;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px}
-        .btn:hover{opacity:0.95}
-        .btn:disabled{opacity:0.6;cursor:not-allowed}
-        .error{color:#ef4444;font-size:13px;margin-top:10px;display:none}
-        .error.show{display:block}
-        .success{color:#10b981;font-size:13px;margin-top:10px;display:none}
-        .success.show{display:block}
-        .info{background:rgba(99,102,241,0.15);border:1px solid var(--primary);border-radius:10px;padding:12px;margin-top:15px;font-size:13px;color:var(--text-muted)}
-        .info code{background:var(--bg);padding:2px 6px;border-radius:4px;color:var(--primary);font-family:monospace}
+        .input-wrapper i{
+            position:absolute;left:16px;top:50%;transform:translateY(-50%);
+            color:var(--text-muted);font-size:18px;transition:color 0.3s
+        }
+        .form-group input{
+            width:100%;padding:16px 16px 16px 50px;background:var(--bg);
+            border:1px solid var(--border);border-radius:12px;color:var(--text);
+            font-size:16px;transition:all 0.3s;font-family:inherit
+        }
+        .form-group input:focus{
+            outline:none;border-color:var(--primary);
+            box-shadow:0 0 0 3px rgba(99,102,241,0.15)
+        }
+        .input-wrapper:focus-within i{color:var(--primary)}
+        
+        .password-toggle{
+            position:absolute;right:16px;top:50%;transform:translateY(-50%);
+            background:none;border:none;color:var(--text-muted);cursor:pointer;
+            font-size:18px;transition:color 0.3s;padding:4px
+        }
+        .password-toggle:hover{color:var(--primary)}
+        
+        .form-options{
+            display:flex;justify-content:space-between;align-items:center;
+            margin-bottom:24px;font-size:14px;flex-wrap:wrap;gap:12px
+        }
+        .remember-me{display:flex;align-items:center;gap:8px;color:var(--text-muted);cursor:pointer}
+        .remember-me input[type="checkbox"]{
+            width:18px;height:18px;accent-color:var(--primary);cursor:pointer
+        }
+        .forgot-link{color:var(--primary);text-decoration:none;font-weight:500;transition:color 0.3s}
+        .forgot-link:hover{color:var(--primary-dark);text-decoration:underline}
+        
+        .btn{
+            width:100%;padding:16px;background:var(--gradient);color:white;
+            border:none;border-radius:12px;font-size:16px;font-weight:600;
+            cursor:pointer;transition:all 0.3s;display:flex;align-items:center;
+            justify-content:center;gap:10px;box-shadow:0 4px 20px rgba(99,102,241,0.4)
+        }
+        .btn:hover{transform:translateY(-2px);box-shadow:0 6px 30px rgba(99,102,241,0.6)}
+        .btn:active{transform:translateY(0)}
+        .btn:disabled{opacity:0.6;cursor:not-allowed;transform:none}
+        
+        .spinner{
+            width:20px;height:20px;border:3px solid rgba(255,255,255,0.3);
+            border-top-color:white;border-radius:50%;animation:spin 0.8s linear infinite;display:none
+        }
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .btn.loading .spinner{display:block}
+        .btn.loading .btn-text{display:none}
+        
+        .divider{
+            display:flex;align-items:center;margin:24px 0;color:var(--text-muted);font-size:14px
+        }
+        .divider::before,.divider::after{
+            content:'';flex:1;height:1px;background:var(--border)
+        }
+        .divider span{padding:0 16px}
+        
+        .register-link{
+            text-align:center;color:var(--text-muted);font-size:15px;
+            margin-top:32px;padding-top:24px;border-top:1px solid var(--border)
+        }
+        .register-link a{color:var(--primary);text-decoration:none;font-weight:600;transition:color 0.3s}
+        .register-link a:hover{color:var(--primary-dark);text-decoration:underline}
+        
+        .error{
+            color:var(--danger);font-size:14px;margin-top:16px;display:none;
+            padding:12px 16px;background:rgba(239,68,68,0.1);border:1px solid var(--danger);
+            border-radius:10px;display:flex;align-items:center;gap:10px
+        }
+        .error.show{display:flex}
+        .success{
+            color:var(--secondary);font-size:14px;margin-top:16px;display:none;
+            padding:12px 16px;background:rgba(16,185,129,0.1);border:1px solid var(--secondary);
+            border-radius:10px;display:flex;align-items:center;gap:10px
+        }
+        .success.show{display:flex}
+        
+        .info{
+            background:rgba(99,102,241,0.12);border:1px solid var(--primary);
+            border-radius:12px;padding:16px;margin-top:24px;font-size:14px;color:var(--text-muted)
+        }
+        .info code{
+            background:var(--bg);padding:4px 10px;border-radius:6px;
+            color:var(--primary);font-family:monospace;font-size:13px
+        }
+        
+        .security-badge{
+            display:flex;align-items:center;justify-content:center;gap:10px;
+            margin-top:24px;font-size:13px;color:var(--text-muted)
+        }
+        .security-badge i{color:var(--secondary);font-size:16px}
+        
+        .server-status{
+            display:flex;align-items:center;justify-content:center;gap:10px;
+            margin-top:16px;font-size:13px;color:var(--text-muted)
+        }
+        .status-dot{
+            width:10px;height:10px;border-radius:50%;background:var(--secondary);
+            animation:pulse 2s infinite
+        }
+        
+        @media(max-width:480px){
+            .login-card{padding:32px 24px}
+            .logo-text{font-size:28px}
+            .logo-icon{width:70px;height:70px;font-size:32px}
+            .form-options{flex-direction:column;align-items:flex-start}
+        }
+        
+        .form-group.error input{border-color:var(--danger)}
+        .error-message{
+            color:var(--danger);font-size:13px;margin-top:8px;display:none
+        }
+        .form-group.error .error-message{display:block}
     </style>
 </head>
 <body>
+    <!-- Fondo Animado -->
+    <div class="bg-animation"></div>
+    <!-- Partículas -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Logo -->
     <div class="brand">
         <div class="logo-icon"><i class="fas fa-bolt"></i></div>
         <div class="logo-text">BuyCrafting</div>
+        <div class="logo-subtitle">Panel de Administración</div>
     </div>
+
+    <!-- Login Card -->
     <div class="login-card">
         <div class="login-header">
-            <div class="login-title">Acceso al Panel</div>
-            <div class="login-subtitle">Ingresa tu API Key</div>
+            <h1 class="login-title">Bienvenido de nuevo</h1>
+            <p class="login-subtitle">Ingresa tus credenciales para gestionar tu tienda</p>
         </div>
-        <form onsubmit="handleLogin(event)">
-            <div class="form-group">
-                <label>API Key</label>
+
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="form-group" id="emailGroup">
+                <label for="email"><i class="fas fa-envelope"></i> Email del Servidor</label>
                 <div class="input-wrapper">
-                    <input type="password" id="apiKey" placeholder="sk_live_..." required autocomplete="off" value="Adrian2005@">
-                    <i class="fas fa-key"></i>
-                    <button type="button" class="password-toggle" onclick="toggleKey()"><i class="fas fa-eye" id="eyeIcon"></i></button>
+                    <input type="email" id="email" placeholder="admin@miserver.com" autocomplete="email" required>
+                    <i class="fas fa-user"></i>
                 </div>
+                <div class="error-message">Por favor ingresa un email válido</div>
             </div>
-            <button type="submit" class="btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Acceder</button>
-            <div class="error" id="errorMsg"></div>
-            <div class="success" id="successMsg"></div>
+
+            <div class="form-group" id="passwordGroup">
+                <label for="password"><i class="fas fa-lock"></i> Contraseña</label>
+                <div class="input-wrapper">
+                    <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required minlength="6">
+                    <i class="fas fa-key"></i>
+                    <button type="button" class="password-toggle" onclick="togglePassword()">
+                        <i class="fas fa-eye" id="eyeIcon"></i>
+                    </button>
+                </div>
+                <div class="error-message">La contraseña debe tener al menos 6 caracteres</div>
+            </div>
+
+            <div class="form-options">
+                <label class="remember-me">
+                    <input type="checkbox" id="remember">
+                    <span>Recordar sesión</span>
+                </label>
+                <a href="#" class="forgot-link" onclick="showNotification('Contacta al soporte para recuperar acceso');return false;">¿Olvidaste tu contraseña?</a>
+            </div>
+
+            <button type="submit" class="btn" id="loginBtn">
+                <span class="spinner"></span>
+                <span class="btn-text">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Iniciar Sesión
+                </span>
+            </button>
+            
+            <div class="error" id="errorMsg">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText"></span>
+            </div>
+            <div class="success" id="successMsg">
+                <i class="fas fa-check-circle"></i>
+                <span id="successText"></span>
+            </div>
         </form>
+
+        <div class="divider"><span>o</span></div>
+
+        <div style="text-align:center">
+            <a href="register.html" class="btn" style="background:var(--bg-hover);border:1px solid var(--border);box-shadow:none">
+                <i class="fas fa-user-plus"></i>
+                Crear Nueva Tienda
+            </a>
+        </div>
+
         <div class="info">
-            <i class="fas fa-info-circle"></i> Tu key: <code>Adrian2005@</code>
+            <i class="fas fa-info-circle"></i> 
+            <strong>¿Eres nuevo?</strong> Regístrate gratis para crear tu tienda de Minecraft. 
+            Recibirás un token único para conectar tu plugin.
+        </div>
+
+        <div class="security-badge">
+            <i class="fas fa-shield-alt"></i>
+            <span>Conexión segura • Datos encriptados • Firebase Auth</span>
+        </div>
+
+        <div class="server-status">
+            <div class="status-dot"></div>
+            <span>Sistema en línea • Firebase conectado</span>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+        import { getFirestore, collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCIGXn0zND_8A_nD6NPxx1txYFQzrhM9hg",
@@ -81,62 +315,159 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        window.toggleKey = function(){
-            const input = document.getElementById('apiKey');
+        // Crear Partículas
+        function createParticles(){
+            const container = document.getElementById('particles');
+            for(let i=0;i<25;i++){
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random()*100+'%';
+                p.style.animationDelay = Math.random()*15+'s';
+                p.style.animationDuration = (Math.random()*10+10)+'s';
+                container.appendChild(p);
+            }
+        }
+
+        // Toggle Password
+        window.togglePassword = function(){
+            const input = document.getElementById('password');
             const icon = document.getElementById('eyeIcon');
-            if(input.type === 'password'){ input.type = 'text'; icon.className = 'fas fa-eye-slash'; }
-            else { input.type = 'password'; icon.className = 'fas fa-eye'; }
+            if(input.type === 'password'){
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
         };
 
-        function showError(msg){ const el = document.getElementById('errorMsg'); el.innerText = '⚠ '+msg; el.classList.add('show'); }
-        function showSuccess(msg){ const el = document.getElementById('successMsg'); el.innerText = '✅ '+msg; el.classList.add('show'); }
+        // Validar Formulario
+        function validateForm(){
+            let valid = true;
+            const email = document.getElementById('email');
+            const password = document.getElementById('password');
+            
+            if(!email.value.includes('@')){
+                document.getElementById('emailGroup').classList.add('error');
+                valid = false;
+            } else {
+                document.getElementById('emailGroup').classList.remove('error');
+            }
+            
+            if(password.value.length < 6){
+                document.getElementById('passwordGroup').classList.add('error');
+                valid = false;
+            } else {
+                document.getElementById('passwordGroup').classList.remove('error');
+            }
+            
+            return valid;
+        }
 
+        // Notificaciones
+        window.showNotification = function(msg, type='error'){
+            const el = type==='error' ? document.getElementById('errorMsg') : document.getElementById('successMsg');
+            const textEl = type==='error' ? document.getElementById('errorText') : document.getElementById('successText');
+            textEl.innerText = msg;
+            el.className = type==='error' ? 'error show' : 'success show';
+            setTimeout(()=>{el.className = type==='error' ? 'error' : 'success'},5000);
+        };
+
+        // Manejar Login
         window.handleLogin = async function(e){
             e.preventDefault();
-            const key = document.getElementById('apiKey').value.trim();
-            const btn = document.getElementById('loginBtn');
-            const err = document.getElementById('errorMsg');
-            const succ = document.getElementById('successMsg');
-            err.classList.remove('show'); succ.classList.remove('show');
-            btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando...';
-
-            // ✅ TU KEY PERSONALIZADA - ENTRADA DIRECTA SIN FIREBASE
-            if(key === 'Adrian2005@'){
-                showSuccess('¡Acceso concedido!');
-                localStorage.setItem('buycrafting_auth', 'true');
-                localStorage.setItem('buycrafting_key', key);
-                // Redirección directa sin bucle
-                window.location.replace('index.html');
+            
+            if(!validateForm()){
+                showNotification('Por favor corrige los errores');
                 return;
             }
 
+            const email = document.getElementById('email').value.trim().toLowerCase();
+            const password = document.getElementById('password').value.trim();
+            const remember = document.getElementById('remember').checked;
+            const btn = document.getElementById('loginBtn');
+            
+            // Estado de carga
+            btn.classList.add('loading');
+            btn.disabled = true;
+
             try{
-                const configRef = doc(db, 'config', 'settings');
-                const configSnap = await getDoc(configRef);
-                if(configSnap.exists()){
-                    if(key === configSnap.data().apiKey){
-                        showSuccess('¡Bienvenido!');
-                        localStorage.setItem('buycrafting_auth', 'true');
-                        localStorage.setItem('buycrafting_key', key);
-                        window.location.replace('index.html');
-                    } else { showError('API Key incorrecta'); btn.disabled = false; btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Acceder'; }
-                } else {
-                    await setDoc(configRef, { apiKey: 'Adrian2005@' });
-                    showError('Config creada. Usa: Adrian2005@');
-                    btn.disabled = false; btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Acceder';
+                // Buscar servidor por email y contraseña
+                const serversRef = collection(db, 'servers');
+                const q = query(serversRef, where('ownerEmail', '==', email), where('password', '==', password), where('active', '==', true));
+                const snapshot = await getDocs(q);
+
+                if(snapshot.empty){
+                    showNotification('Email o contraseña incorrectos');
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+                    return;
                 }
+
+                // Login exitoso
+                const serverDoc = snapshot.docs[0];
+                const serverData = serverDoc.data();
+                const serverId = serverDoc.id;
+
+                showNotification('¡Bienvenido! Redirigiendo...', 'success');
+                
+                // Guardar sesión
+                const sessionData = {
+                    buycrafting_auth: 'true',
+                    buycrafting_serverId: serverId,
+                    buycrafting_token: serverData.token,
+                    buycrafting_serverName: serverData.serverName,
+                    buycrafting_email: serverData.ownerEmail
+                };
+                
+                if(remember){
+                    Object.entries(sessionData).forEach(([k,v]) => localStorage.setItem(k,v));
+                } else {
+                    Object.entries(sessionData).forEach(([k,v]) => sessionStorage.setItem(k,v));
+                }
+
+                // Redirigir al dashboard
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+
             } catch(error){
                 console.error('Login error:', error);
-                showError('Error: '+error.message);
-                btn.disabled = false; btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Acceder';
+                showNotification('Error de conexión: '+error.message);
+                btn.classList.remove('loading');
+                btn.disabled = false;
             }
         };
 
-        // ✅ SOLO redirigir si NO estamos en login
-        const currentPath = window.location.pathname;
-        if(localStorage.getItem('buycrafting_auth') === 'true' && !currentPath.includes('login.html')){
-            window.location.replace('index.html');
+        // Auto-login si hay sesión guardada
+        function checkExistingSession(){
+            const auth = localStorage.getItem('buycrafting_auth') || sessionStorage.getItem('buycrafting_auth');
+            if(auth === 'true'){
+                // Verificar que los datos existen
+                const serverId = localStorage.getItem('buycrafting_serverId') || sessionStorage.getItem('buycrafting_serverId');
+                if(serverId){
+                    window.location.href = 'index.html';
+                }
+            }
         }
+
+        // Limpiar errores al escribir
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', function(){
+                this.closest('.form-group')?.classList.remove('error');
+                document.getElementById('errorMsg')?.classList.remove('show');
+                document.getElementById('successMsg')?.classList.remove('show');
+            });
+        });
+
+        // Inicializar
+        createParticles();
+        checkExistingSession();
+        
+        // Focus en el primer input
+        window.addEventListener('load', () => {
+            document.getElementById('email')?.focus();
+        });
     </script>
 </body>
 </html>
