@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>BuyCrafting - Acceso</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -10,19 +12,20 @@
         :root{
             --primary:#6366f1;--primary-dark:#4f46e5;--secondary:#10b981;--accent:#f59e0b;--danger:#ef4444;
             --bg:#0a0e1a;--bg-secondary:#111827;--bg-card:#1e293b;--bg-hover:#334155;
-            --text:#f8fafc;--text-muted:#94a3b8;--border:#334155;
+            --text:#f8fafc;--text-muted:#94a3b8;--border:#334155;--border-light:#475569;
             --gradient:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#a855f7 100%);
             --shadow:0 20px 60px rgba(0,0,0,0.5);--shadow-glow:0 0 60px rgba(99,102,241,0.4)
         }
+        html,body{height:100%}
         body{
             font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
-            background:var(--bg);color:var(--text);min-height:100vh;
-            display:flex;align-items:center;justify-content:center;padding:20px;
-            overflow:hidden;position:relative
+            background:var(--bg);color:var(--text);
+            display:flex;flex-direction:column;align-items:center;justify-content:center;
+            padding:20px;min-height:100vh;position:relative;overflow-x:hidden
         }
         
         /* Fondo Animado */
-        .bg-animation{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;overflow:hidden}
+        .bg-animation{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;overflow:hidden;pointer-events:none}
         .bg-animation::before{
             content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
             background:radial-gradient(circle,rgba(99,102,241,0.15)0%,transparent 70%);
@@ -51,51 +54,54 @@
         @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
         @keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
-        
-        .brand{text-align:center;margin-bottom:40px;z-index:2;animation:fadeIn 0.6s}
         @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
         
+        /* Contenido Principal */
+        .main-content{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;z-index:2}
+        
+        .brand{text-align:center;margin-bottom:32px;animation:fadeIn 0.6s}
+        
         .logo-icon{
-            width:80px;height:80px;background:var(--gradient);background-size:200% 200%;
+            width:76px;height:76px;background:var(--gradient);background-size:200% 200%;
             border-radius:20px;display:flex;align-items:center;justify-content:center;
-            font-size:36px;margin:0 auto 20px;animation:gradient 3s ease infinite,float 3s ease-in-out infinite;
+            font-size:34px;margin:0 auto 16px;animation:gradient 3s ease infinite,float 3s ease-in-out infinite;
             box-shadow:var(--shadow-glow)
         }
         .logo-text{
-            font-size:32px;font-weight:700;background:var(--gradient);background-size:200% 200%;
+            font-size:30px;font-weight:700;background:var(--gradient);background-size:200% 200%;
             -webkit-background-clip:text;-webkit-text-fill-color:transparent;
             animation:gradient 3s ease infinite;letter-spacing:-1px
         }
-        .logo-subtitle{color:var(--text-muted);font-size:15px;margin-top:8px}
+        .logo-subtitle{color:var(--text-muted);font-size:14px;margin-top:6px}
         
         .login-card{
             background:var(--bg-card);border:1px solid var(--border);border-radius:24px;
-            padding:40px;width:100%;max-width:440px;box-shadow:var(--shadow);
-            z-index:2;animation:slideUp 0.6s cubic-bezier(0.4,0,0.2,1);
+            padding:36px 32px;width:100%;max-width:420px;box-shadow:var(--shadow);
+            animation:slideUp 0.6s cubic-bezier(0.4,0,0.2,1);
             position:relative;overflow:hidden
         }
         .login-card::before{
             content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gradient)
         }
         
-        .login-header{text-align:center;margin-bottom:32px}
-        .login-title{font-size:26px;font-weight:700;margin-bottom:8px}
-        .login-subtitle{color:var(--text-muted);font-size:15px}
+        .login-header{text-align:center;margin-bottom:28px}
+        .login-title{font-size:24px;font-weight:700;margin-bottom:6px}
+        .login-subtitle{color:var(--text-muted);font-size:14px}
         
-        .form-group{margin-bottom:24px;position:relative}
+        .form-group{margin-bottom:20px;position:relative}
         .form-group label{
-            display:block;margin-bottom:10px;font-size:14px;color:var(--text-muted);
+            display:block;margin-bottom:8px;font-size:13px;color:var(--text-muted);
             font-weight:500;display:flex;align-items:center;gap:8px
         }
         .input-wrapper{position:relative}
         .input-wrapper i{
-            position:absolute;left:16px;top:50%;transform:translateY(-50%);
-            color:var(--text-muted);font-size:18px;transition:color 0.3s
+            position:absolute;left:14px;top:50%;transform:translateY(-50%);
+            color:var(--text-muted);font-size:17px;transition:color 0.3s;pointer-events:none
         }
         .form-group input{
-            width:100%;padding:16px 16px 16px 50px;background:var(--bg);
+            width:100%;padding:14px 14px 14px 48px;background:var(--bg);
             border:1px solid var(--border);border-radius:12px;color:var(--text);
-            font-size:16px;transition:all 0.3s;font-family:inherit
+            font-size:15px;transition:all 0.3s;font-family:inherit
         }
         .form-group input:focus{
             outline:none;border-color:var(--primary);
@@ -104,26 +110,26 @@
         .input-wrapper:focus-within i{color:var(--primary)}
         
         .password-toggle{
-            position:absolute;right:16px;top:50%;transform:translateY(-50%);
+            position:absolute;right:14px;top:50%;transform:translateY(-50%);
             background:none;border:none;color:var(--text-muted);cursor:pointer;
-            font-size:18px;transition:color 0.3s;padding:4px
+            font-size:17px;transition:color 0.3s;padding:4px;z-index:1
         }
         .password-toggle:hover{color:var(--primary)}
         
         .form-options{
             display:flex;justify-content:space-between;align-items:center;
-            margin-bottom:24px;font-size:14px;flex-wrap:wrap;gap:12px
+            margin-bottom:20px;font-size:13px;flex-wrap:wrap;gap:10px
         }
         .remember-me{display:flex;align-items:center;gap:8px;color:var(--text-muted);cursor:pointer}
         .remember-me input[type="checkbox"]{
-            width:18px;height:18px;accent-color:var(--primary);cursor:pointer
+            width:17px;height:17px;accent-color:var(--primary);cursor:pointer
         }
         .forgot-link{color:var(--primary);text-decoration:none;font-weight:500;transition:color 0.3s}
         .forgot-link:hover{color:var(--primary-dark);text-decoration:underline}
         
         .btn{
-            width:100%;padding:16px;background:var(--gradient);color:white;
-            border:none;border-radius:12px;font-size:16px;font-weight:600;
+            width:100%;padding:15px;background:var(--gradient);color:white;
+            border:none;border-radius:12px;font-size:15px;font-weight:600;
             cursor:pointer;transition:all 0.3s;display:flex;align-items:center;
             justify-content:center;gap:10px;box-shadow:0 4px 20px rgba(99,102,241,0.4)
         }
@@ -132,7 +138,7 @@
         .btn:disabled{opacity:0.6;cursor:not-allowed;transform:none}
         
         .spinner{
-            width:20px;height:20px;border:3px solid rgba(255,255,255,0.3);
+            width:19px;height:19px;border:3px solid rgba(255,255,255,0.3);
             border-top-color:white;border-radius:50%;animation:spin 0.8s linear infinite;display:none
         }
         @keyframes spin{to{transform:rotate(360deg)}}
@@ -140,67 +146,95 @@
         .btn.loading .btn-text{display:none}
         
         .divider{
-            display:flex;align-items:center;margin:24px 0;color:var(--text-muted);font-size:14px
+            display:flex;align-items:center;margin:20px 0;color:var(--text-muted);font-size:13px
         }
         .divider::before,.divider::after{
             content:'';flex:1;height:1px;background:var(--border)
         }
-        .divider span{padding:0 16px}
+        .divider span{padding:0 14px}
         
         .register-link{
-            text-align:center;color:var(--text-muted);font-size:15px;
-            margin-top:32px;padding-top:24px;border-top:1px solid var(--border)
+            text-align:center;color:var(--text-muted);font-size:14px;
+            margin-top:28px;padding-top:20px;border-top:1px solid var(--border)
         }
         .register-link a{color:var(--primary);text-decoration:none;font-weight:600;transition:color 0.3s}
         .register-link a:hover{color:var(--primary-dark);text-decoration:underline}
         
         .error{
-            color:var(--danger);font-size:14px;margin-top:16px;display:none;
-            padding:12px 16px;background:rgba(239,68,68,0.1);border:1px solid var(--danger);
+            color:var(--danger);font-size:13px;margin-top:14px;display:none;
+            padding:10px 14px;background:rgba(239,68,68,0.1);border:1px solid var(--danger);
             border-radius:10px;display:flex;align-items:center;gap:10px
         }
         .error.show{display:flex}
         .success{
-            color:var(--secondary);font-size:14px;margin-top:16px;display:none;
-            padding:12px 16px;background:rgba(16,185,129,0.1);border:1px solid var(--secondary);
+            color:var(--secondary);font-size:13px;margin-top:14px;display:none;
+            padding:10px 14px;background:rgba(16,185,129,0.1);border:1px solid var(--secondary);
             border-radius:10px;display:flex;align-items:center;gap:10px
         }
         .success.show{display:flex}
         
         .info{
             background:rgba(99,102,241,0.12);border:1px solid var(--primary);
-            border-radius:12px;padding:16px;margin-top:24px;font-size:14px;color:var(--text-muted)
+            border-radius:12px;padding:14px;margin-top:20px;font-size:13px;color:var(--text-muted)
         }
         .info code{
-            background:var(--bg);padding:4px 10px;border-radius:6px;
-            color:var(--primary);font-family:monospace;font-size:13px
+            background:var(--bg);padding:3px 8px;border-radius:6px;
+            color:var(--primary);font-family:monospace;font-size:12px
         }
         
         .security-badge{
-            display:flex;align-items:center;justify-content:center;gap:10px;
-            margin-top:24px;font-size:13px;color:var(--text-muted)
+            display:flex;align-items:center;justify-content:center;gap:8px;
+            margin-top:20px;font-size:12px;color:var(--text-muted)
         }
-        .security-badge i{color:var(--secondary);font-size:16px}
+        .security-badge i{color:var(--secondary);font-size:15px}
         
         .server-status{
-            display:flex;align-items:center;justify-content:center;gap:10px;
-            margin-top:16px;font-size:13px;color:var(--text-muted)
+            display:flex;align-items:center;justify-content:center;gap:8px;
+            margin-top:14px;font-size:12px;color:var(--text-muted)
         }
         .status-dot{
-            width:10px;height:10px;border-radius:50%;background:var(--secondary);
+            width:9px;height:9px;border-radius:50%;background:var(--secondary);
             animation:pulse 2s infinite
         }
         
+        /* Footer con Copyright */
+        .footer{
+            width:100%;text-align:center;padding:20px 16px;
+            color:var(--text-muted);font-size:12px;z-index:2;flex-shrink:0
+        }
+        .footer a{color:var(--primary);text-decoration:none;font-weight:600}
+        .footer a:hover{text-decoration:underline}
+        .footer-heart{color:var(--danger);animation:pulse 2s infinite}
+        
+        /* Responsive iPhone */
         @media(max-width:480px){
-            .login-card{padding:32px 24px}
-            .logo-text{font-size:28px}
-            .logo-icon{width:70px;height:70px;font-size:32px}
+            body{padding:16px}
+            .logo-icon{width:70px;height:70px;font-size:30px}
+            .logo-text{font-size:26px}
+            .login-card{padding:32px 24px;border-radius:20px}
+            .login-title{font-size:22px}
+            .form-group input{padding:13px 13px 13px 46px;font-size:14px}
+            .btn{padding:14px;font-size:14px}
             .form-options{flex-direction:column;align-items:flex-start}
+            .footer{padding:16px 12px;font-size:11px}
+        }
+        
+        /* Responsive PC */
+        @media(min-width:1024px){
+            .login-card{max-width:440px;padding:40px 36px}
+            .logo-icon{width:80px;height:80px;font-size:36px}
+            .logo-text{font-size:32px}
+        }
+        
+        /* Safe Area para iPhone X+ */
+        @supports(padding: max(0px)){
+            body{padding-left:max(20px, env(safe-area-inset-left));padding-right:max(20px, env(safe-area-inset-right))}
+            .footer{padding-bottom:max(20px, env(safe-area-inset-bottom))}
         }
         
         .form-group.error input{border-color:var(--danger)}
         .error-message{
-            color:var(--danger);font-size:13px;margin-top:8px;display:none
+            color:var(--danger);font-size:12px;margin-top:6px;display:none
         }
         .form-group.error .error-message{display:block}
     </style>
@@ -211,97 +245,108 @@
     <!-- Partículas -->
     <div class="particles" id="particles"></div>
 
-    <!-- Logo -->
-    <div class="brand">
-        <div class="logo-icon"><i class="fas fa-bolt"></i></div>
-        <div class="logo-text">BuyCrafting</div>
-        <div class="logo-subtitle">Panel de Administración</div>
+    <!-- Contenido Principal -->
+    <div class="main-content">
+        <!-- Logo -->
+        <div class="brand">
+            <div class="logo-icon"><i class="fas fa-bolt"></i></div>
+            <div class="logo-text">BuyCrafting</div>
+            <div class="logo-subtitle">Panel de Administración</div>
+        </div>
+
+        <!-- Login Card -->
+        <div class="login-card">
+            <div class="login-header">
+                <h1 class="login-title">Bienvenido de nuevo</h1>
+                <p class="login-subtitle">Ingresa tus credenciales para gestionar tu tienda</p>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group" id="emailGroup">
+                    <label for="email"><i class="fas fa-envelope"></i> Email del Servidor</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="email" placeholder="admin@miserver.com" autocomplete="email" required>
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="error-message">Por favor ingresa un email válido</div>
+                </div>
+
+                <div class="form-group" id="passwordGroup">
+                    <label for="password"><i class="fas fa-lock"></i> Contraseña</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required minlength="6">
+                        <i class="fas fa-key"></i>
+                        <button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Mostrar contraseña">
+                            <i class="fas fa-eye" id="eyeIcon"></i>
+                        </button>
+                    </div>
+                    <div class="error-message">La contraseña debe tener al menos 6 caracteres</div>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="remember">
+                        <span>Recordar sesión</span>
+                    </label>
+                    <a href="#" class="forgot-link" onclick="showNotification('Contacta al soporte para recuperar acceso');return false;">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                <button type="submit" class="btn" id="loginBtn">
+                    <span class="spinner"></span>
+                    <span class="btn-text">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Iniciar Sesión
+                    </span>
+                </button>
+                
+                <div class="error" id="errorMsg">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="errorText"></span>
+                </div>
+                <div class="success" id="successMsg">
+                    <i class="fas fa-check-circle"></i>
+                    <span id="successText"></span>
+                </div>
+            </form>
+
+            <div class="divider"><span>o</span></div>
+
+            <div style="text-align:center">
+                <a href="register.html" class="btn" style="background:var(--bg-hover);border:1px solid var(--border);box-shadow:none">
+                    <i class="fas fa-user-plus"></i>
+                    Crear Nueva Tienda
+                </a>
+            </div>
+
+            <div class="info">
+                <i class="fas fa-info-circle"></i> 
+                <strong>¿Eres nuevo?</strong> Regístrate gratis para crear tu tienda de Minecraft. 
+                Recibirás un token único para conectar tu plugin.
+            </div>
+
+            <div class="security-badge">
+                <i class="fas fa-shield-alt"></i>
+                <span>Conexión segura • Datos encriptados • Firebase Auth</span>
+            </div>
+
+            <div class="server-status">
+                <div class="status-dot"></div>
+                <span>Sistema en línea • Firebase conectado</span>
+            </div>
+        </div>
     </div>
 
-    <!-- Login Card -->
-    <div class="login-card">
-        <div class="login-header">
-            <h1 class="login-title">Bienvenido de nuevo</h1>
-            <p class="login-subtitle">Ingresa tus credenciales para gestionar tu tienda</p>
-        </div>
-
-        <form id="loginForm" onsubmit="handleLogin(event)">
-            <div class="form-group" id="emailGroup">
-                <label for="email"><i class="fas fa-envelope"></i> Email del Servidor</label>
-                <div class="input-wrapper">
-                    <input type="email" id="email" placeholder="admin@miserver.com" autocomplete="email" required>
-                    <i class="fas fa-user"></i>
-                </div>
-                <div class="error-message">Por favor ingresa un email válido</div>
-            </div>
-
-            <div class="form-group" id="passwordGroup">
-                <label for="password"><i class="fas fa-lock"></i> Contraseña</label>
-                <div class="input-wrapper">
-                    <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required minlength="6">
-                    <i class="fas fa-key"></i>
-                    <button type="button" class="password-toggle" onclick="togglePassword()">
-                        <i class="fas fa-eye" id="eyeIcon"></i>
-                    </button>
-                </div>
-                <div class="error-message">La contraseña debe tener al menos 6 caracteres</div>
-            </div>
-
-            <div class="form-options">
-                <label class="remember-me">
-                    <input type="checkbox" id="remember">
-                    <span>Recordar sesión</span>
-                </label>
-                <a href="#" class="forgot-link" onclick="showNotification('Contacta al soporte para recuperar acceso');return false;">¿Olvidaste tu contraseña?</a>
-            </div>
-
-            <button type="submit" class="btn" id="loginBtn">
-                <span class="spinner"></span>
-                <span class="btn-text">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Iniciar Sesión
-                </span>
-            </button>
-            
-            <div class="error" id="errorMsg">
-                <i class="fas fa-exclamation-circle"></i>
-                <span id="errorText"></span>
-            </div>
-            <div class="success" id="successMsg">
-                <i class="fas fa-check-circle"></i>
-                <span id="successText"></span>
-            </div>
-        </form>
-
-        <div class="divider"><span>o</span></div>
-
-        <div style="text-align:center">
-            <a href="register.html" class="btn" style="background:var(--bg-hover);border:1px solid var(--border);box-shadow:none">
-                <i class="fas fa-user-plus"></i>
-                Crear Nueva Tienda
-            </a>
-        </div>
-
-        <div class="info">
-            <i class="fas fa-info-circle"></i> 
-            <strong>¿Eres nuevo?</strong> Regístrate gratis para crear tu tienda de Minecraft. 
-            Recibirás un token único para conectar tu plugin.
-        </div>
-
-        <div class="security-badge">
-            <i class="fas fa-shield-alt"></i>
-            <span>Conexión segura • Datos encriptados • Firebase Auth</span>
-        </div>
-
-        <div class="server-status">
-            <div class="status-dot"></div>
-            <span>Sistema en línea • Firebase conectado</span>
-        </div>
-    </div>
+    <!-- Footer con Copyright -->
+    <footer class="footer">
+        <p>
+            © Todos los derechos reservados. Hecho con <span class="footer-heart">❤</span> por 
+            <a href="https://youtube.com/@soyadrianyt001" target="_blank" rel="noopener">soyadrianyt001</a> 2026
+        </p>
+    </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-        import { getFirestore, collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+        import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCIGXn0zND_8A_nD6NPxx1txYFQzrhM9hg",
@@ -315,10 +360,14 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // Flag para evitar redirección múltiple
+        let isRedirecting = false;
+
         // Crear Partículas
         function createParticles(){
             const container = document.getElementById('particles');
-            for(let i=0;i<25;i++){
+            if(!container) return;
+            for(let i=0;i<20;i++){
                 const p = document.createElement('div');
                 p.className = 'particle';
                 p.style.left = Math.random()*100+'%';
@@ -368,12 +417,12 @@
         window.showNotification = function(msg, type='error'){
             const el = type==='error' ? document.getElementById('errorMsg') : document.getElementById('successMsg');
             const textEl = type==='error' ? document.getElementById('errorText') : document.getElementById('successText');
-            textEl.innerText = msg;
+            textEl.textContent = msg;
             el.className = type==='error' ? 'error show' : 'success show';
             setTimeout(()=>{el.className = type==='error' ? 'error' : 'success'},5000);
         };
 
-        // Manejar Login
+        // Manejar Login - SIN BUCLE
         window.handleLogin = async function(e){
             e.preventDefault();
             
@@ -420,16 +469,16 @@
                     buycrafting_email: serverData.ownerEmail
                 };
                 
-                if(remember){
-                    Object.entries(sessionData).forEach(([k,v]) => localStorage.setItem(k,v));
-                } else {
-                    Object.entries(sessionData).forEach(([k,v]) => sessionStorage.setItem(k,v));
-                }
+                const storage = remember ? localStorage : sessionStorage;
+                Object.entries(sessionData).forEach(([k,v]) => storage.setItem(k,v));
 
-                // Redirigir al dashboard
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1500);
+                // ✅ REDIRECCIÓN SEGURA (sin bucle)
+                if(!isRedirecting){
+                    isRedirecting = true;
+                    setTimeout(() => {
+                        window.location.replace('index.html'); // replace evita que el usuario pueda volver con "atrás"
+                    }, 1200);
+                }
 
             } catch(error){
                 console.error('Login error:', error);
@@ -439,14 +488,18 @@
             }
         };
 
-        // Auto-login si hay sesión guardada
+        // ✅ Auto-login CORREGIDO (sin bucle infinito)
         function checkExistingSession(){
+            // Solo verificar si estamos EN login.html
+            if(!window.location.pathname.includes('login.html')) return;
+            
             const auth = localStorage.getItem('buycrafting_auth') || sessionStorage.getItem('buycrafting_auth');
-            if(auth === 'true'){
-                // Verificar que los datos existen
+            if(auth === 'true' && !isRedirecting){
                 const serverId = localStorage.getItem('buycrafting_serverId') || sessionStorage.getItem('buycrafting_serverId');
                 if(serverId){
-                    window.location.href = 'index.html';
+                    isRedirecting = true;
+                    // Usar replace para evitar bucle con botón atrás
+                    window.location.replace('index.html');
                 }
             }
         }
@@ -461,12 +514,14 @@
         });
 
         // Inicializar
-        createParticles();
-        checkExistingSession();
-        
-        // Focus en el primer input
-        window.addEventListener('load', () => {
-            document.getElementById('email')?.focus();
+        document.addEventListener('DOMContentLoaded', function(){
+            createParticles();
+            checkExistingSession();
+            
+            // Focus en el primer input (con delay para iOS)
+            setTimeout(() => {
+                document.getElementById('email')?.focus();
+            }, 300);
         });
     </script>
 </body>
