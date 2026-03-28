@@ -3,1170 +3,991 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cargando Tienda...</title>
+    <title>Admin Panel - BuyCrafting Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         :root{
-            --primary:#6366f1;--primary-dark:#4f46e5;--secondary:#10b981;
-            --bg:#0a0e1a;--bg-secondary:#111827;--bg-card:#1e293b;
-            --text:#f8fafc;--text-muted:#94a3b8;--border:#334155;
-            --gradient:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#a855f7 100%);
-            --shadow:0 10px 40px rgba(0,0,0,0.5)
+            --primary:#6366f1;--secondary:#10b981;--danger:#ef4444;
+            --warning:#f59e0b;--info:#3b82f6;--bg:#0a0e1a;
+            --bg-card:#1e293b;--text:#f8fafc;--text-muted:#94a3b8;
+            --border:#334155;--gradient:linear-gradient(135deg,#6366f1 0%,#a855f7 100%)
         }
         body{
-            font-family:'Inter',sans-serif;background:var(--bg);
-            color:var(--text);min-height:100vh;line-height:1.6
+            font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+            background:var(--bg);color:var(--text);min-height:100vh
         }
         
-        /* Header con animaciones */
-        .store-header{
-            padding:60px 20px;text-align:center;position:relative;overflow:hidden;
-            background:var(--gradient);transition:all 0.3s
+        /* Header */
+        .header{
+            position:fixed;top:0;left:0;right:0;height:70px;
+            background:var(--bg-card);border-bottom:1px solid var(--border);
+            display:flex;align-items:center;justify-content:space-between;
+            padding:0 24px;z-index:1000;backdrop-filter:blur(10px)
+        }
+        .menu-toggle{
+            width:50px;height:50px;border:none;background:transparent;
+            color:var(--text);font-size:24px;cursor:pointer;
+            display:flex;align-items:center;justify-content:center;
+            border-radius:12px;transition:all 0.3s
+        }
+        .menu-toggle:hover{background:rgba(99,102,241,0.1);color:var(--primary)}
+        .header-title{
+            font-size:20px;font-weight:700;background:var(--gradient);
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+            display:flex;align-items:center;gap:10px
+        }
+        .header-actions{display:flex;align-items:center;gap:12px}
+        .header-btn{
+            width:44px;height:44px;border-radius:12px;border:none;
+            background:rgba(99,102,241,0.1);color:var(--primary);
+            cursor:pointer;transition:all 0.3s;display:flex;
+            align-items:center;justify-content:center;position:relative
+        }
+        .header-btn:hover{background:var(--primary);color:white}
+        .badge{
+            position:absolute;top:-2px;right:-2px;width:18px;height:18px;
+            background:var(--danger);color:white;border-radius:50%;
+            font-size:11px;font-weight:700;display:flex;
+            align-items:center;justify-content:center
         }
         
-        /* Animaciones de fondo */
-        .anim-glow{animation:glowPulse 4s ease-in-out infinite}
-        @keyframes glowPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.15)}}
-        
-        .anim-particles::before{
-            content:'';position:absolute;top:0;left:0;right:0;bottom:0;
-            background-image:radial-gradient(circle at 20% 35%,rgba(255,255,255,0.1) 0%,transparent 50%),
-                           radial-gradient(circle at 80% 70%,rgba(255,255,255,0.08) 0%,transparent 50%);
-            animation:float 20s ease-in-out infinite
+        /* Sidebar */
+        .sidebar{
+            position:fixed;left:-320px;top:70px;width:320px;
+            height:calc(100vh - 70px);background:var(--bg-card);
+            border-right:1px solid var(--border);padding:24px;
+            overflow-y:auto;transition:left 0.3s;z-index:999
         }
-        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
-        
-        .anim-waves::after{
-            content:'';position:absolute;bottom:-30%;left:0;right:0;height:150px;
-            background:radial-gradient(ellipse at center,rgba(255,255,255,0.1) 0%,transparent 70%);
-            animation:wave 6s ease-in-out infinite
+        .sidebar.active{left:0}
+        .sidebar-overlay{
+            position:fixed;top:70px;left:0;right:0;bottom:0;
+            background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);
+            z-index:998;display:none
         }
-        @keyframes wave{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-        
-        .anim-shine{position:relative;overflow:hidden}
-        .anim-shine::before{
-            content:'';position:absolute;top:-100%;left:-100%;right:-100%;bottom:-100%;
-            background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,0.25) 50%,transparent 60%);
-            animation:shine 3s ease-in-out infinite
+        .sidebar-overlay.active{display:block}
+        .sidebar-section{margin-bottom:24px}
+        .sidebar-title{
+            font-size:11px;font-weight:600;color:var(--text-muted);
+            text-transform:uppercase;letter-spacing:1px;
+            margin-bottom:12px;padding:0 16px
         }
-        @keyframes shine{0%{transform:translateX(-100%) rotate(45deg)}100%{transform:translateX(100%) rotate(45deg)}}
-        
-        .store-logo{
-            width:100px;height:100px;background:rgba(255,255,255,0.15);
-            border-radius:20px;display:flex;align-items:center;justify-content:center;
-            margin:0 auto 20px;font-size:48px;backdrop-filter:blur(10px);
-            border:2px solid rgba(255,255,255,0.25)
+        .nav-item{
+            padding:14px 16px;margin-bottom:6px;border-radius:12px;
+            cursor:pointer;transition:all 0.3s;display:flex;
+            align-items:center;gap:12px;color:var(--text-muted);
+            font-size:14px;font-weight:500
         }
-        .store-logo img{width:100%;height:100%;object-fit:contain;border-radius:20px}
-        
-        .store-title{
-            font-size:36px;font-weight:800;margin-bottom:8px;color:var(--text);
-            text-shadow:0 2px 20px rgba(0,0,0,0.3)
+        .nav-item:hover{background:rgba(99,102,241,0.1);color:var(--primary)}
+        .nav-item.active{
+            background:var(--gradient);color:white;
+            box-shadow:0 4px 15px rgba(99,102,241,0.4)
+        }
+        .nav-item i{width:20px;text-align:center;font-size:16px}
+        .nav-item .badge{
+            position:static;width:auto;height:auto;background:rgba(255,255,255,0.2);
+            padding:2px 8px;border-radius:10px;font-size:11px
         }
         
-        /* Animaciones de título */
-        .title-anim-gradient{
-            background:linear-gradient(90deg,var(--text),var(--primary),var(--text));
-            background-size:200% auto;-webkit-background-clip:text;
-            -webkit-text-fill-color:transparent;background-clip:text;
-            animation:gradientShift 3s linear infinite
+        /* Main Content */
+        .main-content{
+            margin-top:70px;padding:32px;min-height:calc(100vh - 70px)
         }
-        @keyframes gradientShift{0%{background-position:0% center}100%{background-position:200% center}}
-        
-        .title-anim-glow{animation:textGlow 2s ease-in-out infinite alternate}
-        @keyframes textGlow{
-            from{text-shadow:0 0 10px rgba(99,102,241,0.5)}
-            to{text-shadow:0 0 25px rgba(99,102,241,0.9),0 0 45px rgba(99,102,241,0.5)}
+        .page-header{
+            margin-bottom:32px;display:flex;
+            justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px
         }
+        .page-header h1{font-size:32px;margin-bottom:8px}
+        .page-header p{color:var(--text-muted)}
         
-        .title-anim-pulse{animation:titlePulse 2s ease-in-out infinite}
-        @keyframes titlePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
-        
-        /* ======================================== */
-        /* ✅ PALOMITA DE VERIFICACIÓN ANIMADA */
-        /* ======================================== */
-        .verified-badge{
-            display:inline-flex;
-            align-items:center;
-            margin-left:8px;
-            cursor:help
+        /* Stats Grid */
+        .stats-grid{
+            display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+            gap:20px;margin-bottom:32px
         }
-        .verified-icon{
-            color:#1da1f2;
-            font-size:18px;
-            animation:verifiedPulse 2s ease-in-out infinite, verifiedGlow 3s ease-in-out infinite;
-            filter:drop-shadow(0 0 8px rgba(29,161,242,0.6));
+        .stat-card{
+            background:var(--bg-card);border:1px solid var(--border);
+            border-radius:16px;padding:24px;transition:all 0.3s;
+            position:relative;overflow:hidden
+        }
+        .stat-card::before{
+            content:'';position:absolute;top:0;left:0;right:0;height:3px;
+            background:var(--gradient);transform:scaleX(0);
             transition:transform 0.3s
         }
-        .verified-icon:hover{
-            transform:scale(1.2)
+        .stat-card:hover{
+            transform:translateY(-4px);border-color:var(--primary);
+            box-shadow:0 10px 40px rgba(99,102,241,0.2)
         }
-        @keyframes verifiedPulse{
-            0%,100%{transform:scale(1)}
-            50%{transform:scale(1.15)}
+        .stat-card:hover::before{transform:scaleX(1)}
+        .stat-card-header{
+            display:flex;justify-content:space-between;
+            align-items:center;margin-bottom:12px
         }
-        @keyframes verifiedGlow{
-            0%,100%{filter:drop-shadow(0 0 8px rgba(29,161,242,0.6))}
-            50%{filter:drop-shadow(0 0 20px rgba(29,161,242,1))}
+        .stat-card-icon{
+            width:48px;height:48px;border-radius:12px;
+            display:flex;align-items:center;justify-content:center;
+            font-size:24px;background:rgba(99,102,241,0.1);color:var(--primary)
         }
+        .stat-card-value{
+            font-size:32px;font-weight:800;margin-bottom:4px
+        }
+        .stat-card-label{color:var(--text-muted);font-size:14px}
+        .stat-card-change{
+            font-size:12px;margin-top:8px;display:flex;align-items:center;gap:4px
+        }
+        .stat-card-change.positive{color:var(--secondary)}
+        .stat-card-change.negative{color:var(--danger)}
         
-        /* ======================================== */
-        /* ✅ BADGE DE PLAN */
-        /* ======================================== */
-        .plan-badge{
-            display:inline-flex;
-            align-items:center;
-            gap:6px;
-            padding:6px 14px;
-            border-radius:20px;
-            font-size:12px;
-            font-weight:700;
-            margin-left:12px;
-            text-transform:uppercase;
-            letter-spacing:0.5px
+        /* Cards */
+        .card{
+            background:var(--bg-card);border:1px solid var(--border);
+            border-radius:16px;padding:24px;margin-bottom:24px
         }
-        .plan-badge.free{
-            background:rgba(107,114,128,0.2);
-            color:#9ca3af;
-            border:1px solid #6b7280
+        .card-header{
+            display:flex;justify-content:space-between;
+            align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px
         }
-        .plan-badge.premium{
-            background:rgba(99,102,241,0.2);
-            color:#818cf8;
-            border:1px solid #6366f1
-        }
-        .plan-badge.vip{
-            background:rgba(16,185,129,0.2);
-            color:#34d399;
-            border:1px solid #10b981
-        }
-        .plan-badge.enterprise{
-            background:rgba(245,158,11,0.2);
-            color:#fbbf24;
-            border:1px solid #f59e0b
-        }
+        .card-header h3{font-size:20px;display:flex;align-items:center;gap:10px}
+        .card-header h3 i{color:var(--primary)}
         
-        .published-by{
-            font-size:14px;
-            color:rgba(255,255,255,0.85);
-            margin:8px 0 12px;
-            font-weight:500;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            gap:4px;
-            flex-wrap:wrap
-        }
-        .published-by i{margin-right:6px;color:var(--primary)}
+        /* Grid Layouts */
+        .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+        .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+        .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+        @media(max-width:1024px){.grid-4{grid-template-columns:repeat(2,1fr)}}
+        @media(max-width:768px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
         
-        .store-desc{font-size:16px;color:rgba(255,255,255,0.9);max-width:550px;margin:0 auto}
-        
-        /* Botones personalizados */
-        .custom-buttons{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:20px}
-        .custom-btn{
-            padding:12px 24px;border-radius:12px;font-size:14px;font-weight:600;
-            text-decoration:none;display:inline-flex;align-items:center;gap:8px;
-            transition:all 0.3s;border:none;cursor:pointer
+        /* Lists */
+        .item-list{display:flex;flex-direction:column;gap:12px}
+        .item-card{
+            background:var(--bg);border:1px solid var(--border);
+            border-radius:12px;padding:20px;display:grid;
+            grid-template-columns:1fr auto auto;gap:20px;
+            align-items:center;transition:all 0.3s
         }
-        .custom-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.3)}
-        
-        /* ======================================== */
-        /* 🎨 PRODUCTOS - VERSIÓN PREMIUM ULTRA */
-        /* ======================================== */
-        .products-section{
-            padding:60px 20px;
-            max-width:1300px;
-            margin:0 auto;
-            background:linear-gradient(180deg, var(--bg) 0%, var(--bg-secondary) 100%)
-        }
-        .products-title{
-            font-size:34px;
-            font-weight:800;
-            margin-bottom:50px;
-            text-align:center;
-            background:linear-gradient(135deg, var(--primary) 0%, #a855f7 50%, var(--primary) 100%);
-            -webkit-background-clip:text;
-            -webkit-text-fill-color:transparent;
-            background-clip:text;
-            animation:titleGlow 3s ease-in-out infinite;
-            position:relative;
-            display:inline-block;
-            left:50%;
-            transform:translateX(-50%)
-        }
-        @keyframes titleGlow{
-            0%,100%{filter:brightness(1); text-shadow:0 0 20px rgba(99,102,241,0.3)}
-            50%{filter:brightness(1.3); text-shadow:0 0 40px rgba(99,102,241,0.6)}
-        }
-        .products-title::after{
-            content:'';
-            position:absolute;
-            bottom:-10px;
-            left:50%;
-            transform:translateX(-50%);
-            width:100px;
-            height:4px;
-            background:var(--gradient);
-            border-radius:2px;
-            animation:shimmer 2s infinite
-        }
-        @keyframes shimmer{
-            0%{opacity:0.5; width:60px}
-            50%{opacity:1; width:120px}
-            100%{opacity:0.5; width:60px}
-        }
-        .products-grid{
-            display:grid;
-            grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
-            gap:30px
-        }
-
-        /* 🔥 TARJETA PREMIUM - FORZAR OSCURO */
-        .product-card{
-            background:linear-gradient(145deg, #1e293b 0%, #0f172a 100%) !important;
-            border:2px solid rgba(99,102,241,0.2);
-            border-radius:24px;
-            overflow:hidden;
-            transition:all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position:relative;
-            box-shadow:0 10px 40px rgba(0,0,0,0.5), 
-                       inset 0 1px 0 rgba(255,255,255,0.1);
-            display:flex;
-            flex-direction:column;
-            backdrop-filter:blur(10px)
-        }
-
-        .product-card::before{
-            content:'';
-            position:absolute;
-            top:0;
-            left:0;
-            right:0;
-            height:3px;
-            background:linear-gradient(90deg, #6366f1, #a855f7, #6366f1, #a855f7, #6366f1);
-            background-size:300% 100%;
-            animation:borderShine 4s linear infinite;
-            opacity:0;
-            transition:opacity 0.3s
-        }
-        .product-card:hover::before{
-            opacity:1
-        }
-        @keyframes borderShine{
-            0%{background-position:0% 50%}
-            100%{background-position:300% 50%}
-        }
-
-        .product-card:hover{
-            transform:translateY(-12px) scale(1.03);
-            border-color:#6366f1;
-            box-shadow:0 25px 80px rgba(99,102,241,0.5), 
-                       0 0 60px rgba(99,102,241,0.2), 
-                       inset 0 1px 0 rgba(255,255,255,0.15);
-            filter:brightness(1.1)
-        }
-
-        .product-badge{
-            position:absolute;
-            top:16px;
-            right:16px;
-            background:linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
-            color:white;
-            padding:8px 16px;
-            border-radius:24px;
-            font-size:11px;
-            font-weight:700;
-            text-transform:uppercase;
-            letter-spacing:0.8px;
-            box-shadow:0 6px 20px rgba(245,158,11,0.5);
-            animation:badgePulse 2.5s ease-in-out infinite;
-            z-index:10;
-            display:flex;
-            align-items:center;
-            gap:6px
-        }
-        @keyframes badgePulse{
-            0%,100%{transform:scale(1); box-shadow:0 6px 20px rgba(245,158,11,0.5)}
-            50%{transform:scale(1.08); box-shadow:0 8px 25px rgba(245,158,11,0.7)}
-        }
-        .product-badge.popular{
-            background:linear-gradient(135deg, #ef4444 0%, #f97316 100%);
-            box-shadow:0 6px 20px rgba(239,68,68,0.5)
-        }
-        .product-badge.new{
-            background:linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
-            box-shadow:0 6px 20px rgba(16,185,129,0.5)
-        }
-        .product-badge.discount{
-            background:linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
-            box-shadow:0 6px 20px rgba(139,92,246,0.5)
-        }
-
-        .product-icon{
-            width:100%;
-            height:180px;
-            background:linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(168,85,247,0.1) 100%);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-size:64px;
-            position:relative;
-            overflow:hidden;
-            border-bottom:1px solid rgba(99,102,241,0.15)
-        }
-        .product-icon::after{
-            content:'';
-            position:absolute;
-            top:-50%;
-            left:-50%;
-            width:200%;
-            height:200%;
-            background:radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 60%);
-            animation:iconGlow 5s ease-in-out infinite;
-            pointer-events:none
-        }
-        @keyframes iconGlow{
-            0%,100%{transform:scale(1); opacity:0.4}
-            50%{transform:scale(1.2); opacity:0.8}
-        }
-        .product-icon img{
-            max-width:85%;
-            max-height:85%;
-            object-fit:contain;
-            position:relative;
-            z-index:1;
-            filter:drop-shadow(0 8px 24px rgba(99,102,241,0.4));
-            transition:transform 0.4s;
-            border-radius:12px
-        }
-        .product-card:hover .product-icon img{
-            transform:scale(1.1) rotate(3deg)
-        }
-
-        .product-info{
-            padding:28px;
-            flex:1;
-            display:flex;
-            flex-direction:column;
-            background:transparent !important
-        }
-        .product-name{
-            font-size:24px;
-            font-weight:700;
-            margin-bottom:10px;
-            background:linear-gradient(135deg, #f8fafc 0%, #6366f1 100%);
-            -webkit-background-clip:text;
-            -webkit-text-fill-color:transparent;
-            background-clip:text;
-            line-height:1.3;
-            text-transform:capitalize
-        }
-        .product-desc{
-            font-size:15px;
-            color:#94a3b8;
-            margin-bottom:20px;
-            line-height:1.6;
-            flex:1
-        }
-
-        .product-footer{
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            padding-top:20px;
-            border-top:1px solid rgba(99,102,241,0.2);
-            margin-top:auto
-        }
-        .product-price{
-            font-size:28px;
-            font-weight:800;
-            background:linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            -webkit-background-clip:text;
-            -webkit-text-fill-color:transparent;
-            background-clip:text
-        }
-        .product-price::before{
-            content:'$';
-            font-size:20px;
-            margin-right:2px
-        }
-
-        .buy-btn{
-            background:linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            color:white;
-            padding:14px 28px;
-            border:none;
-            border-radius:14px;
-            font-size:15px;
-            font-weight:700;
-            cursor:pointer;
-            transition:all 0.3s;
-            display:flex;
-            align-items:center;
-            gap:10px;
-            position:relative;
-            overflow:hidden;
-            box-shadow:0 6px 20px rgba(99,102,241,0.4)
-        }
-        .buy-btn::before{
-            content:'';
-            position:absolute;
-            top:0;
-            left:-100%;
-            width:100%;
-            height:100%;
-            background:linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition:left 0.5s
-        }
-        .buy-btn:hover::before{
-            left:100%
-        }
-        .buy-btn:hover{
-            transform:scale(1.06);
-            box-shadow:0 10px 30px rgba(99,102,241,0.6), 0 0 40px rgba(99,102,241,0.3)
-        }
-        .buy-btn:active{
-            transform:scale(0.98)
-        }
-        .buy-btn i{
-            transition:transform 0.3s
-        }
-        .buy-btn:hover i{
-            transform:translateX(3px)
-        }
-
-        .product-card::after{
-            content:'';
-            position:absolute;
-            top:0;
-            left:0;
-            right:0;
-            bottom:0;
-            background:linear-gradient(135deg, transparent 0%, rgba(99,102,241,0.05) 50%, transparent 100%);
-            opacity:0;
-            transition:opacity 0.4s;
-            pointer-events:none;
-            border-radius:24px
-        }
-        .product-card:hover::after{
-            opacity:1
-        }
-        
-        /* ======================================== */
-        /* 💳 CHECKOUT MODAL - PROFESIONAL */
-        /* ======================================== */
-        .checkout-modal{
-            position:fixed;
-            top:0;
-            left:0;
-            right:0;
-            bottom:0;
-            z-index:9999;
-            display:none;
-            align-items:center;
-            justify-content:center;
-            padding:20px;
-            animation:modalFadeIn 0.3s ease-out
-        }
-        @keyframes modalFadeIn{
-            from{opacity:0}
-            to{opacity:1}
-        }
-        .checkout-overlay{
-            position:absolute;
-            top:0;
-            left:0;
-            right:0;
-            bottom:0;
-            background:rgba(0,0,0,0.85);
-            backdrop-filter:blur(8px)
-        }
-        .checkout-content{
-            position:relative;
-            background:linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
-            border:2px solid rgba(99,102,241,0.3);
-            border-radius:24px;
-            max-width:550px;
-            width:100%;
-            max-height:90vh;
-            overflow-y:auto;
-            box-shadow:0 25px 100px rgba(99,102,241,0.5), 0 0 60px rgba(99,102,241,0.3);
-            animation:modalSlideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)
-        }
-        @keyframes modalSlideUp{
-            from{
-                opacity:0;
-                transform:translateY(50px) scale(0.9)
-            }
-            to{
-                opacity:1;
-                transform:translateY(0) scale(1)
-            }
-        }
-        .checkout-close{
-            position:absolute;
-            top:16px;
-            right:16px;
-            width:40px;
-            height:40px;
-            border-radius:12px;
-            border:none;
-            background:rgba(255,255,255,0.1);
-            color:var(--text);
-            font-size:18px;
-            cursor:pointer;
-            transition:all 0.3s;
-            z-index:10;
-            display:flex;
-            align-items:center;
-            justify-content:center
-        }
-        .checkout-close:hover{
-            background:var(--danger);
-            transform:rotate(90deg) scale(1.1)
-        }
-        .checkout-header{
-            text-align:center;
-            padding:40px 24px 24px;
-            background:linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(168,85,247,0.15) 100%);
-            border-bottom:1px solid rgba(99,102,241,0.2)
-        }
-        .checkout-icon{
-            width:90px;
-            height:90px;
-            margin:0 auto 20px;
-            background:var(--gradient);
-            border-radius:50%;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-size:42px;
-            color:white;
-            box-shadow:0 10px 40px rgba(99,102,241,0.5), 0 0 60px rgba(99,102,241,0.3);
-            animation:iconPulse 2s ease-in-out infinite
-        }
-        @keyframes iconPulse{
-            0%,100%{transform:scale(1); box-shadow:0 10px 40px rgba(99,102,241,0.5)}
-            50%{transform:scale(1.05); box-shadow:0 15px 50px rgba(99,102,241,0.7)}
-        }
-        .checkout-header h2{
-            font-size:28px;
-            margin-bottom:8px;
-            background:linear-gradient(135deg, #f8fafc 0%, #a855f7 100%);
-            -webkit-background-clip:text;
-            -webkit-text-fill-color:transparent;
-            font-weight:800
-        }
-        .checkout-header p{
-            color:var(--text-muted);
-            font-size:15px
-        }
-        .checkout-body{
-            padding:28px
-        }
-        .checkout-product{
-            background:linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(168,85,247,0.1) 100%);
-            border:2px solid rgba(99,102,241,0.3);
-            border-radius:16px;
-            padding:24px;
-            margin-bottom:28px;
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            box-shadow:0 8px 24px rgba(0,0,0,0.3)
-        }
-        .checkout-product-info h3{
-            font-size:20px;
-            margin-bottom:6px;
-            color:var(--text);
-            font-weight:700
-        }
-        .checkout-product-info p{
-            font-size:14px;
-            color:var(--text-muted)
-        }
-        .checkout-product-price{
-            font-size:32px;
-            font-weight:800;
-            background:var(--gradient);
-            -webkit-background-clip:text;
-            -webkit-text-fill-color:transparent;
-            white-space:nowrap
-        }
-        .checkout-form .form-group{
-            margin-bottom:22px
-        }
-        .checkout-form label{
-            display:flex;
-            align-items:center;
-            gap:10px;
-            margin-bottom:10px;
-            font-size:14px;
-            color:var(--text-muted);
-            font-weight:600
-        }
-        .checkout-form label i{
-            color:var(--primary);
-            font-size:16px
-        }
-        .checkout-form input{
-            width:100%;
-            padding:16px 18px;
-            background:var(--bg);
-            border:2px solid var(--border);
-            border-radius:14px;
-            color:var(--text);
-            font-size:15px;
-            transition:all 0.3s;
-            font-family:inherit
-        }
-        .checkout-form input:focus{
-            outline:none;
+        .item-card:hover{
             border-color:var(--primary);
-            box-shadow:0 0 0 5px rgba(99,102,241,0.15);
-            background:rgba(99,102,241,0.05)
+            box-shadow:0 4px 20px rgba(99,102,241,0.2)
         }
-        .checkout-form input::placeholder{
-            color:var(--text-muted)
+        .item-info h4{margin-bottom:4px;font-size:16px}
+        .item-info p{color:var(--text-muted);font-size:13px;margin-bottom:2px}
+        
+        /* Badges */
+        .badge-plan{
+            display:inline-flex;align-items:center;gap:8px;
+            padding:8px 16px;border-radius:20px;
+            font-size:12px;font-weight:700
         }
-        .payment-methods{
-            margin:28px 0
+        .badge-plan.free{
+            background:rgba(107,114,128,0.2);color:#9ca3af;border:1px solid #6b7280
         }
-        .payment-methods h4{
-            display:flex;
-            align-items:center;
-            gap:10px;
-            margin-bottom:18px;
-            font-size:15px;
-            color:var(--text);
-            font-weight:700
+        .badge-plan.premium{
+            background:rgba(99,102,241,0.2);color:#818cf8;border:1px solid #6366f1
         }
-        .payment-methods h4 i{
-            color:var(--primary)
+        .badge-plan.vip{
+            background:rgba(16,185,129,0.2);color:#34d399;border:1px solid #10b981
         }
-        .payment-options{
-            display:grid;
-            grid-template-columns:1fr 1fr;
-            gap:14px
+        .badge-plan.enterprise{
+            background:rgba(245,158,11,0.2);color:#fbbf24;border:1px solid #f59e0b
         }
-        .payment-option{
-            cursor:pointer
+        .badge-status{
+            padding:6px 12px;border-radius:20px;
+            font-size:11px;font-weight:600;text-transform:uppercase
         }
-        .payment-option input{
-            display:none
+        .badge-status.active{
+            background:rgba(16,185,129,0.2);color:var(--secondary)
         }
-        .payment-card{
-            background:var(--bg);
-            border:2px solid var(--border);
-            border-radius:14px;
-            padding:20px 16px;
-            text-align:center;
-            transition:all 0.3s;
-            position:relative;
-            overflow:hidden
+        .badge-status.pending{
+            background:rgba(245,158,11,0.2);color:var(--warning)
         }
-        .payment-card::before{
-            content:'';
-            position:absolute;
-            top:0;
-            left:0;
-            right:0;
-            height:3px;
-            background:var(--gradient);
-            transform:scaleX(0);
-            transition:transform 0.3s
-        }
-        .payment-option input:checked + .payment-card{
-            border-color:var(--primary);
-            background:rgba(99,102,241,0.1);
-            box-shadow:0 8px 24px rgba(99,102,241,0.3)
-        }
-        .payment-option input:checked + .payment-card::before{
-            transform:scaleX(1)
-        }
-        .payment-card i{
-            font-size:32px;
-            margin-bottom:10px;
-            background:var(--gradient);
-            -webkit-background-clip:text;
-            -webkit-text-fill-color:transparent
-        }
-        .payment-card span{
-            display:block;
-            font-size:14px;
-            font-weight:700;
-            color:var(--text)
-        }
-        .checkout-footer{
-            padding:28px;
-            background:rgba(0,0,0,0.3);
-            border-top:1px solid rgba(99,102,241,0.2)
-        }
-        .checkout-total{
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            margin-bottom:24px;
-            padding-bottom:24px;
-            border-bottom:2px solid var(--border)
-        }
-        .checkout-total span{
-            font-size:17px;
-            color:var(--text-muted);
-            font-weight:600
-        }
-        .checkout-total strong{
-            font-size:36px;
-            background:var(--gradient);
-            -webkit-background-clip:text;
-            -webkit-text-fill-color:transparent;
-            font-weight:800
-        }
-        .checkout-btn{
-            width:100%;
-            padding:20px;
-            background:var(--gradient);
-            border:none;
-            border-radius:16px;
-            color:white;
-            font-size:17px;
-            font-weight:800;
-            cursor:pointer;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            gap:12px;
-            transition:all 0.3s;
-            box-shadow:0 10px 40px rgba(99,102,241,0.5), 0 0 60px rgba(99,102,241,0.3);
-            position:relative;
-            overflow:hidden
-        }
-        .checkout-btn::before{
-            content:'';
-            position:absolute;
-            top:0;
-            left:-100%;
-            width:100%;
-            height:100%;
-            background:linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition:left 0.6s
-        }
-        .checkout-btn:hover::before{
-            left:100%
-        }
-        .checkout-btn:hover{
-            transform:translateY(-3px);
-            box-shadow:0 15px 50px rgba(99,102,241,0.7), 0 0 80px rgba(99,102,241,0.4)
-        }
-        .checkout-btn:active{
-            transform:translateY(-1px)
-        }
-        .checkout-btn i{
-            font-size:20px
-        }
-        .checkout-security{
-            text-align:center;
-            margin-top:20px;
-            font-size:13px;
-            color:var(--text-muted);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            gap:10px;
-            font-weight:500
-        }
-        .checkout-security i{
-            color:var(--secondary);
-            font-size:16px
-        }
-        @media(max-width:640px){
-            .checkout-content{
-                max-height:95vh
-            }
-            .payment-options{
-                grid-template-columns:1fr
-            }
-            .checkout-product{
-                flex-direction:column;
-                text-align:center;
-                gap:16px
-            }
-            .checkout-product-price{
-                font-size:28px
-            }
+        .badge-status.inactive{
+            background:rgba(239,68,68,0.2);color:var(--danger)
         }
         
-        /* ======================================== */
-        /* 🎁 GIFT CARDS - PREMIUM */
-        /* ======================================== */
-        .giftcards-section{
-            padding:60px 20px;
-            background:linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg) 100%)
+        /* Buttons */
+        .btn{
+            padding:12px 24px;border:none;border-radius:12px;
+            font-size:14px;font-weight:600;cursor:pointer;
+            transition:all 0.3s;display:inline-flex;
+            align-items:center;gap:8px
         }
-        .giftcards-title{
-            font-size:32px;
-            font-weight:800;
-            margin-bottom:12px;
-            text-align:center;
-            background:linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
-            -webkit-background-clip:text;
-            -webkit-text-fill-color:transparent;
-            background-clip:text
+        .btn-primary{
+            background:var(--gradient);color:white;
+            box-shadow:0 4px 15px rgba(99,102,241,0.4)
         }
-        .giftcards-desc{
-            text-align:center;
-            color:var(--text-muted);
-            margin-bottom:35px;
-            font-size:16px
-        }
-        .giftcards-grid{
-            display:grid;
-            grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-            gap:24px;
-            max-width:900px;
-            margin:0 auto
-        }
-        .giftcard{
-            background:var(--gradient);
-            border-radius:20px;
-            padding:28px 24px;
-            text-align:center;
-            cursor:pointer;
-            transition:all 0.4s;
-            border:2px solid rgba(255,255,255,0.2);
-            position:relative;
-            overflow:hidden
-        }
-        .giftcard::before{
-            content:'';
-            position:absolute;
-            top:-50%;
-            left:-50%;
-            width:200%;
-            height:200%;
-            background:radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
-            animation:giftGlow 4s ease-in-out infinite;
-            pointer-events:none
-        }
-        @keyframes giftGlow{
-            0%,100%{transform:scale(1); opacity:0.5}
-            50%{transform:scale(1.1); opacity:0.8}
-        }
-        .giftcard:hover{
-            transform:translateY(-8px) scale(1.04);
-            box-shadow:0 20px 50px rgba(99,102,241,0.5), 0 0 40px rgba(245,158,11,0.3);
-            border-color:rgba(255,255,255,0.5)
-        }
-        .giftcard-amount{
-            font-size:38px;
-            font-weight:800;
-            color:white;
-            margin-bottom:6px;
-            text-shadow:0 2px 20px rgba(0,0,0,0.3);
-            position:relative;
-            z-index:1
-        }
-        .giftcard-label{
-            font-size:14px;
-            color:rgba(255,255,255,0.95);
-            font-weight:500;
-            position:relative;
-            z-index:1
-        }
-        
-        /* ======================================== */
-        /* 🎫 REDEEM CODE - PREMIUM */
-        /* ======================================== */
-        .redeem-section{
-            padding:60px 20px;
-            background:linear-gradient(135deg, var(--bg-card) 0%, var(--bg-secondary) 100%)
-        }
-        .redeem-container{
-            max-width:500px;
-            margin:0 auto;
-            text-align:center
-        }
-        .redeem-title{
-            font-size:28px;
-            font-weight:700;
-            margin-bottom:12px;
-            background:linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
-            -webkit-background-clip:text;
-            -webkit-text-fill-color:transparent;
-            background-clip:text
-        }
-        .redeem-desc{
-            color:var(--text-muted);
-            margin-bottom:28px;
-            font-size:15px
-        }
-        .redeem-form{
-            display:flex;
-            gap:12px;
-            background:var(--bg);
-            padding:8px;
-            border-radius:16px;
-            border:2px solid var(--border)
-        }
-        .redeem-input{
-            flex:1;
-            padding:14px 20px;
-            background:transparent;
-            border:none;
-            border-radius:12px;
-            color:var(--text);
-            font-size:15px;
-            outline:none
-        }
-        .redeem-input::placeholder{
-            color:var(--text-muted)
-        }
-        .redeem-btn{
-            padding:14px 28px;
-            background:var(--gradient);
-            color:white;
-            border:none;
-            border-radius:12px;
-            font-weight:700;
-            cursor:pointer;
-            transition:all 0.3s;
-            display:flex;
-            align-items:center;
-            gap:8px
-        }
-        .redeem-btn:hover{
+        .btn-primary:hover{
             transform:translateY(-2px);
-            box-shadow:0 8px 25px rgba(99,102,241,0.5)
+            box-shadow:0 8px 25px rgba(99,102,241,0.6)
+        }
+        .btn-secondary{
+            background:var(--bg-card);color:var(--text);
+            border:1px solid var(--border)
+        }
+        .btn-secondary:hover{background:var(--bg-hover)}
+        .btn-danger{
+            background:rgba(239,68,68,0.15);color:var(--danger);
+            border:1px solid var(--danger)
+        }
+        .btn-danger:hover{background:var(--danger);color:white}
+        .btn-sm{padding:8px 16px;font-size:13px;border-radius:10px}
+        
+        /* Forms */
+        .form-group{margin-bottom:20px}
+        .form-group label{
+            display:block;margin-bottom:8px;font-size:14px;
+            font-weight:600;color:var(--text-muted)
+        }
+        .form-group input,.form-group select,.form-group textarea{
+            width:100%;padding:12px 16px;background:var(--bg);
+            border:1px solid var(--border);border-radius:12px;
+            color:var(--text);font-size:14px;transition:all 0.3s
+        }
+        .form-group input:focus,.form-group select:focus,.form-group textarea:focus{
+            outline:none;border-color:var(--primary);
+            box-shadow:0 0 0 3px rgba(99,102,241,0.1)
+        }
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+        
+        /* Tables */
+        .table-container{overflow-x:auto;margin-top:16px}
+        table{width:100%;border-collapse:collapse}
+        th{
+            text-align:left;padding:12px;color:var(--text-muted);
+            font-size:12px;text-transform:uppercase;
+            letter-spacing:0.5px;border-bottom:2px solid var(--border);
+            font-weight:600
+        }
+        td{
+            padding:16px 12px;border-bottom:1px solid var(--border);
+            font-size:14px;vertical-align:middle
+        }
+        tr:hover td{background:rgba(99,102,241,0.05)}
+        
+        /* Plan Selector */
+        .plan-selector{display:flex;gap:8px;align-items:center}
+        .plan-selector select{
+            padding:8px 12px;background:var(--bg);
+            border:1px solid var(--border);border-radius:8px;
+            color:var(--text);font-size:13px;cursor:pointer
+        }
+        .btn-apply{
+            padding:8px 16px;background:var(--gradient);
+            border:none;border-radius:8px;color:white;
+            font-size:13px;font-weight:600;cursor:pointer;
+            transition:all 0.3s
+        }
+        .btn-apply:hover{transform:scale(1.05)}
+        
+        /* Charts */
+        .chart-container{
+            position:relative;height:300px;margin-top:20px
         }
         
-        /* Footer */
-        .store-footer{
-            background:var(--bg-secondary);
-            padding:40px 20px;
-            text-align:center;
-            border-top:1px solid var(--border)
+        /* Activity Feed */
+        .activity-item{
+            padding:16px;border-bottom:1px solid var(--border);
+            display:flex;gap:16px;align-items:flex-start
         }
-        .footer-text{
-            font-size:14px;
-            color:var(--text-muted);
-            margin-bottom:20px
+        .activity-item:last-child{border-bottom:none}
+        .activity-icon{
+            width:40px;height:40px;border-radius:10px;
+            display:flex;align-items:center;justify-content:center;
+            font-size:18px;flex-shrink:0
         }
-        .social-links{
-            display:flex;
-            justify-content:center;
-            gap:20px
-        }
-        .social-links a{
-            width:48px;
-            height:48px;
-            background:var(--bg);
-            border-radius:14px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-size:20px;
-            color:var(--text-muted);
-            transition:all 0.3s;
-            text-decoration:none;
-            border:2px solid transparent
-        }
-        .social-links a:hover{
-            background:var(--primary);
-            color:white;
-            transform:translateY(-5px);
-            border-color:var(--primary);
-            box-shadow:0 10px 30px rgba(99,102,241,0.4)
-        }
+        .activity-icon.success{background:rgba(16,185,129,0.1);color:var(--secondary)}
+        .activity-icon.warning{background:rgba(245,158,11,0.1);color:var(--warning)}
+        .activity-icon.info{background:rgba(99,102,241,0.1);color:var(--primary)}
+        .activity-content{flex:1}
+        .activity-title{font-weight:600;margin-bottom:4px}
+        .activity-time{font-size:12px;color:var(--text-muted)}
         
-        /* Loading & Error */
-        .loading,.error{
-            text-align:center;
-            padding:100px 20px
+        /* Notification */
+        .notification{
+            position:fixed;top:90px;right:20px;padding:16px 24px;
+            background:var(--bg-card);border:1px solid var(--border);
+            border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.5);
+            transform:translateX(400px);transition:transform 0.3s;
+            z-index:9999;display:flex;align-items:center;gap:12px
         }
-        .spinner{
-            width:50px;
-            height:50px;
-            border:4px solid var(--border);
-            border-top-color:var(--primary);
-            border-radius:50%;
-            animation:spin 1s linear infinite;
-            margin:0 auto 24px
+        .notification.show{transform:translateX(0)}
+        .notification.success{border-color:var(--secondary)}
+        .notification.error{border-color:var(--danger)}
+        .notification.warning{border-color:var(--warning)}
+        
+        /* Loading */
+        .loading{
+            text-align:center;padding:40px;color:var(--text-muted)
+        }
+        .loading i{
+            font-size:32px;margin-bottom:12px;animation:spin 1s linear infinite
         }
         @keyframes spin{to{transform:rotate(360deg)}}
         
-        .error{
-            color:var(--danger)
+        /* Sections */
+        .section{display:none}
+        .section.active{display:block;animation:fadeIn 0.3s}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        
+        /* Verification List Styles */
+        .verified-list-item{
+            display:flex;justify-content:space-between;align-items:center;
+            padding:12px 16px;background:var(--bg);border:1px solid var(--border);
+            border-radius:10px;margin-bottom:8px
         }
-        .error i{
-            font-size:56px;
-            margin-bottom:20px;
-            animation:shake 0.5s ease-in-out infinite
-        }
-        @keyframes shake{
-            0%,100%{transform:translateX(0)}
-            25%{transform:translateX(-5px)}
-            75%{transform:translateX(5px)}
-        }
+        .verified-list-item .info{display:flex;align-items:center;gap:12px}
+        .verified-list-item .info i{color:#1da1f2;font-size:18px}
+        .verified-list-item .actions{display:flex;gap:8px}
         
         /* Responsive */
         @media(max-width:768px){
-            .store-title{font-size:30px}
-            .products-grid{grid-template-columns:1fr}
-            .products-title{font-size:28px}
-            .redeem-form{flex-direction:column}
-            .product-name{font-size:20px}
-            .product-price{font-size:24px}
-            .published-by{flex-direction:column;gap:8px}
+            .item-card{grid-template-columns:1fr}
+            .form-row{grid-template-columns:1fr}
+            .page-header{flex-direction:column;align-items:flex-start}
         }
     </style>
 </head>
 <body>
-    <!-- Loading -->
-    <div class="loading" id="loading">
-        <div class="spinner"></div>
-        <p>Cargando tienda...</p>
-    </div>
-
-    <!-- Error -->
-    <div class="error" id="error" style="display:none">
-        <i class="fas fa-exclamation-triangle"></i>
-        <h2>Tienda No Encontrada</h2>
-        <p id="errorMsg">Este servidor no existe o fue eliminado.</p>
-    </div>
-
-    <!-- Store Content -->
-    <div id="storeContent" style="display:none">
-        <!-- Header -->
-        <header class="store-header" id="storeHeader">
-            <div class="store-logo" id="storeLogo"><i class="fas fa-shopping-cart"></i></div>
-            <h1 class="store-title" id="storeTitle">Mi Tienda</h1>
-            <p class="published-by" id="publishedBy">
-                <i class="fas fa-user-check"></i>
-                Publicado por 
-                <span id="publisherName">Tu Nombre</span>
-                <span id="verifiedBadge" class="verified-badge" style="display:none">
-                    <i class="fas fa-check-circle verified-icon" title="Cuenta verificada"></i>
-                </span>
-                <span id="planBadge" class="plan-badge free">Gratis</span>
-            </p>
-            <p class="store-desc" id="storeDesc">Bienvenido a nuestra tienda oficial</p>
-            <div class="custom-buttons" id="customButtons"></div>
-        </header>
-
-        <!-- Products -->
-        <section class="products-section" id="productsSection">
-            <h2 class="products-title" id="productsTitle">Productos Disponibles</h2>
-            <div class="products-grid" id="productsGrid"></div>
-        </section>
-
-        <!-- Gift Cards -->
-        <section class="giftcards-section" id="giftcardsSection" style="display:none">
-            <h2 class="giftcards-title">🎁 Gift Cards</h2>
-            <p class="giftcards-desc">Regala saldo para que tus amigos compren en la tienda</p>
-            <div class="giftcards-grid" id="giftcardsGrid"></div>
-        </section>
-
-        <!-- Redeem Code -->
-        <section class="redeem-section" id="redeemSection" style="display:none">
-            <div class="redeem-container">
-                <h2 class="redeem-title">🎫 Canjear Código</h2>
-                <p class="redeem-desc">¿Tienes un código promocional? Canjéalo aquí</p>
-                <form class="redeem-form" onsubmit="redeemCode(event)">
-                    <input type="text" class="redeem-input" id="redeemInput" placeholder="Ingresa tu código" required>
-                    <button type="submit" class="redeem-btn"><i class="fas fa-gift"></i>Canjear</button>
-                </form>
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer class="store-footer">
-            <p class="footer-text" id="footerText">Powered by BuyCrafting</p>
-            <div class="social-links" id="socialLinks"></div>
-        </footer>
-    </div>
-
-    <!-- ======================================== -->
-    <!-- 💳 CHECKOUT MODAL - PROFESIONAL -->
-    <!-- ======================================== -->
-    <div id="checkoutModal" class="checkout-modal">
-        <div class="checkout-overlay" onclick="closeCheckout()"></div>
-        <div class="checkout-content">
-            <button class="checkout-close" onclick="closeCheckout()">
-                <i class="fas fa-times"></i>
+    <!-- Header -->
+    <header class="header">
+        <button class="menu-toggle" onclick="window.toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="header-title">
+            <i class="fas fa-crown"></i> Admin Panel
+        </div>
+        <div class="header-actions">
+            <button class="header-btn" onclick="window.showSection('notifications')" title="Notificaciones">
+                <i class="fas fa-bell"></i>
+                <span class="badge">3</span>
             </button>
-            
-            <div class="checkout-header">
-                <div class="checkout-icon">
-                    <i class="fas fa-shopping-cart"></i>
+            <button class="header-btn" onclick="window.logout()" title="Cerrar Sesión">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" onclick="window.toggleMenu()"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-title">Principal</div>
+            <div class="nav-item active" onclick="window.showSection('dashboard')">
+                <i class="fas fa-chart-line"></i> Dashboard
+            </div>
+            <div class="nav-item" onclick="window.showSection('analytics')">
+                <i class="fas fa-chart-bar"></i> Analytics
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Gestión</div>
+            <div class="nav-item" onclick="window.showSection('servers')">
+                <i class="fas fa-server"></i> Servidores
+                <span class="badge" id="badgeServers">0</span>
+            </div>
+            <div class="nav-item" onclick="window.showSection('users')">
+                <i class="fas fa-users"></i> Usuarios
+                <span class="badge" id="badgeUsers">0</span>
+            </div>
+            <div class="nav-item" onclick="window.showSection('products')">
+                <i class="fas fa-box"></i> Productos
+                <span class="badge" id="badgeProducts">0</span>
+            </div>
+            <div class="nav-item" onclick="window.showSection('orders')">
+                <i class="fas fa-shopping-cart"></i> Órdenes
+                <span class="badge" id="badgeOrders">0</span>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Plataforma</div>
+            <div class="nav-item" onclick="window.showSection('plans')">
+                <i class="fas fa-crown"></i> Planes
+            </div>
+            <div class="nav-item" onclick="window.showSection('announcements')">
+                <i class="fas fa-bullhorn"></i> Anuncios
+            </div>
+            <div class="nav-item" onclick="window.showSection('tickets')">
+                <i class="fas fa-ticket-alt"></i> Soporte
+                <span class="badge">5</span>
+            </div>
+            <!-- NUEVA OPCIÓN: Verificaciones -->
+            <div class="nav-item" onclick="window.showSection('verifications')">
+                <i class="fas fa-check-circle" style="color:#1da1f2"></i> Verificaciones
+                <span class="badge" id="verifiedBadge">0</span>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-title">Sistema</div>
+            <div class="nav-item" onclick="window.showSection('settings')">
+                <i class="fas fa-cog"></i> Configuración
+            </div>
+            <div class="nav-item" onclick="window.showSection('logs')">
+                <i class="fas fa-history"></i> Logs
+            </div>
+            <div class="nav-item" onclick="window.showSection('database')">
+                <i class="fas fa-database"></i> Base de Datos
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Section -->
+        <section id="section-dashboard" class="section active">
+            <div class="page-header">
+                <div>
+                    <h1>Dashboard</h1>
+                    <p>Resumen general de la plataforma</p>
                 </div>
-                <h2>Finalizar Compra</h2>
-                <p>Completa tu compra de forma segura</p>
+                <button class="btn btn-primary" onclick="window.loadDashboard()">
+                    <i class="fas fa-sync-alt"></i> Actualizar
+                </button>
             </div>
             
-            <div class="checkout-body">
-                <div class="checkout-product">
-                    <div class="checkout-product-info">
-                        <h3 id="checkoutProductName">Producto</h3>
-                        <p class="checkout-product-desc" id="checkoutProductDesc">Descripción del producto</p>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-card-value" id="totalServers">0</div>
+                            <div class="stat-card-label">Servidores Totales</div>
+                        </div>
+                        <div class="stat-card-icon"><i class="fas fa-server"></i></div>
                     </div>
-                    <div class="checkout-product-price" id="checkoutProductPrice">$0.00</div>
+                    <div class="stat-card-change positive">
+                        <i class="fas fa-arrow-up"></i> 12% vs mes anterior
+                    </div>
                 </div>
                 
-                <div class="checkout-form">
-                    <div class="form-group">
-                        <label><i class="fas fa-user"></i> Nombre de usuario en Minecraft</label>
-                        <input type="text" id="checkoutUsername" placeholder="Ej: Notch" required>
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-card-value" id="totalUsers">0</div>
+                            <div class="stat-card-label">Usuarios Registrados</div>
+                        </div>
+                        <div class="stat-card-icon"><i class="fas fa-users"></i></div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label><i class="fas fa-envelope"></i> Correo electrónico</label>
-                        <input type="email" id="checkoutEmail" placeholder="tu@email.com" required>
+                    <div class="stat-card-change positive">
+                        <i class="fas fa-arrow-up"></i> 8% esta semana
                     </div>
-                    
-                    <div class="payment-methods">
-                        <h4><i class="fas fa-credit-card"></i> Método de pago</h4>
-                        <div class="payment-options">
-                            <label class="payment-option active">
-                                <input type="radio" name="payment" value="paypal" checked>
-                                <div class="payment-card">
-                                    <i class="fab fa-paypal"></i>
-                                    <span>PayPal</span>
-                                </div>
-                            </label>
-                            <label class="payment-option">
-                                <input type="radio" name="payment" value="card">
-                                <div class="payment-card">
-                                    <i class="fas fa-credit-card"></i>
-                                    <span>Tarjeta</span>
-                                </div>
-                            </label>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-card-value" id="totalProducts">0</div>
+                            <div class="stat-card-label">Productos Activos</div>
+                        </div>
+                        <div class="stat-card-icon"><i class="fas fa-box"></i></div>
+                    </div>
+                    <div class="stat-card-change positive">
+                        <i class="fas fa-arrow-up"></i> 24 nuevos
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-card-value" id="totalRevenue">$0</div>
+                            <div class="stat-card-label">Ingresos Totales</div>
+                        </div>
+                        <div class="stat-card-icon"><i class="fas fa-dollar-sign"></i></div>
+                    </div>
+                    <div class="stat-card-change positive">
+                        <i class="fas fa-arrow-up"></i> 15% vs mes anterior
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-line"></i> Ingresos (Últimos 7 días)</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-clock"></i> Actividad Reciente</h3>
+                    </div>
+                    <div id="recentActivity">
+                        <div class="loading">
+                            <i class="fas fa-spinner"></i>
+                            <p>Cargando...</p>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="checkout-footer">
-                <div class="checkout-total">
-                    <span>Total a pagar:</span>
-                    <strong id="checkoutTotal">$0.00</strong>
+        </section>
+
+        <!-- Servers Section -->
+        <section id="section-servers" class="section">
+            <div class="page-header">
+                <div>
+                    <h1>Gestión de Servidores</h1>
+                    <p>Administra todos los servidores y asigna planes</p>
                 </div>
-                <button class="checkout-btn" onclick="processPayment()">
-                    <i class="fas fa-lock"></i>
-                    Pagar Ahora
+                <button class="btn btn-primary" onclick="window.loadServers()">
+                    <i class="fas fa-sync-alt"></i> Actualizar
                 </button>
-                <p class="checkout-security">
-                    <i class="fas fa-shield-alt"></i>
-                    Pago 100% seguro y encriptado
-                </p>
             </div>
-        </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-list"></i> Lista de Servidores</h3>
+                    <div style="display:flex;gap:12px">
+                        <input type="text" placeholder="Buscar servidor..." style="padding:10px 16px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text)" onkeyup="window.filterServers(this.value)">
+                    </div>
+                </div>
+                <div class="item-list" id="serversList">
+                    <div class="loading">
+                        <i class="fas fa-spinner"></i>
+                        <p>Cargando servidores...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Users Section -->
+        <section id="section-users" class="section">
+            <div class="page-header">
+                <div>
+                    <h1>Gestión de Usuarios</h1>
+                    <p>Administra todos los usuarios registrados</p>
+                </div>
+                <button class="btn btn-primary" onclick="window.loadUsers()">
+                    <i class="fas fa-sync-alt"></i> Actualizar
+                </button>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-users"></i> Usuarios Registrados</h3>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Email</th>
+                                <th>Servidor</th>
+                                <th>Plan</th>
+                                <th>Fecha Registro</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTable">
+                            <tr><td colspan="6" class="loading"><i class="fas fa-spinner"></i> Cargando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section id="section-products" class="section">
+            <div class="page-header">
+                <div>
+                    <h1>Gestión de Productos</h1>
+                    <p>Todos los productos de la plataforma</p>
+                </div>
+                <button class="btn btn-primary" onclick="window.loadProducts()">
+                    <i class="fas fa-sync-alt"></i> Actualizar
+                </button>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-box"></i> Productos Registrados</h3>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Servidor</th>
+                                <th>Precio</th>
+                                <th>Ventas</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTable">
+                            <tr><td colspan="6" class="loading"><i class="fas fa-spinner"></i> Cargando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Orders Section -->
+        <section id="section-orders" class="section">
+            <div class="page-header">
+                <div>
+                    <h1>Gestión de Órdenes</h1>
+                    <p>Todas las transacciones de la plataforma</p>
+                </div>
+                <button class="btn btn-primary" onclick="window.loadOrders()">
+                    <i class="fas fa-sync-alt"></i> Actualizar
+                </button>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-shopping-cart"></i> Órdenes Recientes</h3>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Producto</th>
+                                <th>Jugador</th>
+                                <th>Monto</th>
+                                <th>Fecha</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTable">
+                            <tr><td colspan="6" class="loading"><i class="fas fa-spinner"></i> Cargando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Plans Section -->
+        <section id="section-plans" class="section">
+            <div class="page-header">
+                <div>
+                    <h1>Gestión de Planes</h1>
+                    <p>Configura los planes disponibles</p>
+                </div>
+            </div>
+            
+            <div class="grid-3">
+                <div class="card">
+                    <div style="text-align:center;padding:20px">
+                        <i class="fas fa-crown" style="font-size:48px;color:#6b7280;margin-bottom:16px"></i>
+                        <h3 style="margin-bottom:8px">Plan Gratis</h3>
+                        <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px">Características básicas</p>
+                        <ul style="text-align:left;color:var(--text-muted);font-size:13px;line-height:2;margin-bottom:20px">
+                            <li><i class="fas fa-check" style="color:var(--secondary)"></i> Hasta 10 productos</li>
+                            <li><i class="fas fa-check" style="color:var(--secondary)"></i> Tienda básica</li>
+                            <li><i class="fas fa-check" style="color:var(--secondary)"></i> 5% comisión</li>
+                            <li><i class="fas fa-check" style="color:var(--secondary)"></i> Soporte email</li>
+                        </ul>
+                        <button class="btn btn-secondary btn-sm">Editar Plan</button>
+                    </div>
+                </div>
+                
+                <div class="card" style="border-color:var(--primary);box-shadow:0 0 20px rgba(99,102,241,0.2)">
+                    <div style="text-align:center;padding:20px">
+                        <i class="fas fa-gem" style="font-size:48px;color:var(--primary);margin-bottom:16px"></i>
+                        <h3 style="margin-bottom:8px">Plan Premium</h3>
+                        <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px">$9.99/mes</p>
+                        <ul style="text-align:left;color:var(--text-muted);font-size:13px;line-height:2;margin-bottom:20px">
+                            <li><i class="fas fa-check" style="color:var(--secondary)"></i> Productos ilimitados</li>
+                            <li><i class="fas fa-check" style="color:var(--secondary)"></i> Tienda personalizada</li>
+                            <li><i class="fas fa-check" style="color:var(--secondary)"></i> Sin comisión</li>
+                            <li><i class="fas fa-check" style="color:var(--secondary)"></i> Soporte prioritario</li>
+                        </ul>
+                        <button class="btn btn-primary btn-sm">Editar Plan</button>
+                    </div>
+                </div>
+                
+                <div class="card" style="border-color:var(--secondary)">
+                    <div style="text-align:center;padding:20px">
+                        <i class="fas fa-star" style="font-size:48px;color:var(--secondary);margin-bottom:16px"></i>
+                        <h3 style="margin-bottom:8px">Plan VIP</h3>
+                        <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px">$19.99/mes</p>
+                        <ul style="text-align:left;color:var(--text-muted);font-size:13px;line-height:2;margin-bottom:20px">
+                            <li><i class="fas fa-check" style="color:var(--secondary)"></i> Todo lo de Premium</li>
+                            <li><i class="fas fa-check" style="color:var(--secondary)"></i> Dominio personalizado</li>
+                            <li><i class="fas fa-check" style="color:var(--secondary)"></i> API access</li>
+                            <li><i class="fas fa-check" style="color:var(--secondary)"></i> Soporte 24/7</li>
+                        </ul>
+                        <button class="btn btn-secondary btn-sm">Editar Plan</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Announcements Section -->
+        <section id="section-announcements" class="section">
+            <div class="page-header">
+                <div>
+                    <h1>Anuncios</h1>
+                    <p>Publica anuncios para todos los servidores</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-plus"></i> Nuevo Anuncio</h3>
+                </div>
+                <div class="form-group">
+                    <label>Título del Anuncio</label>
+                    <input type="text" id="announcementTitle" placeholder="Ej: Nueva actualización disponible">
+                </div>
+                <div class="form-group">
+                    <label>Contenido</label>
+                    <textarea id="announcementContent" rows="4" placeholder="Escribe el contenido del anuncio..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Tipo</label>
+                    <select id="announcementType">
+                        <option value="info">Informativo</option>
+                        <option value="warning">Advertencia</option>
+                        <option value="success">Éxito</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="window.publishAnnouncement()">
+                    <i class="fas fa-paper-plane"></i> Publicar Anuncio
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-list"></i> Anuncios Publicados</h3>
+                </div>
+                <div id="announcementsList">
+                    <div class="loading">
+                        <i class="fas fa-spinner"></i>
+                        <p>Cargando anuncios...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tickets Section -->
+        <section id="section-tickets" class="section">
+            <div class="page-header">
+                <div>
+                    <h1>Soporte - Tickets</h1>
+                    <p>Gestiona los tickets de los usuarios</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-ticket-alt"></i> Tickets Pendientes</h3>
+                </div>
+                <div class="item-list" id="ticketsList">
+                    <div class="loading">
+                        <i class="fas fa-spinner"></i>
+                        <p>Cargando tickets...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ✅ NUEVA SECCIÓN: VERIFICACIONES -->
+        <section id="section-verifications" class="section">
+            <div class="page-header">
+                <div>
+                    <h1>Verificaciones Automáticas</h1>
+                    <p>Gestiona emails/nombres que reciben la palomita azul automáticamente</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-plus-circle" style="color:#1da1f2"></i> Agregar a Lista de Verificados</h3>
+                </div>
+                <div class="form-group">
+                    <label>Tipo de Verificación</label>
+                    <select id="verificationType">
+                        <option value="email">Por Email</option>
+                        <option value="name">Por Nombre de Servidor</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label id="verificationLabel">Email a verificar</label>
+                    <input type="text" id="verificationValue" placeholder="ejemplo@dominio.com">
+                </div>
+                <div class="form-group">
+                    <label>Notas (opcional)</label>
+                    <input type="text" id="verificationNotes" placeholder="Ej: Creador oficial, Partner, etc.">
+                </div>
+                <button class="btn btn-primary" onclick="window.addVerification()">
+                    <i class="fas fa-plus"></i> Agregar a Lista
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-list-check"></i> Lista de Verificados Automáticos</h3>
+                    <button class="btn btn-secondary btn-sm" onclick="window.loadVerifications()">
+                        <i class="fas fa-sync-alt"></i> Actualizar
+                    </button>
+                </div>
+                <div id="verificationsList">
+                    <div class="loading">
+                        <i class="fas fa-spinner"></i>
+                        <p>Cargando verificaciones...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-info-circle"></i> ¿Cómo funciona?</h3>
+                </div>
+                <div style="color:var(--text-muted);line-height:1.8">
+                    <p><strong>✅ Verificación Automática:</strong></p>
+                    <ul style="margin-left:20px;margin-bottom:16px">
+                        <li>Cuando un usuario registra su tienda con un email/nombre de esta lista</li>
+                        <li>El sistema detecta la coincidencia automáticamente</li>
+                        <li>Se aplica la palomita azul 🔵 en su tienda pública</li>
+                        <li>El badge de verificación aparece sin intervención manual</li>
+                    </ul>
+                    <p><strong>📝 Ejemplos de uso:</strong></p>
+                    <ul style="margin-left:20px">
+                        <li><code>adrianortiz3322@gmail.com</code> → Tu cuenta personal</li>
+                        <li><code>partner@minecraft.com</code> → Socios oficiales</li>
+                        <li><code>MyServer Pro</code> → Nombre de servidor verificado</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings Section -->
+        <section id="section-settings" class="section">
+            <div class="page-header">
+                <div>
+                    <h1>Configuración</h1>
+                    <p>Configuración de la plataforma</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-cog"></i> Configuración General</h3>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nombre de la Plataforma</label>
+                        <input type="text" id="platformName" value="BuyCrafting Pro">
+                    </div>
+                    <div class="form-group">
+                        <label>Email de Soporte</label>
+                        <input type="email" id="supportEmail" value="soporte@buycrafting.com">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Comisión Plataforma (%)</label>
+                        <input type="number" id="platformCommission" value="5" min="0" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label>Moneda por Defecto</label>
+                        <select id="defaultCurrency">
+                            <option value="USD">USD - Dólar</option>
+                            <option value="EUR">EUR - Euro</option>
+                            <option value="MXN">MXN - Peso Mexicano</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="window.saveSettings()">
+                    <i class="fas fa-save"></i> Guardar Configuración
+                </button>
+            </div>
+        </section>
+
+        <!-- Logs Section -->
+        <section id="section-logs" class="section">
+            <div class="page-header">
+                <div>
+                    <h1>Logs del Sistema</h1>
+                    <p>Registro de actividades del sistema</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-history"></i> Actividad Reciente</h3>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Usuario</th>
+                                <th>Acción</th>
+                                <th>Detalles</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logsTable">
+                            <tr><td colspan="4" class="loading"><i class="fas fa-spinner"></i> Cargando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Database Section -->
+        <section id="section-database" class="section">
+            <div class="page-header">
+                <div>
+                    <h1>Base de Datos</h1>
+                    <p>Gestión y respaldo de datos</p>
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-download"></i> Exportar Datos</h3>
+                    </div>
+                    <p style="color:var(--text-muted);margin-bottom:16px">Descarga una copia de seguridad de los datos</p>
+                    <div style="display:flex;gap:12px;flex-wrap:wrap">
+                        <button class="btn btn-secondary" onclick="window.exportData('servers')">
+                            <i class="fas fa-server"></i> Servidores
+                        </button>
+                        <button class="btn btn-secondary" onclick="window.exportData('users')">
+                            <i class="fas fa-users"></i> Usuarios
+                        </button>
+                        <button class="btn btn-secondary" onclick="window.exportData('products')">
+                            <i class="fas fa-box"></i> Productos
+                        </button>
+                        <button class="btn btn-primary" onclick="window.exportData('all')">
+                            <i class="fas fa-database"></i> Todo
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-upload"></i> Importar Datos</h3>
+                    </div>
+                    <p style="color:var(--text-muted);margin-bottom:16px">Restaura datos desde un archivo JSON</p>
+                    <input type="file" accept=".json" style="margin-bottom:12px">
+                    <button class="btn btn-danger">
+                        <i class="fas fa-upload"></i> Importar
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle" id="notificationIcon"></i>
+        <span id="notificationText"></span>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, collection, query, where, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, addDoc, query, orderBy, limit, where, deleteDoc } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCIGXn0zND_8A_nD6NPxx1txYFQzrhM9hg",
@@ -1180,351 +1001,788 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        const speedMap = { slow: '5s', normal: '4s', fast: '2s' };
+        let revenueChart = null;
 
-        const path = window.location.pathname;
-        const parts = path.split('/').filter(p => p);
-        const serverId = parts[parts.indexOf('store') + 1] || localStorage.getItem('buycrafting_serverId');
+        // Toggle Menu
+        window.toggleMenu = function(){
+            document.getElementById('sidebar').classList.toggle('active');
+            document.querySelector('.sidebar-overlay').classList.toggle('active');
+        };
 
-        console.log('🛒 Loading store:', serverId);
+        // Show Section
+        window.showSection = function(sectionName){
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById('section-' + sectionName).classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            event.target.closest('.nav-item').classList.add('active');
+            
+            if(window.innerWidth <= 768) window.toggleMenu();
+            
+            // Load section data
+            const loaders = {
+                'dashboard': window.loadDashboard,
+                'servers': window.loadServers,
+                'users': window.loadUsers,
+                'products': window.loadProducts,
+                'orders': window.loadOrders,
+                'announcements': window.loadAnnouncements,
+                'tickets': window.loadTickets,
+                'logs': window.loadLogs,
+                'verifications': window.loadVerifications
+            };
+            
+            if(loaders[sectionName]) loaders[sectionName]();
+        };
 
-        async function loadStore(){
-            if(!serverId){
-                showError('URL inválida');
+        // Load Dashboard
+        window.loadDashboard = async function(){
+            try{
+                const serversSnap = await getDocs(collection(db, 'servers'));
+                const usersSnap = await getDocs(collection(db, 'users'));
+                const productsSnap = await getDocs(collection(db, 'products'));
+                const ordersSnap = await getDocs(collection(db, 'orders'));
+
+                const totalServers = serversSnap.size;
+                const totalUsers = usersSnap.size;
+                const totalProducts = productsSnap.size;
+                
+                let revenue = 0;
+                ordersSnap.forEach(d => { if(d.data().delivered) revenue += d.data().price || 0; });
+
+                document.getElementById('totalServers').textContent = totalServers;
+                document.getElementById('totalUsers').textContent = totalUsers;
+                document.getElementById('totalProducts').textContent = totalProducts;
+                document.getElementById('totalRevenue').textContent = '$' + revenue.toFixed(2);
+                
+                // Update badges
+                document.getElementById('badgeServers').textContent = totalServers;
+                document.getElementById('badgeUsers').textContent = totalUsers;
+                document.getElementById('badgeProducts').textContent = totalProducts;
+                document.getElementById('badgeOrders').textContent = ordersSnap.size;
+
+                // Load recent activity
+                await loadRecentActivity(ordersSnap);
+                
+                // Load chart
+                loadRevenueChart();
+                
+            } catch(e){
+                console.error('Error loading dashboard:', e);
+                window.showNotification('Error al cargar dashboard', 'error');
+            }
+        };
+
+        // Load Recent Activity
+        async function loadRecentActivity(ordersSnap){
+            const container = document.getElementById('recentActivity');
+            const recent = ordersSnap.docs.slice(0, 5);
+            
+            if(recent.length === 0){
+                container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:20px">No hay actividad reciente</p>';
                 return;
             }
+            
+            container.innerHTML = recent.map(docSnap => {
+                const data = docSnap.data();
+                return `
+                    <div class="activity-item">
+                        <div class="activity-icon success">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">${data.productName || 'Producto'}</div>
+                            <div style="color:var(--text-muted);font-size:13px">${data.playerName || 'Jugador'}</div>
+                            <div class="activity-time">$${(data.price || 0).toFixed(2)} - ${data.createdAt?.toDate?.().toLocaleString() || 'N/A'}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
 
-            try{
-                // 1. Cargar configuración visual desde 'stores'
-                const storeRef = doc(db, 'stores', serverId);
-                const storeSnap = await getDoc(storeRef);
-
-                if(!storeSnap.exists()){
-                    console.error('❌ Store doc not found');
-                    showError('Este servidor no existe o fue eliminado.');
-                    return;
-                }
-
-                const storeData = storeSnap.data();
-                console.log('✅ Store loaded:', storeData);
-
-                // 2. Cargar estado de verificación/plan desde 'servers'
-                const serverRef = doc(db, 'servers', serverId);
-                const serverSnap = await getDoc(serverRef);
-                const serverData = serverSnap.exists() ? serverSnap.data() : {};
-                
-                // Combinar datos: store para diseño, server para estado
-                const data = { ...storeData, ...serverData };
-                console.log('✅ Datos combinados:', data);
-
-                // === COLORES ===
-                const root = document.documentElement;
-                if(data.primaryColor) root.style.setProperty('--primary', data.primaryColor);
-                if(data.backgroundColor) root.style.setProperty('--bg', data.backgroundColor);
-                if(data.cardColor) root.style.setProperty('--bg-card', data.cardColor);
-                if(data.textColor) root.style.setProperty('--text', data.textColor);
-                
-                const primary = data.primaryColor || '#6366f1';
-                root.style.setProperty('--gradient', `linear-gradient(135deg,${primary} 0%,${primary}dd 50%,${primary}aa 100%)`);
-
-                // === TEXTOS ===
-                document.getElementById('storeTitle').textContent = data.name || 'Mi Tienda';
-                document.getElementById('storeDesc').textContent = data.description || 'Bienvenido a nuestra tienda oficial';
-                document.getElementById('publisherName').textContent = data.publishedBy || 'Tu Nombre';
-                document.getElementById('productsTitle').textContent = data.heroTitle || 'Productos Disponibles';
-                document.getElementById('footerText').textContent = data.footerText || 'Powered by BuyCrafting';
-
-                // === LOGO ===
-                const logoEl = document.getElementById('storeLogo');
-                if(data.logo){
-                    logoEl.innerHTML = `<img src="${data.logo}" alt="Logo" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-shopping-cart\\'></i>'">`;
-                }
-
-                // === BADGE DE PLAN Y VERIFICACIÓN ===
-                updatePlanAndVerification(data);
-
-                // === HEADER ===
-                const header = document.getElementById('storeHeader');
-                header.className = 'store-header';
-                
-                if(data.backgroundImage){
-                    header.style.backgroundImage = `url(${data.backgroundImage})`;
-                    header.style.backgroundSize = 'cover';
-                    header.style.backgroundPosition = 'center';
-                    header.style.backgroundRepeat = 'no-repeat';
-                    if(data.backgroundImage.includes('.gif') || data.backgroundImage.startsWith('data:image/gif')){
-                        header.style.animation = 'none';
+        // Load Revenue Chart
+        function loadRevenueChart(){
+            const ctx = document.getElementById('revenueChart');
+            if(!ctx) return;
+            
+            if(revenueChart) revenueChart.destroy();
+            
+            revenueChart = new Chart(ctx, {
+                type: 'line',
+                 {
+                    labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+                    datasets: [{
+                        label: 'Ingresos',
+                         [120, 190, 30, 50, 20, 30, 45],
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            grid: { color: 'rgba(51, 65, 85, 0.3)' },
+                            ticks: { color: '#94a3b8' }
+                        },
+                        x: { 
+                            grid: { display: false },
+                            ticks: { color: '#94a3b8' }
+                        }
                     }
-                } else {
-                    const bgAnim = data.bgAnimation || 'glow';
-                    header.classList.add(`anim-${bgAnim}`);
-                    header.style.animationDuration = speedMap[data.animSpeed] || '4s';
-                }
-
-                // === TÍTULO ===
-                const title = document.getElementById('storeTitle');
-                const titleAnim = data.titleAnimation || 'gradient';
-                title.classList.add(`title-anim-${titleAnim}`);
-                title.style.animationDuration = speedMap[data.animSpeed] || '3s';
-                if(data.animIntensity) title.style.filter = `brightness(${data.animIntensity})`;
-
-                // === FUENTE Y BORDES ===
-                if(data.fontFamily) document.body.style.fontFamily = data.fontFamily;
-                if(data.fontSize) document.body.style.fontSize = data.fontSize;
-                if(data.borderRadius){
-                    document.querySelectorAll('.product-card,.buy-btn,.custom-btn,.giftcard').forEach(el => {
-                        el.style.borderRadius = data.borderRadius;
-                    });
-                }
-
-                // === BOTONES ===
-                const btnContainer = document.getElementById('customButtons');
-                if(data.customButtons && Array.isArray(data.customButtons)){
-                    btnContainer.innerHTML = data.customButtons.map(btn => `
-                        <a href="${btn.url}" target="_blank" class="custom-btn" style="background:${btn.color};color:white">
-                            ${btn.icon ? `<i class="${btn.icon}"></i>` : ''}${btn.text}
-                        </a>
-                    `).join('');
-                }
-
-                // === REDES SOCIALES ===
-                const socials = document.getElementById('socialLinks');
-                if(data.discordUrl) socials.innerHTML += `<a href="${data.discordUrl}" target="_blank"><i class="fab fa-discord"></i></a>`;
-                if(data.twitterUrl) socials.innerHTML += `<a href="${data.twitterUrl}" target="_blank"><i class="fab fa-twitter"></i></a>`;
-                if(data.instagramUrl) socials.innerHTML += `<a href="${data.instagramUrl}" target="_blank"><i class="fab fa-instagram"></i></a>`;
-                if(data.youtubeUrl) socials.innerHTML += `<a href="${data.youtubeUrl}" target="_blank"><i class="fab fa-youtube"></i></a>`;
-
-                // === SECCIONES ===
-                if(data.sections?.products === false) document.getElementById('productsSection').style.display = 'none';
-                if(data.sections?.giftcards){
-                    document.getElementById('giftcardsSection').style.display = 'block';
-                    if(data.giftCards?.length) renderGiftCards(data.giftCards);
-                }
-                if(data.sections?.redeem) document.getElementById('redeemSection').style.display = 'block';
-
-                await loadProducts(serverId);
-
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('storeContent').style.display = 'block';
-                document.title = `${data.name || 'Tienda'} - BuyCrafting`;
-
-                // Setup real-time listener for BOTH collections
-                setupRealtimeListeners(serverId);
-
-            } catch(err){
-                console.error('❌ Error:', err);
-                showError('Error: ' + err.message);
-            }
-        }
-
-        // Update Plan Badge and Verification
-        function updatePlanAndVerification(data){
-            const plan = data.plan || 'free';
-            const verified = data.verified || false;
-            
-            // Update plan badge
-            const planBadge = document.getElementById('planBadge');
-            if(planBadge){
-                const planNames = {
-                    'free': 'Gratis',
-                    'premium': 'Premium',
-                    'vip': 'VIP',
-                    'enterprise': 'Enterprise'
-                };
-                planBadge.className = `plan-badge ${plan}`;
-                planBadge.textContent = planNames[plan] || 'Gratis';
-            }
-            
-            // Update verification badge
-            const verifiedBadge = document.getElementById('verifiedBadge');
-            if(verifiedBadge){
-                verifiedBadge.style.display = verified ? 'inline-flex' : 'none';
-            }
-        }
-
-        // Real-time listeners for BOTH collections
-        function setupRealtimeListeners(serverId){
-            if(!serverId) return;
-            
-            // Listener para 'servers' (verificación y plan)
-            const serverRef = doc(db, 'servers', serverId);
-            onSnapshot(serverRef, (doc) => {
-                if(doc.exists()){
-                    const data = doc.data();
-                    // Solo actualizar verificación y plan, no el diseño
-                    updatePlanAndVerification({
-                        plan: data.plan,
-                        verified: data.verified
-                    });
-                    console.log('🔄 Server actualizado:', { plan: data.plan, verified: data.verified });
-                }
-            });
-            
-            // Listener para 'stores' (configuración visual)
-            const storeRef = doc(db, 'stores', serverId);
-            onSnapshot(storeRef, (doc) => {
-                if(doc.exists()){
-                    const data = doc.data();
-                    // Actualizar solo elementos visuales si cambian
-                    const title = document.getElementById('storeTitle');
-                    const desc = document.getElementById('storeDesc');
-                    const publisher = document.getElementById('publisherName');
-                    
-                    if(data.name && title.textContent !== data.name) title.textContent = data.name;
-                    if(data.description && desc.textContent !== data.description) desc.textContent = data.description;
-                    if(data.publishedBy && publisher.textContent !== data.publishedBy) publisher.textContent = data.publishedBy;
-                    
-                    console.log('🔄 Store actualizado');
                 }
             });
         }
 
-        // 🔥 CARGAR PRODUCTOS CON TAGS Y ESTILO PREMIUM
-        async function loadProducts(serverId){
+        // Load Servers
+        window.loadServers = async function(){
             try{
-                const productsRef = collection(db, 'products');
-                const q = query(productsRef, where('serverId', '==', serverId));
-                const snap = await getDocs(q);
-                const grid = document.getElementById('productsGrid');
-                
-                if(snap.empty){
-                    grid.innerHTML = `<p style="grid-column:1/-1;text-align:center;color:var(--text-muted);font-size:16px;padding:40px">No hay productos aún</p>`;
+                const serversSnap = await getDocs(collection(db, 'servers'));
+                const list = document.getElementById('serversList');
+                list.innerHTML = '';
+
+                if(serversSnap.empty){
+                    list.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:40px">No hay servidores registrados</p>';
                     return;
                 }
 
-                snap.forEach(doc => {
-                    const p = doc.data();
-                    const card = document.createElement('div');
-                    card.className = 'product-card';
+                serversSnap.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const plan = data.plan || 'free';
+                    const serverId = docSnap.id;
                     
-                    // 🔥 Determinar badge/tag según datos del producto
-                    let badgeHtml = '';
-                    if(p.isPopular) badgeHtml = `<span class="product-badge popular"><i class="fas fa-fire"></i>Popular</span>`;
-                    else if(p.isNew) badgeHtml = `<span class="product-badge new"><i class="fas fa-star"></i>Nuevo</span>`;
-                    else if(p.discount) badgeHtml = `<span class="product-badge discount"><i class="fas fa-percent"></i>-${p.discount}%</span>`;
-                    
-                    // Icono
-                    let icon = p.image ? 
-                        `<img src="${p.image}" alt="${p.name}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-box\\' style=\\'font-size:50px;color:var(--text-muted)\\'></i>'">` : 
-                        p.material ? getMaterialIcon(p.material) : 
-                        `<i class="fas fa-gem" style="font-size:50px;color:var(--primary)"></i>`;
-                    
-                    // Precio con descuento si aplica
-                    let priceHtml = `<span class="product-price">${(p.price||0).toFixed(2)}</span>`;
-                    if(p.discount && p.originalPrice){
-                        priceHtml = `
-                            <div style="display:flex;align-items:center;gap:8px">
-                                <span class="product-price">${(p.price||0).toFixed(2)}</span>
-                                <span style="font-size:16px;color:var(--text-muted);text-decoration:line-through">$${p.originalPrice.toFixed(2)}</span>
-                            </div>
-                        `;
-                    }
-                    
-                    card.innerHTML = `
-                        ${badgeHtml}
-                        <div class="product-icon">${icon}</div>
-                        <div class="product-info">
-                            <h3 class="product-name">${p.name}</h3>
-                            <p class="product-desc">${p.description || 'Sin descripción'}</p>
-                            <div class="product-footer">
-                                ${priceHtml}
-                                <button class="buy-btn" onclick="buyProduct('${p.id}','${p.name}',${p.price},'${p.description || ''}')">
-                                    <i class="fas fa-cart-plus"></i>Comprar
-                                </button>
-                            </div>
+                    const item = document.createElement('div');
+                    item.className = 'item-card';
+                    item.innerHTML = `
+                        <div class="item-info">
+                            <h4>${data.serverName || 'Sin nombre'} ${data.verified ? '<i class="fas fa-check-circle" style="color:#1da1f2;margin-left:6px"></i>' : ''}</h4>
+                            <p><i class="fas fa-envelope"></i> ${data.ownerEmail || 'N/A'}</p>
+                            <p><i class="fas fa-calendar"></i> ${data.createdAt?.toDate?.().toLocaleDateString() || 'N/A'}</p>
+                        </div>
+                        <div class="badge-plan ${plan}">
+                            <i class="fas fa-crown"></i>
+                            <span>${window.getPlanName(plan)}</span>
+                        </div>
+                        <div class="plan-selector">
+                            <select id="select-${serverId}">
+                                <option value="free" ${plan==='free'?'selected':''}>Gratis</option>
+                                <option value="premium" ${plan==='premium'?'selected':''}>Premium</option>
+                                <option value="vip" ${plan==='vip'?'selected':''}>VIP</option>
+                                <option value="enterprise" ${plan==='enterprise'?'selected':''}>Enterprise</option>
+                            </select>
+                            <button onclick="window.applyPlan('${serverId}')" class="btn-apply">
+                                <i class="fas fa-check"></i> Aplicar
+                            </button>
                         </div>
                     `;
-                    grid.appendChild(card);
+                    list.appendChild(item);
                 });
-            } catch(e){ console.error('Error loading products:', e); }
+            } catch(e){
+                console.error('Error loading servers:', e);
+                window.showNotification('Error al cargar servidores', 'error');
+            }
+        };
+
+        // Apply Plan
+        window.applyPlan = async function(serverId){
+            const select = document.getElementById(`select-${serverId}`);
+            if(!select){
+                window.showNotification('Error: No se encontró el selector', 'error');
+                return;
+            }
+            
+            const newPlan = select.value;
+            console.log('Aplicando plan:', newPlan, 'al servidor:', serverId);
+            
+            try{
+                const serverRef = doc(db, 'servers', serverId);
+                await updateDoc(serverRef, {
+                    plan: newPlan,
+                    updatedAt: new Date()
+                });
+
+                window.showNotification(`✅ Plan ${window.getPlanName(newPlan)} aplicado correctamente`, 'success');
+                
+                setTimeout(() => {
+                    window.loadServers();
+                }, 1000);
+                
+            } catch(e){
+                console.error('Error updating plan:', e);
+                window.showNotification('❌ Error: ' + e.message, 'error');
+            }
+        };
+
+        // Filter Servers
+        window.filterServers = function(searchTerm){
+            const cards = document.querySelectorAll('.item-card');
+            const term = searchTerm.toLowerCase();
+            
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(term) ? 'grid' : 'none';
+            });
+        };
+
+        // Load Users
+        window.loadUsers = async function(){
+            try{
+                const usersSnap = await getDocs(collection(db, 'users'));
+                const tbody = document.getElementById('usersTable');
+                tbody.innerHTML = '';
+
+                if(usersSnap.empty){
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:40px">No hay usuarios registrados</td></tr>';
+                    return;
+                }
+
+                usersSnap.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>
+                            <div style="display:flex;align-items:center;gap:12px">
+                                <div style="width:40px;height:40px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700">
+                                    ${(data.displayName || 'U')[0].toUpperCase()}
+                                </div>
+                                <div>
+                                    <div style="font-weight:600">${data.displayName || 'Usuario'} ${data.verified ? '<i class="fas fa-check-circle" style="color:#1da1f2;margin-left:6px"></i>' : ''}</div>
+                                    <div style="font-size:12px;color:var(--text-muted)">${data.email || ''}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${data.email || 'N/A'}</td>
+                        <td>${data.serverName || 'N/A'}</td>
+                        <td><span class="badge-plan free"><i class="fas fa-crown"></i> Gratis</span></td>
+                        <td>${data.createdAt?.toDate?.().toLocaleDateString() || 'N/A'}</td>
+                        <td>
+                            <button class="btn btn-secondary btn-sm" onclick="window.viewUser('${docSnap.id}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="window.deleteUser('${docSnap.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch(e){
+                console.error('Error loading users:', e);
+            }
+        };
+
+        // Load Products
+        window.loadProducts = async function(){
+            try{
+                const productsSnap = await getDocs(collection(db, 'products'));
+                const tbody = document.getElementById('productsTable');
+                tbody.innerHTML = '';
+
+                if(productsSnap.empty){
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:40px">No hay productos</td></tr>';
+                    return;
+                }
+
+                productsSnap.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>
+                            <div style="font-weight:600">${data.name || 'Producto'}</div>
+                            <div style="font-size:12px;color:var(--text-muted)">${data.category || 'General'}</div>
+                        </td>
+                        <td>${data.serverName || 'N/A'}</td>
+                        <td style="font-weight:600;color:var(--primary)">$${(data.price || 0).toFixed(2)}</td>
+                        <td>${data.sales || 0}</td>
+                        <td><span class="badge-status active">Activo</span></td>
+                        <td>
+                            <button class="btn btn-secondary btn-sm">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch(e){
+                console.error('Error loading products:', e);
+            }
+        };
+
+        // Load Orders
+        window.loadOrders = async function(){
+            try{
+                const ordersSnap = await getDocs(collection(db, 'orders'));
+                const tbody = document.getElementById('ordersTable');
+                tbody.innerHTML = '';
+
+                if(ordersSnap.empty){
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:40px">No hay órdenes</td></tr>';
+                    return;
+                }
+
+                ordersSnap.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><code>#${docSnap.id.substring(0,8)}</code></td>
+                        <td>${data.productName || 'Producto'}</td>
+                        <td>${data.playerName || 'Jugador'}</td>
+                        <td style="font-weight:600;color:var(--primary)">$${(data.price || 0).toFixed(2)}</td>
+                        <td>${data.createdAt?.toDate?.().toLocaleDateString() || 'N/A'}</td>
+                        <td>
+                            <span class="badge-status ${data.delivered ? 'active' : 'pending'}">
+                                ${data.delivered ? 'Entregado' : 'Pendiente'}
+                            </span>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch(e){
+                console.error('Error loading orders:', e);
+            }
+        };
+
+        // Load Announcements
+        window.loadAnnouncements = async function(){
+            try{
+                const announcementsSnap = await getDocs(collection(db, 'announcements'));
+                const list = document.getElementById('announcementsList');
+                list.innerHTML = '';
+
+                if(announcementsSnap.empty){
+                    list.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:40px">No hay anuncios</p>';
+                    return;
+                }
+
+                announcementsSnap.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const item = document.createElement('div');
+                    item.className = 'activity-item';
+                    item.innerHTML = `
+                        <div class="activity-icon info">
+                            <i class="fas fa-bullhorn"></i>
+                        </div>
+                        <div class="activity-content" style="flex:1">
+                            <div class="activity-title">${data.title || 'Anuncio'}</div>
+                            <div style="color:var(--text-muted);font-size:13px;margin:8px 0">${data.content || ''}</div>
+                            <div class="activity-time">
+                                <i class="fas fa-user"></i> ${data.publishedBy || 'Admin'} • 
+                                <i class="fas fa-calendar"></i> ${data.createdAt?.toDate?.().toLocaleString() || 'N/A'}
+                            </div>
+                        </div>
+                        <button class="btn btn-danger btn-sm" onclick="window.deleteAnnouncement('${docSnap.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    `;
+                    list.appendChild(item);
+                });
+            } catch(e){
+                console.error('Error loading announcements:', e);
+            }
+        };
+
+        // Publish Announcement
+        window.publishAnnouncement = async function(){
+            const title = document.getElementById('announcementTitle').value;
+            const content = document.getElementById('announcementContent').value;
+            const type = document.getElementById('announcementType').value;
+
+            if(!title || !content){
+                window.showNotification('❌ Completa todos los campos', 'error');
+                return;
+            }
+
+            try{
+                await addDoc(collection(db, 'announcements'), {
+                    title: title,
+                    content: content,
+                    type: type,
+                    publishedBy: 'admin@buycrafting.com',
+                    createdAt: new Date(),
+                    active: true
+                });
+
+                window.showNotification('✅ Anuncio publicado exitosamente', 'success');
+                document.getElementById('announcementTitle').value = '';
+                document.getElementById('announcementContent').value = '';
+                window.loadAnnouncements();
+            } catch(e){
+                console.error('Error publishing announcement:', e);
+                window.showNotification('❌ Error al publicar', 'error');
+            }
+        };
+
+        // Load Tickets
+        window.loadTickets = async function(){
+            try{
+                const ticketsSnap = await getDocs(collection(db, 'tickets'));
+                const list = document.getElementById('ticketsList');
+                list.innerHTML = '';
+
+                if(ticketsSnap.empty){
+                    list.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:40px">No hay tickets pendientes</p>';
+                    return;
+                }
+
+                ticketsSnap.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const item = document.createElement('div');
+                    item.className = 'item-card';
+                    item.innerHTML = `
+                        <div class="item-info">
+                            <h4>${data.subject || 'Sin asunto'}</h4>
+                            <p><i class="fas fa-user"></i> ${data.userName || 'Usuario'}</p>
+                            <p><i class="fas fa-calendar"></i> ${data.createdAt?.toDate?.().toLocaleDateString() || 'N/A'}</p>
+                        </div>
+                        <div><span class="badge-status pending">Pendiente</span></div>
+                        <div>
+                            <button class="btn btn-primary btn-sm" onclick="window.viewTicket('${docSnap.id}')">
+                                <i class="fas fa-eye"></i> Ver
+                            </button>
+                        </div>
+                    `;
+                    list.appendChild(item);
+                });
+            } catch(e){
+                console.error('Error loading tickets:', e);
+            }
+        };
+
+        // Load Logs
+        window.loadLogs = async function(){
+            try{
+                const logsSnap = await getDocs(query(collection(db, 'logs'), orderBy('timestamp', 'desc'), limit(50)));
+                const tbody = document.getElementById('logsTable');
+                tbody.innerHTML = '';
+
+                if(logsSnap.empty){
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:40px">No hay registros</td></tr>';
+                    return;
+                }
+
+                logsSnap.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${data.timestamp?.toDate?.().toLocaleString() || 'N/A'}</td>
+                        <td>${data.user || 'Sistema'}</td>
+                        <td>${data.action || 'Acción'}</td>
+                        <td style="color:var(--text-muted)">${data.details || ''}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch(e){
+                console.error('Error loading logs:', e);
+            }
+        };
+
+        // ✅ NUEVAS FUNCIONES DE VERIFICACIÓN
+
+        // Load Verifications List
+        window.loadVerifications = async function(){
+            try{
+                const verificationsSnap = await getDocs(collection(db, 'verified_list'));
+                const list = document.getElementById('verificationsList');
+                list.innerHTML = '';
+
+                if(verificationsSnap.empty){
+                    list.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:40px">No hay verificaciones configuradas</p>';
+                    document.getElementById('verifiedBadge').textContent = '0';
+                    return;
+                }
+
+                let count = 0;
+                verificationsSnap.forEach(docSnap => {
+                    const data = docSnap.data();
+                    count++;
+                    
+                    const item = document.createElement('div');
+                    item.className = 'verified-list-item';
+                    item.innerHTML = `
+                        <div class="info">
+                            <i class="fas fa-check-circle" style="color:#1da1f2"></i>
+                            <div>
+                                <strong>${data.value}</strong>
+                                <div style="font-size:12px;color:var(--text-muted)">
+                                    ${data.type === 'email' ? '📧 Email' : '🏷️ Nombre'} • ${data.notes || 'Sin notas'}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <button class="btn btn-danger btn-sm" onclick="window.removeVerification('${docSnap.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    list.appendChild(item);
+                });
+                
+                document.getElementById('verifiedBadge').textContent = count;
+                
+            } catch(e){
+                console.error('Error loading verifications:', e);
+            }
+        };
+
+        // Add Verification
+        window.addVerification = async function(){
+            const type = document.getElementById('verificationType').value;
+            const value = document.getElementById('verificationValue').value.trim().toLowerCase();
+            const notes = document.getElementById('verificationNotes').value.trim();
+
+            if(!value){
+                window.showNotification('❌ Ingresa un email o nombre', 'error');
+                return;
+            }
+
+            try{
+                // Verificar si ya existe
+                const existing = await getDocs(query(
+                    collection(db, 'verified_list'),
+                    where('value', '==', value),
+                    where('type', '==', type)
+                ));
+
+                if(!existing.empty){
+                    window.showNotification('⚠️ Este valor ya está en la lista', 'warning');
+                    return;
+                }
+
+                await addDoc(collection(db, 'verified_list'), {
+                    type: type,
+                    value: value,
+                    notes: notes || null,
+                    addedBy: 'admin@buycrafting.com',
+                    createdAt: new Date()
+                });
+
+                window.showNotification('✅ Agregado a lista de verificados', 'success');
+                
+                // Clear form
+                document.getElementById('verificationValue').value = '';
+                document.getElementById('verificationNotes').value = '';
+                
+                // Reload list
+                window.loadVerifications();
+                
+                // Auto-verify existing servers with this email/name
+                await autoVerifyServers(type, value);
+                
+            } catch(e){
+                console.error('Error adding verification:', e);
+                window.showNotification('❌ Error: ' + e.message, 'error');
+            }
+        };
+
+        // Remove Verification
+        window.removeVerification = async function(id){
+            if(!confirm('¿Eliminar esta verificación de la lista?')) return;
+            
+            try{
+                await deleteDoc(doc(db, 'verified_list', id));
+                window.showNotification('🗑️ Verificación eliminada', 'success');
+                window.loadVerifications();
+            } catch(e){
+                console.error('Error removing verification:', e);
+                window.showNotification('❌ Error: ' + e.message, 'error');
+            }
+        };
+
+        // Auto-verify servers when adding to list
+        async function autoVerifyServers(type, value){
+            try{
+                const serversRef = collection(db, 'servers');
+                let q;
+                
+                if(type === 'email'){
+                    q = query(serversRef, where('ownerEmail', '==', value));
+                } else {
+                    q = query(serversRef, where('serverName', '==', value));
+                }
+                
+                const snap = await getDocs(q);
+                
+                snap.forEach(async (docSnap) => {
+                    await updateDoc(doc(db, 'servers', docSnap.id), {
+                        verified: true,
+                        verifiedAt: new Date(),
+                        verifiedBy: 'auto-verification',
+                        updatedAt: new Date()
+                    });
+                    console.log('✅ Auto-verificado:', docSnap.id);
+                });
+                
+                if(snap.size > 0){
+                    window.showNotification(`✅ ${snap.size} servidor(es) verificado(s) automáticamente`, 'success');
+                }
+            } catch(e){
+                console.error('Error auto-verifying:', e);
+            }
         }
 
-        function getMaterialIcon(mat){
-            const icons = {
-                'DIAMOND':'💎','EMERALD':'💚','GOLD_INGOT':'🥇','IRON_INGOT':'⚙️',
-                'NETHER_STAR':'⭐','PLAYER_HEAD':'👤','CHEST':'📦','BOOK':'📚',
-                'PAPER':'📄','APPLE':'🍎','DIAMOND_SWORD':'⚔️','SHIELD':'🛡️'
+        // Check if server should be auto-verified (call this when server is created/updated)
+        window.checkAutoVerification = async function(serverData, serverId){
+            try{
+                const { ownerEmail, serverName } = serverData;
+                
+                // Check email
+                if(ownerEmail){
+                    const emailCheck = await getDocs(query(
+                        collection(db, 'verified_list'),
+                        where('type', '==', 'email'),
+                        where('value', '==', ownerEmail.toLowerCase())
+                    ));
+                    
+                    if(!emailCheck.empty){
+                        await updateDoc(doc(db, 'servers', serverId), {
+                            verified: true,
+                            verifiedAt: new Date(),
+                            verifiedBy: 'auto-verification',
+                            updatedAt: new Date()
+                        });
+                        return true;
+                    }
+                }
+                
+                // Check name
+                if(serverName){
+                    const nameCheck = await getDocs(query(
+                        collection(db, 'verified_list'),
+                        where('type', '==', 'name'),
+                        where('value', '==', serverName.toLowerCase())
+                    ));
+                    
+                    if(!nameCheck.empty){
+                        await updateDoc(doc(db, 'servers', serverId), {
+                            verified: true,
+                            verifiedAt: new Date(),
+                            verifiedBy: 'auto-verification',
+                            updatedAt: new Date()
+                        });
+                        return true;
+                    }
+                }
+                
+                return false;
+            } catch(e){
+                console.error('Error checking auto-verification:', e);
+                return false;
+            }
+        };
+
+        // Export Data
+        window.exportData = async function(type){
+            try{
+                window.showNotification('📥 Preparando exportación...', 'info');
+                
+                let data = {};
+                
+                if(type === 'all' || type === 'servers'){
+                    const serversSnap = await getDocs(collection(db, 'servers'));
+                    data.servers = serversSnap.docs.map(d => ({id: d.id, ...d.data()}));
+                }
+                
+                if(type === 'all' || type === 'users'){
+                    const usersSnap = await getDocs(collection(db, 'users'));
+                    data.users = usersSnap.docs.map(d => ({id: d.id, ...d.data()}));
+                }
+                
+                if(type === 'all' || type === 'products'){
+                    const productsSnap = await getDocs(collection(db, 'products'));
+                    data.products = productsSnap.docs.map(d => ({id: d.id, ...d.data()}));
+                }
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `buycrafting_backup_${type}_${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                window.showNotification('✅ Datos exportados correctamente', 'success');
+            } catch(e){
+                console.error('Error exporting ', e);
+                window.showNotification('❌ Error al exportar', 'error');
+            }
+        };
+
+        // Save Settings
+        window.saveSettings = function(){
+            window.showNotification('✅ Configuración guardada correctamente', 'success');
+        };
+
+        // Helper Functions
+        window.getPlanName = function(plan){
+            const plans = {
+                'free': 'Gratis',
+                'premium': 'Premium',
+                'vip': 'VIP',
+                'enterprise': 'Enterprise'
             };
-            return `<div style="font-size:50px">${icons[mat]||'💎'}</div>`;
-        }
-
-        function renderGiftCards(cards){
-            const grid = document.getElementById('giftcardsGrid');
-            grid.innerHTML = cards.map(gc => `
-                <div class="giftcard" style="background:linear-gradient(135deg,${gc.color} 0%,${gc.color}dd 100%)">
-                    <div class="giftcard-amount">$${gc.value?.toFixed(2)||'0.00'}</div>
-                    <div class="giftcard-label">${gc.desc||'Crédito en tienda'}</div>
-                </div>
-            `).join('');
-        }
-
-        window.redeemCode = function(e){
-            e.preventDefault();
-            const code = document.getElementById('redeemInput').value.toUpperCase();
-            alert(`✅ Código "${code}" validado exitosamente`);
+            return plans[plan] || 'Gratis';
         };
 
-        // ========================================
-        // 💳 CHECKOUT FUNCTIONS
-        // ========================================
-        let currentProduct = null;
-        
-        window.buyProduct = function(id, name, price, desc){
-            currentProduct = { id, name, price, desc };
-            
-            document.getElementById('checkoutProductName').textContent = name;
-            document.getElementById('checkoutProductDesc').textContent = desc || 'Producto premium';
-            document.getElementById('checkoutProductPrice').textContent = '$' + price.toFixed(2);
-            document.getElementById('checkoutTotal').textContent = '$' + price.toFixed(2);
-            
-            document.getElementById('checkoutModal').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
+        window.viewUser = function(id){
+            window.showNotification('👁️ Ver usuario: ' + id, 'info');
         };
-        
-        window.closeCheckout = function(){
-            document.getElementById('checkoutModal').style.display = 'none';
-            document.body.style.overflow = '';
-            currentProduct = null;
+
+        window.deleteUser = function(id){
+            if(confirm('¿Eliminar este usuario?')){
+                window.showNotification('🗑️ Usuario eliminado', 'success');
+            }
         };
-        
-        window.processPayment = function(){
-            const username = document.getElementById('checkoutUsername').value.trim();
-            const email = document.getElementById('checkoutEmail').value.trim();
-            const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
-            
-            if(!username){
-                alert('⚠️ Por favor ingresa tu nombre de usuario de Minecraft');
-                document.getElementById('checkoutUsername').focus();
-                return;
-            }
-            if(!email || !email.includes('@')){
-                alert('⚠️ Por favor ingresa un correo electrónico válido');
-                document.getElementById('checkoutEmail').focus();
-                return;
-            }
-            
-            const paymentText = paymentMethod === 'paypal' ? 'PayPal' : 'Tarjeta de Crédito/Débito';
-            
-            // Aquí iría la integración real con PayPal/Stripe
-            alert(`✅ ¡Gracias por tu compra!\n\n📦 Producto: ${currentProduct.name}\n👤 Usuario: ${username}\n📧 Email: ${email}\n💳 Método: ${paymentText}\n💰 Total: $${currentProduct.price.toFixed(2)}\n\nEn un entorno real, aquí se procesaría el pago con ${paymentText}.`);
-            
-            closeCheckout();
+
+        window.viewTicket = function(id){
+            window.showNotification('🎫 Ver ticket: ' + id, 'info');
         };
-        
-        // Cerrar modal al presionar ESC
-        document.addEventListener('keydown', function(e){
-            if(e.key === 'Escape' && currentProduct){
-                closeCheckout();
+
+        window.deleteAnnouncement = function(id){
+            if(confirm('¿Eliminar este anuncio?')){
+                window.showNotification('🗑️ Anuncio eliminado', 'success');
+                window.loadAnnouncements();
             }
+        };
+
+        window.logout = function(){
+            localStorage.removeItem('admin_logged');
+            window.location.reload();
+        };
+
+        // Notification
+        window.showNotification = function(message, type = 'success'){
+            const notif = document.getElementById('notification');
+            const icon = document.getElementById('notificationIcon');
+            document.getElementById('notificationText').textContent = message;
+            
+            icon.className = type === 'success' ? 'fas fa-check-circle' : 
+                           type === 'error' ? 'fas fa-exclamation-circle' : 
+                           'fas fa-info-circle';
+            
+            notif.classList.add('show');
+            
+            setTimeout(() => notif.classList.remove('show'), 3000);
+        };
+
+        // Update verification label when type changes
+        document.getElementById('verificationType')?.addEventListener('change', function(e){
+            const label = document.getElementById('verificationLabel');
+            label.textContent = e.target.value === 'email' ? 'Email a verificar' : 'Nombre de servidor a verificar';
+            document.getElementById('verificationValue').placeholder = e.target.value === 'email' ? 'ejemplo@dominio.com' : 'Nombre del Servidor';
         });
 
-        function showError(msg){
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('error').style.display = 'block';
-            document.getElementById('errorMsg').textContent = msg;
-        }
-
-        loadStore();
+        // Load dashboard on start
+        window.loadDashboard();
+        
+        console.log('✅ Admin Panel con verificaciones automáticas cargado correctamente');
     </script>
 </body>
 </html>
