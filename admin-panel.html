@@ -133,7 +133,7 @@
         }
         .stat-card{
             background:var(--bg-card);border:1px solid var(--border);
-            border-radius:16px;padding:24px;transition:all 0.3s
+            border-radius:16px;padding:24px;transition:all 0.3s;cursor:pointer
         }
         .stat-card:hover{
             transform:translateY(-4px);border-color:var(--primary);
@@ -214,27 +214,6 @@
             transition:all 0.3s
         }
         .btn-apply:hover{transform:scale(1.05)}
-        .btn-danger{
-            padding:8px 16px;background:var(--danger);
-            border:none;border-radius:8px;color:white;
-            font-size:13px;font-weight:600;cursor:pointer;
-            transition:all 0.3s
-        }
-        .btn-danger:hover{transform:scale(1.05)}
-        
-        .announcement-card{
-            background:var(--bg);border:1px solid var(--border);
-            border-radius:12px;padding:20px;margin-bottom:16px
-        }
-        .announcement-card h4{
-            margin-bottom:8px;color:var(--primary)
-        }
-        .announcement-card p{
-            color:var(--text-muted);font-size:14px;margin-bottom:12px
-        }
-        .announcement-meta{
-            display:flex;gap:16px;font-size:12px;color:var(--text-muted)
-        }
         
         .notification{
             position:fixed;top:20px;right:20px;padding:16px 24px;
@@ -271,7 +250,7 @@
                 <h1>Admin Panel</h1>
                 <p>BuyCrafting Pro - Acceso Exclusivo</p>
             </div>
-            <form onsubmit="adminLogin(event)">
+            <form onsubmit="window.handleLogin(event)">
                 <div class="form-group">
                     <label><i class="fas fa-envelope"></i> Correo Electrónico</label>
                     <input type="email" id="adminEmail" placeholder="tu@email.com" required>
@@ -301,31 +280,16 @@
                 <strong id="adminEmailDisplay">Cargando...</strong>
             </div>
             
-            <div class="nav-item active" onclick="showSection('dashboard')">
+            <div class="nav-item active" onclick="window.showSection('dashboard')">
                 <i class="fas fa-chart-line"></i> Dashboard
             </div>
-            <div class="nav-item" onclick="showSection('servers')">
+            <div class="nav-item" onclick="window.showSection('servers')">
                 <i class="fas fa-server"></i> Servidores
             </div>
-            <div class="nav-item" onclick="showSection('plans')">
+            <div class="nav-item" onclick="window.showSection('plans')">
                 <i class="fas fa-crown"></i> Gestión de Planes
             </div>
-            <div class="nav-item" onclick="showSection('users')">
-                <i class="fas fa-users"></i> Usuarios
-            </div>
-            <div class="nav-item" onclick="showSection('products')">
-                <i class="fas fa-box"></i> Productos
-            </div>
-            <div class="nav-item" onclick="showSection('orders')">
-                <i class="fas fa-shopping-cart"></i> Órdenes
-            </div>
-            <div class="nav-item" onclick="showSection('announcements')">
-                <i class="fas fa-bullhorn"></i> Anuncios
-            </div>
-            <div class="nav-item" onclick="showSection('settings')">
-                <i class="fas fa-cog"></i> Configuración
-            </div>
-            <div class="nav-item" onclick="adminLogout()" style="color:var(--danger)">
+            <div class="nav-item" onclick="window.adminLogout()" style="color:var(--danger)">
                 <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
             </div>
         </div>
@@ -342,7 +306,7 @@
                 </div>
                 
                 <div class="stats-grid">
-                    <div class="stat-card">
+                    <div class="stat-card" onclick="window.showSection('servers')">
                         <div class="stat-card-header">
                             <div>
                                 <div class="stat-card-value" id="totalServers">0</div>
@@ -390,18 +354,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-chart-bar"></i> Actividad Reciente</h3>
-                    </div>
-                    <div id="recentActivity">
-                        <div class="loading">
-                            <i class="fas fa-spinner"></i>
-                            <p>Cargando actividad...</p>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- Servers Section -->
@@ -416,7 +368,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h3><i class="fas fa-list"></i> Lista de Servidores</h3>
-                        <button onclick="loadServers()" class="btn btn-primary" style="width:auto">
+                        <button onclick="window.loadServers()" class="btn btn-primary" style="width:auto">
                             <i class="fas fa-sync-alt"></i> Actualizar
                         </button>
                     </div>
@@ -450,29 +402,16 @@
                                 <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px">
                                     Características básicas
                                 </p>
-                                <ul style="text-align:left;color:var(--text-muted);font-size:13px;line-height:2">
-                                    <li><i class="fas fa-check"></i> Hasta 10 productos</li>
-                                    <li><i class="fas fa-check"></i> Tienda básica</li>
-                                    <li><i class="fas fa-check"></i> Soporte por email</li>
-                                    <li><i class="fas fa-check"></i> 5% comisión</li>
-                                </ul>
                             </div>
                         </div>
                         
-                        <div class="stat-card" style="border-color:var(--primary);box-shadow:0 0 20px rgba(99,102,241,0.2)">
+                        <div class="stat-card" style="border-color:var(--primary)">
                             <div style="text-align:center;padding:20px">
                                 <i class="fas fa-gem" style="font-size:48px;color:var(--primary);margin-bottom:16px"></i>
                                 <h3 style="margin-bottom:8px">Plan Premium</h3>
                                 <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px">
                                     $9.99/mes
                                 </p>
-                                <ul style="text-align:left;color:var(--text-muted);font-size:13px;line-height:2">
-                                    <li><i class="fas fa-check"></i> Productos ilimitados</li>
-                                    <li><i class="fas fa-check"></i> Tienda personalizada</li>
-                                    <li><i class="fas fa-check"></i> Sin comisión</li>
-                                    <li><i class="fas fa-check"></i> Soporte prioritario</li>
-                                    <li><i class="fas fa-check"></i> Estadísticas avanzadas</li>
-                                </ul>
                             </div>
                         </div>
                         
@@ -483,171 +422,9 @@
                                 <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px">
                                     $19.99/mes
                                 </p>
-                                <ul style="text-align:left;color:var(--text-muted);font-size:13px;line-height:2">
-                                    <li><i class="fas fa-check"></i> Todo lo de Premium</li>
-                                    <li><i class="fas fa-check"></i> Dominio personalizado</li>
-                                    <li><i class="fas fa-check"></i> API access</li>
-                                    <li><i class="fas fa-check"></i> Soporte 24/7</li>
-                                    <li><i class="fas fa-check"></i> Personalización total</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="stat-card" style="border-color:var(--warning)">
-                            <div style="text-align:center;padding:20px">
-                                <i class="fas fa-rocket" style="font-size:48px;color:var(--warning);margin-bottom:16px"></i>
-                                <h3 style="margin-bottom:8px">Enterprise</h3>
-                                <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px">
-                                    Contacto
-                                </p>
-                                <ul style="text-align:left;color:var(--text-muted);font-size:13px;line-height:2">
-                                    <li><i class="fas fa-check"></i> Todo lo de VIP</li>
-                                    <li><i class="fas fa-check"></i> Múltiples servidores</li>
-                                    <li><i class="fas fa-check"></i> White label</li>
-                                    <li><i class="fas fa-check"></i> Soporte dedicado</li>
-                                    <li><i class="fas fa-check"></i> SLA garantizado</li>
-                                </ul>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Users Section -->
-            <div id="section-users" style="display:none">
-                <div class="page-header">
-                    <div>
-                        <h1>Usuarios</h1>
-                        <p>Gestión de usuarios registrados</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-users"></i> Lista de Usuarios</h3>
-                        <button onclick="loadUsers()" class="btn btn-primary" style="width:auto">
-                            <i class="fas fa-sync-alt"></i> Actualizar
-                        </button>
-                    </div>
-                    <div id="usersList">
-                        <div class="loading">
-                            <i class="fas fa-spinner"></i>
-                            <p>Cargando usuarios...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Products Section -->
-            <div id="section-products" style="display:none">
-                <div class="page-header">
-                    <div>
-                        <h1>Productos</h1>
-                        <p>Todos los productos de la plataforma</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-box"></i> Productos Registrados</h3>
-                        <button onclick="loadProducts()" class="btn btn-primary" style="width:auto">
-                            <i class="fas fa-sync-alt"></i> Actualizar
-                        </button>
-                    </div>
-                    <div id="productsList">
-                        <div class="loading">
-                            <i class="fas fa-spinner"></i>
-                            <p>Cargando productos...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Orders Section -->
-            <div id="section-orders" style="display:none">
-                <div class="page-header">
-                    <div>
-                        <h1>Órdenes</h1>
-                        <p>Todas las órdenes de la plataforma</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-shopping-cart"></i> Órdenes Recientes</h3>
-                        <button onclick="loadOrders()" class="btn btn-primary" style="width:auto">
-                            <i class="fas fa-sync-alt"></i> Actualizar
-                        </button>
-                    </div>
-                    <div id="ordersList">
-                        <div class="loading">
-                            <i class="fas fa-spinner"></i>
-                            <p>Cargando órdenes...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Announcements Section -->
-            <div id="section-announcements" style="display:none">
-                <div class="page-header">
-                    <div>
-                        <h1>Anuncios</h1>
-                        <p>Publica anuncios para todos los servidores</p>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-plus"></i> Nuevo Anuncio</h3>
-                    </div>
-                    <div class="form-group">
-                        <label>Título del Anuncio</label>
-                        <input type="text" id="announcementTitle" placeholder="Ej: Nueva actualización disponible">
-                    </div>
-                    <div class="form-group">
-                        <label>Contenido</label>
-                        <textarea id="announcementContent" rows="4" placeholder="Escribe el contenido del anuncio..." style="width:100%;padding:14px;background:var(--bg);border:1px solid var(--border);border-radius:12px;color:var(--text);resize:vertical;font-family:inherit"></textarea>
-                    </div>
-                    <button onclick="publishAnnouncement()" class="btn btn-primary" style="width:auto">
-                        <i class="fas fa-paper-plane"></i> Publicar Anuncio
-                    </button>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-list"></i> Anuncios Publicados</h3>
-                    </div>
-                    <div id="announcementsList">
-                        <div class="loading">
-                            <i class="fas fa-spinner"></i>
-                            <p>Cargando anuncios...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Settings Section -->
-            <div id="section-settings" style="display:none">
-                <div class="page-header">
-                    <div>
-                        <h1>Configuración</h1>
-                        <p>Configuración de la plataforma</p>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-cog"></i> Configuración General</h3>
-                    </div>
-                    <div class="form-group">
-                        <label>Nombre de la Plataforma</label>
-                        <input type="text" id="platformName" value="BuyCrafting Pro">
-                    </div>
-                    <div class="form-group">
-                        <label>Email de Soporte</label>
-                        <input type="email" id="supportEmail" value="soporte@buycrafting.com">
-                    </div>
-                    <button onclick="saveSettings()" class="btn btn-primary" style="width:auto">
-                        <i class="fas fa-save"></i> Guardar Configuración
-                    </button>
                 </div>
             </div>
         </div>
@@ -661,7 +438,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, updateDoc, addDoc, query, where, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCIGXn0zND_8A_nD6NPxx1txYFQzrhM9hg",
@@ -675,22 +452,24 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // TU EMAIL DE ADMIN
         const ADMIN_EMAIL = 'adrianortiz3322@gmail.com';
+        const ADMIN_PASSWORD = 'Adri2626@';
 
-        // Login
-        window.adminLogin = function(e){
+        // Login Handler
+        window.handleLogin = function(e){
             e.preventDefault();
             const email = document.getElementById('adminEmail').value;
             const password = document.getElementById('adminPassword').value;
 
-            if(email === ADMIN_EMAIL && password === 'Adri2626@'){
+            console.log('Intentando login:', email, password);
+
+            if(email === ADMIN_EMAIL && password === ADMIN_PASSWORD){
                 localStorage.setItem('admin_logged', 'true');
                 localStorage.setItem('admin_email', email);
-                showAdminPanel();
-                showNotification('✅ Bienvenido Administrador', 'success');
+                window.showAdminPanel();
+                window.showNotification('✅ Bienvenido Administrador', 'success');
             } else {
-                showNotification('❌ Credenciales incorrectas', 'error');
+                window.showNotification('❌ Credenciales incorrectas', 'error');
             }
         };
 
@@ -702,50 +481,60 @@
         };
 
         // Show Admin Panel
-        function showAdminPanel(){
+        window.showAdminPanel = function(){
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('adminPanel').style.display = 'block';
             document.getElementById('adminEmailDisplay').textContent = ADMIN_EMAIL;
-            loadDashboard();
-        }
+            window.loadDashboard();
+        };
 
         // Check if logged in
         if(localStorage.getItem('admin_logged') === 'true'){
-            showAdminPanel();
+            window.showAdminPanel();
         }
 
         // Navigation
         window.showSection = function(section){
+            console.log('Cambiando a sección:', section);
+            
+            // Hide all sections
             document.querySelectorAll('.main-content > div').forEach(div => {
                 if(div.id.startsWith('section-')){
                     div.style.display = 'none';
                 }
             });
-            document.getElementById('section-' + section).style.display = 'block';
             
+            // Show selected section
+            const targetSection = document.getElementById('section-' + section);
+            if(targetSection){
+                targetSection.style.display = 'block';
+            }
+            
+            // Update nav active state
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
-            event.target.closest('.nav-item').classList.add('active');
-
-            if(section === 'servers') loadServers();
-            if(section === 'users') loadUsers();
-            if(section === 'products') loadProducts();
-            if(section === 'orders') loadOrders();
-            if(section === 'announcements') loadAnnouncements();
+            
+            // Load section data
+            if(section === 'servers'){
+                window.loadServers();
+            } else if(section === 'dashboard'){
+                window.loadDashboard();
+            }
         };
 
         // Load Dashboard
-        async function loadDashboard(){
+        window.loadDashboard = async function(){
             try{
+                console.log('Cargando dashboard...');
                 const serversSnap = await getDocs(collection(db, 'servers'));
                 const usersSnap = await getDocs(collection(db, 'users'));
                 const productsSnap = await getDocs(collection(db, 'products'));
                 const ordersSnap = await getDocs(collection(db, 'orders'));
 
-                document.getElementById('totalServers').textContent = serversSnap.size;
-                document.getElementById('totalUsers').textContent = usersSnap.size;
-                document.getElementById('totalProducts').textContent = productsSnap.size;
+                const totalServers = serversSnap.size;
+                const totalUsers = usersSnap.size;
+                const totalProducts = productsSnap.size;
                 
                 let revenue = 0;
                 ordersSnap.forEach(doc => {
@@ -754,38 +543,23 @@
                         revenue += data.price || 0;
                     }
                 });
-                document.getElementById('totalRevenue').textContent = '$' + revenue.toFixed(2);
 
-                // Recent activity
-                const recentDiv = document.getElementById('recentActivity');
-                if(ordersSnap.size > 0){
-                    const recent = ordersSnap.docs.slice(0, 5);
-                    recentDiv.innerHTML = recent.map(docSnap => {
-                        const data = docSnap.data();
-                        return `
-                            <div style="padding:12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
-                                <div>
-                                    <strong>${data.productName || 'Producto'}</strong>
-                                    <p style="color:var(--text-muted);font-size:13px">${data.playerName || 'Jugador'}</p>
-                                </div>
-                                <div style="text-align:right">
-                                    <strong style="color:var(--primary)">$${(data.price || 0).toFixed(2)}</strong>
-                                    <p style="color:var(--text-muted);font-size:12px">${data.createdAt?.toDate?.().toLocaleDateString() || 'N/A'}</p>
-                                </div>
-                            </div>
-                        `;
-                    }).join('');
-                } else {
-                    recentDiv.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:20px">No hay actividad reciente</p>';
-                }
+                document.getElementById('totalServers').textContent = totalServers;
+                document.getElementById('totalUsers').textContent = totalUsers;
+                document.getElementById('totalProducts').textContent = totalProducts;
+                document.getElementById('totalRevenue').textContent = '$' + revenue.toFixed(2);
+                
+                console.log('Dashboard cargado:', { totalServers, totalUsers, totalProducts, revenue });
             } catch(e){
                 console.error('Error loading dashboard:', e);
+                window.showNotification('Error al cargar dashboard: ' + e.message, 'error');
             }
-        }
+        };
 
         // Load Servers
         window.loadServers = async function(){
             try{
+                console.log('Cargando servidores...');
                 const serversSnap = await getDocs(collection(db, 'servers'));
                 const list = document.getElementById('serversList');
                 list.innerHTML = '';
@@ -809,7 +583,7 @@
                         </div>
                         <div class="plan-badge ${plan}">
                             <i class="fas fa-crown"></i>
-                            <span>${getPlanName(plan)}</span>
+                            <span>${window.getPlanName(plan)}</span>
                         </div>
                         <div class="plan-selector">
                             <select id="plan-${docSnap.id}">
@@ -818,23 +592,31 @@
                                 <option value="vip" ${plan === 'vip' ? 'selected' : ''}>VIP</option>
                                 <option value="enterprise" ${plan === 'enterprise' ? 'selected' : ''}>Enterprise</option>
                             </select>
-                            <button onclick="updateServerPlan('${docSnap.id}')" class="btn-apply">
+                            <button onclick="window.updateServerPlan('${docSnap.id}')" class="btn-apply">
                                 <i class="fas fa-check"></i> Aplicar
                             </button>
                         </div>
                     `;
                     list.appendChild(item);
                 });
+                
+                console.log('Servidores cargados:', serversSnap.size);
             } catch(e){
                 console.error('Error loading servers:', e);
-                document.getElementById('serversList').innerHTML = '<p style="text-align:center;color:var(--danger);padding:40px">Error al cargar servidores</p>';
+                document.getElementById('serversList').innerHTML = '<p style="text-align:center;color:var(--danger);padding:40px">Error al cargar servidores: ' + e.message + '</p>';
             }
         };
 
         // Update Server Plan
         window.updateServerPlan = async function(serverId){
             const select = document.getElementById(`plan-${serverId}`);
+            if(!select){
+                window.showNotification('Error: No se encontró el selector', 'error');
+                return;
+            }
+            
             const newPlan = select.value;
+            console.log('Actualizando plan:', serverId, newPlan);
 
             try{
                 const serverRef = doc(db, 'servers', serverId);
@@ -843,188 +625,15 @@
                     updatedAt: new Date()
                 });
 
-                showNotification(`✅ Plan ${getPlanName(newPlan)} aplicado correctamente`, 'success');
+                window.showNotification(`✅ Plan ${window.getPlanName(newPlan)} aplicado correctamente`, 'success');
             } catch(e){
                 console.error('Error updating plan:', e);
-                showNotification('❌ Error al aplicar el plan', 'error');
+                window.showNotification('❌ Error al aplicar el plan: ' + e.message, 'error');
             }
-        };
-
-        // Load Users
-        window.loadUsers = async function(){
-            try{
-                const usersSnap = await getDocs(collection(db, 'users'));
-                const list = document.getElementById('usersList');
-                list.innerHTML = '';
-
-                if(usersSnap.empty){
-                    list.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:40px">No hay usuarios registrados</p>';
-                    return;
-                }
-
-                usersSnap.forEach(docSnap => {
-                    const data = docSnap.data();
-                    
-                    const item = document.createElement('div');
-                    item.className = 'server-item';
-                    item.innerHTML = `
-                        <div class="server-info">
-                            <h4>${data.displayName || 'Usuario'}</h4>
-                            <p><i class="fas fa-envelope"></i> ${data.email || 'N/A'}</p>
-                        </div>
-                        <div class="plan-badge free">
-                            <i class="fas fa-user"></i>
-                            <span>Usuario</span>
-                        </div>
-                    `;
-                    list.appendChild(item);
-                });
-            } catch(e){
-                console.error('Error loading users:', e);
-            }
-        };
-
-        // Load Products
-        window.loadProducts = async function(){
-            try{
-                const productsSnap = await getDocs(collection(db, 'products'));
-                const list = document.getElementById('productsList');
-                list.innerHTML = '';
-
-                if(productsSnap.empty){
-                    list.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:40px">No hay productos</p>';
-                    return;
-                }
-
-                productsSnap.forEach(docSnap => {
-                    const data = docSnap.data();
-                    
-                    const item = document.createElement('div');
-                    item.className = 'server-item';
-                    item.innerHTML = `
-                        <div class="server-info">
-                            <h4>${data.name || 'Producto'}</h4>
-                            <p><i class="fas fa-tag"></i> ${data.category || 'General'}</p>
-                            <p><i class="fas fa-dollar-sign"></i> $${(data.price || 0).toFixed(2)}</p>
-                        </div>
-                        <div style="text-align:right">
-                            <p style="color:var(--text-muted);font-size:12px">Ventas</p>
-                            <strong>${data.sales || 0}</strong>
-                        </div>
-                    `;
-                    list.appendChild(item);
-                });
-            } catch(e){
-                console.error('Error loading products:', e);
-            }
-        };
-
-        // Load Orders
-        window.loadOrders = async function(){
-            try{
-                const ordersSnap = await getDocs(collection(db, 'orders'));
-                const list = document.getElementById('ordersList');
-                list.innerHTML = '';
-
-                if(ordersSnap.empty){
-                    list.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:40px">No hay órdenes</p>';
-                    return;
-                }
-
-                ordersSnap.forEach(docSnap => {
-                    const data = docSnap.data();
-                    
-                    const item = document.createElement('div');
-                    item.className = 'server-item';
-                    item.innerHTML = `
-                        <div class="server-info">
-                            <h4>${data.productName || 'Producto'}</h4>
-                            <p><i class="fas fa-user"></i> ${data.playerName || 'Jugador'}</p>
-                            <p><i class="fas fa-calendar"></i> ${data.createdAt?.toDate?.().toLocaleDateString() || 'N/A'}</p>
-                        </div>
-                        <div style="text-align:right">
-                            <strong style="color:var(--primary);font-size:18px">$${(data.price || 0).toFixed(2)}</strong>
-                            <p style="color:${data.delivered ? 'var(--secondary)' : 'var(--warning)'};font-size:12px">
-                                ${data.delivered ? '✓ Entregado' : '⏳ Pendiente'}
-                            </p>
-                        </div>
-                    `;
-                    list.appendChild(item);
-                });
-            } catch(e){
-                console.error('Error loading orders:', e);
-            }
-        };
-
-        // Load Announcements
-        window.loadAnnouncements = async function(){
-            try{
-                const announcementsSnap = await getDocs(collection(db, 'announcements'));
-                const list = document.getElementById('announcementsList');
-                list.innerHTML = '';
-
-                if(announcementsSnap.empty){
-                    list.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:40px">No hay anuncios</p>';
-                    return;
-                }
-
-                announcementsSnap.forEach(docSnap => {
-                    const data = docSnap.data();
-                    
-                    const item = document.createElement('div');
-                    item.className = 'announcement-card';
-                    item.innerHTML = `
-                        <h4>${data.title || 'Anuncio'}</h4>
-                        <p>${data.content || ''}</p>
-                        <div class="announcement-meta">
-                            <span><i class="fas fa-user"></i> ${data.publishedBy || 'Admin'}</span>
-                            <span><i class="fas fa-calendar"></i> ${data.createdAt?.toDate?.().toLocaleDateString() || 'N/A'}</span>
-                            <span><i class="fas fa-check-circle"></i> ${data.active ? 'Activo' : 'Inactivo'}</span>
-                        </div>
-                    `;
-                    list.appendChild(item);
-                });
-            } catch(e){
-                console.error('Error loading announcements:', e);
-            }
-        };
-
-        // Publish Announcement
-        window.publishAnnouncement = async function(){
-            const title = document.getElementById('announcementTitle').value;
-            const content = document.getElementById('announcementContent').value;
-
-            if(!title || !content){
-                showNotification('❌ Completa todos los campos', 'error');
-                return;
-            }
-
-            try{
-                await addDoc(collection(db, 'announcements'), {
-                    title: title,
-                    content: content,
-                    publishedBy: ADMIN_EMAIL,
-                    createdAt: new Date(),
-                    active: true
-                });
-
-                showNotification('✅ Anuncio publicado exitosamente', 'success');
-                document.getElementById('announcementTitle').value = '';
-                document.getElementById('announcementContent').value = '';
-                loadAnnouncements();
-            } catch(e){
-                console.error('Error publishing announcement:', e);
-                showNotification('❌ Error al publicar', 'error');
-            }
-        };
-
-        // Save Settings
-        window.saveSettings = function(){
-            showNotification('✅ Configuración guardada', 'success');
         };
 
         // Helper Functions
-        function getPlanName(plan){
+        window.getPlanName = function(plan){
             const plans = {
                 'free': 'Gratis',
                 'premium': 'Premium',
@@ -1032,9 +641,9 @@
                 'enterprise': 'Enterprise'
             };
             return plans[plan] || 'Gratis';
-        }
+        };
 
-        function showNotification(message, type = 'success'){
+        window.showNotification = function(message, type = 'success'){
             const notif = document.getElementById('notification');
             const icon = document.getElementById('notificationIcon');
             const text = document.getElementById('notificationText');
@@ -1046,12 +655,9 @@
             setTimeout(() => {
                 notif.classList.remove('show');
             }, 3000);
-        }
+        };
 
-        // Make functions global
-        window.updateServerPlan = updateServerPlan;
-        window.publishAnnouncement = publishAnnouncement;
-        window.saveSettings = saveSettings;
+        console.log('Admin Panel cargado correctamente');
     </script>
 </body>
 </html>
