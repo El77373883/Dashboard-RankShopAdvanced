@@ -1195,6 +1195,7 @@
             }
 
             try{
+                // 1. Cargar configuración visual desde 'stores'
                 const storeRef = doc(db, 'stores', serverId);
                 const storeSnap = await getDoc(storeRef);
 
@@ -1204,8 +1205,17 @@
                     return;
                 }
 
-                const data = storeSnap.data();
-                console.log('✅ Store loaded:', data);
+                const storeData = storeSnap.data();
+                console.log('✅ Store loaded:', storeData);
+
+                // 2. Cargar estado de verificación/plan desde 'servers'
+                const serverRef = doc(db, 'servers', serverId);
+                const serverSnap = await getDoc(serverRef);
+                const serverData = serverSnap.exists() ? serverSnap.data() : {};
+                
+                // Combinar datos: store para diseño, server para estado
+                const data = { ...storeData, ...serverData };
+                console.log('✅ Datos combinados:', data);
 
                 // === COLORES ===
                 const root = document.documentElement;
@@ -1298,8 +1308,8 @@
                 document.getElementById('storeContent').style.display = 'block';
                 document.title = `${data.name || 'Tienda'} - BuyCrafting`;
 
-                // Setup real-time listener for plan/verification changes
-                setupRealtimeListener();
+                // Setup real-time listener for BOTH collections
+                setupRealtimeListeners(serverId);
 
             } catch(err){
                 console.error('❌ Error:', err);
@@ -1332,16 +1342,39 @@
             }
         }
 
-        // Real-time listener for changes
-        function setupRealtimeListener(){
+        // Real-time listeners for BOTH collections
+        function setupRealtimeListeners(serverId){
             if(!serverId) return;
             
+            // Listener para 'servers' (verificación y plan)
+            const serverRef = doc(db, 'servers', serverId);
+            onSnapshot(serverRef, (doc) => {
+                if(doc.exists()){
+                    const data = doc.data();
+                    // Solo actualizar verificación y plan, no el diseño
+                    updatePlanAndVerification({
+                        plan: data.plan,
+                        verified: data.verified
+                    });
+                    console.log('🔄 Server actualizado:', { plan: data.plan, verified: data.verified });
+                }
+            });
+            
+            // Listener para 'stores' (configuración visual)
             const storeRef = doc(db, 'stores', serverId);
             onSnapshot(storeRef, (doc) => {
                 if(doc.exists()){
                     const data = doc.data();
-                    updatePlanAndVerification(data);
-                    console.log('🔄 Datos actualizados en tiempo real:', { plan: data.plan, verified: data.verified });
+                    // Actualizar solo elementos visuales si cambian
+                    const title = document.getElementById('storeTitle');
+                    const desc = document.getElementById('storeDesc');
+                    const publisher = document.getElementById('publisherName');
+                    
+                    if(data.name && title.textContent !== data.name) title.textContent = data.name;
+                    if(data.description && desc.textContent !== data.description) desc.textContent = data.description;
+                    if(data.publishedBy && publisher.textContent !== data.publishedBy) publisher.textContent = data.publishedBy;
+                    
+                    console.log('🔄 Store actualizado');
                 }
             });
         }
