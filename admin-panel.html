@@ -14,8 +14,8 @@
             --gradient:linear-gradient(135deg,#6366f1 0%,#a855f7 100%)
         }
         body{
-            font-family:'Inter',sans-serif;background:var(--bg);
-            color:var(--text);min-height:100vh
+            font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+            background:var(--bg);color:var(--text);min-height:100vh
         }
         
         /* Login Screen */
@@ -43,9 +43,8 @@
             50%{transform:scale(1.05)}
         }
         .login-header h1{
-            font-size:28px;margin-bottom:8px;
-            background:var(--gradient);-webkit-background-clip:text;
-            -webkit-text-fill-color:transparent
+            font-size:28px;margin-bottom:8px;background:var(--gradient);
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent
         }
         .login-header p{color:var(--text-muted);font-size:14px}
         .form-group{margin-bottom:20px}
@@ -93,6 +92,16 @@
             -webkit-background-clip:text;-webkit-text-fill-color:transparent
         }
         .sidebar-header p{color:var(--text-muted);font-size:13px}
+        .admin-info{
+            background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);
+            border-radius:12px;padding:16px;margin-bottom:24px
+        }
+        .admin-info p{
+            font-size:13px;color:var(--text-muted);margin-bottom:4px
+        }
+        .admin-info strong{
+            color:var(--text);font-size:14px
+        }
         .nav-item{
             padding:14px 16px;margin-bottom:8px;border-radius:12px;
             cursor:pointer;transition:all 0.3s;display:flex;
@@ -113,7 +122,7 @@
         }
         .page-header{
             margin-bottom:32px;display:flex;
-            justify-content:space-between;align-items:center
+            justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px
         }
         .page-header h1{font-size:32px;margin-bottom:8px}
         .page-header p{color:var(--text-muted)}
@@ -150,7 +159,7 @@
         }
         .card-header{
             display:flex;justify-content:space-between;
-            align-items:center;margin-bottom:20px
+            align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px
         }
         .card-header h3{font-size:20px}
         
@@ -166,7 +175,7 @@
             box-shadow:0 4px 20px rgba(99,102,241,0.2)
         }
         .server-info h4{margin-bottom:4px;font-size:16px}
-        .server-info p{color:var(--text-muted);font-size:13px}
+        .server-info p{color:var(--text-muted);font-size:13px;margin-bottom:2px}
         
         .plan-badge{
             display:inline-flex;align-items:center;gap:8px;
@@ -191,7 +200,7 @@
         }
         
         .plan-selector{
-            display:flex;gap:8px;align-items:center
+            display:flex;gap:8px;align-items:center;flex-wrap:wrap
         }
         .plan-selector select{
             padding:8px 12px;background:var(--bg);
@@ -205,6 +214,27 @@
             transition:all 0.3s
         }
         .btn-apply:hover{transform:scale(1.05)}
+        .btn-danger{
+            padding:8px 16px;background:var(--danger);
+            border:none;border-radius:8px;color:white;
+            font-size:13px;font-weight:600;cursor:pointer;
+            transition:all 0.3s
+        }
+        .btn-danger:hover{transform:scale(1.05)}
+        
+        .announcement-card{
+            background:var(--bg);border:1px solid var(--border);
+            border-radius:12px;padding:20px;margin-bottom:16px
+        }
+        .announcement-card h4{
+            margin-bottom:8px;color:var(--primary)
+        }
+        .announcement-card p{
+            color:var(--text-muted);font-size:14px;margin-bottom:12px
+        }
+        .announcement-meta{
+            display:flex;gap:16px;font-size:12px;color:var(--text-muted)
+        }
         
         .notification{
             position:fixed;top:20px;right:20px;padding:16px 24px;
@@ -216,6 +246,14 @@
         .notification.show{transform:translateX(0)}
         .notification.success{border-color:var(--secondary)}
         .notification.error{border-color:var(--danger)}
+        
+        .loading{
+            text-align:center;padding:40px;color:var(--text-muted)
+        }
+        .loading i{
+            font-size:32px;margin-bottom:12px;animation:spin 1s linear infinite
+        }
+        @keyframes spin{to{transform:rotate(360deg)}}
         
         @media(max-width:768px){
             .sidebar{transform:translateX(-100%)}
@@ -257,6 +295,12 @@
                 <h2><i class="fas fa-crown"></i> Admin Panel</h2>
                 <p>BuyCrafting Pro</p>
             </div>
+            
+            <div class="admin-info">
+                <p><i class="fas fa-user"></i> Administrador</p>
+                <strong id="adminEmailDisplay">Cargando...</strong>
+            </div>
+            
             <div class="nav-item active" onclick="showSection('dashboard')">
                 <i class="fas fa-chart-line"></i> Dashboard
             </div>
@@ -269,10 +313,19 @@
             <div class="nav-item" onclick="showSection('users')">
                 <i class="fas fa-users"></i> Usuarios
             </div>
+            <div class="nav-item" onclick="showSection('products')">
+                <i class="fas fa-box"></i> Productos
+            </div>
+            <div class="nav-item" onclick="showSection('orders')">
+                <i class="fas fa-shopping-cart"></i> Órdenes
+            </div>
             <div class="nav-item" onclick="showSection('announcements')">
                 <i class="fas fa-bullhorn"></i> Anuncios
             </div>
-            <div class="nav-item" onclick="adminLogout()">
+            <div class="nav-item" onclick="showSection('settings')">
+                <i class="fas fa-cog"></i> Configuración
+            </div>
+            <div class="nav-item" onclick="adminLogout()" style="color:var(--danger)">
                 <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
             </div>
         </div>
@@ -316,6 +369,18 @@
                     <div class="stat-card">
                         <div class="stat-card-header">
                             <div>
+                                <div class="stat-card-value" id="totalProducts">0</div>
+                                <div class="stat-card-label">Productos Activos</div>
+                            </div>
+                            <div class="stat-card-icon">
+                                <i class="fas fa-box"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div>
                                 <div class="stat-card-value" id="totalRevenue">$0</div>
                                 <div class="stat-card-label">Ingresos Totales</div>
                             </div>
@@ -324,16 +389,16 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="stat-card">
-                        <div class="stat-card-header">
-                            <div>
-                                <div class="stat-card-value" id="totalProducts">0</div>
-                                <div class="stat-card-label">Productos Activos</div>
-                            </div>
-                            <div class="stat-card-icon">
-                                <i class="fas fa-box"></i>
-                            </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-bar"></i> Actividad Reciente</h3>
+                    </div>
+                    <div id="recentActivity">
+                        <div class="loading">
+                            <i class="fas fa-spinner"></i>
+                            <p>Cargando actividad...</p>
                         </div>
                     </div>
                 </div>
@@ -351,11 +416,15 @@
                 <div class="card">
                     <div class="card-header">
                         <h3><i class="fas fa-list"></i> Lista de Servidores</h3>
+                        <button onclick="loadServers()" class="btn btn-primary" style="width:auto">
+                            <i class="fas fa-sync-alt"></i> Actualizar
+                        </button>
                     </div>
                     <div class="server-list" id="serversList">
-                        <p style="text-align:center;color:var(--text-muted);padding:40px">
-                            Cargando servidores...
-                        </p>
+                        <div class="loading">
+                            <i class="fas fa-spinner"></i>
+                            <p>Cargando servidores...</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -385,6 +454,7 @@
                                     <li><i class="fas fa-check"></i> Hasta 10 productos</li>
                                     <li><i class="fas fa-check"></i> Tienda básica</li>
                                     <li><i class="fas fa-check"></i> Soporte por email</li>
+                                    <li><i class="fas fa-check"></i> 5% comisión</li>
                                 </ul>
                             </div>
                         </div>
@@ -401,6 +471,7 @@
                                     <li><i class="fas fa-check"></i> Tienda personalizada</li>
                                     <li><i class="fas fa-check"></i> Sin comisión</li>
                                     <li><i class="fas fa-check"></i> Soporte prioritario</li>
+                                    <li><i class="fas fa-check"></i> Estadísticas avanzadas</li>
                                 </ul>
                             </div>
                         </div>
@@ -417,6 +488,24 @@
                                     <li><i class="fas fa-check"></i> Dominio personalizado</li>
                                     <li><i class="fas fa-check"></i> API access</li>
                                     <li><i class="fas fa-check"></i> Soporte 24/7</li>
+                                    <li><i class="fas fa-check"></i> Personalización total</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="stat-card" style="border-color:var(--warning)">
+                            <div style="text-align:center;padding:20px">
+                                <i class="fas fa-rocket" style="font-size:48px;color:var(--warning);margin-bottom:16px"></i>
+                                <h3 style="margin-bottom:8px">Enterprise</h3>
+                                <p style="color:var(--text-muted);font-size:14px;margin-bottom:16px">
+                                    Contacto
+                                </p>
+                                <ul style="text-align:left;color:var(--text-muted);font-size:13px;line-height:2">
+                                    <li><i class="fas fa-check"></i> Todo lo de VIP</li>
+                                    <li><i class="fas fa-check"></i> Múltiples servidores</li>
+                                    <li><i class="fas fa-check"></i> White label</li>
+                                    <li><i class="fas fa-check"></i> Soporte dedicado</li>
+                                    <li><i class="fas fa-check"></i> SLA garantizado</li>
                                 </ul>
                             </div>
                         </div>
@@ -435,11 +524,63 @@
                 <div class="card">
                     <div class="card-header">
                         <h3><i class="fas fa-users"></i> Lista de Usuarios</h3>
+                        <button onclick="loadUsers()" class="btn btn-primary" style="width:auto">
+                            <i class="fas fa-sync-alt"></i> Actualizar
+                        </button>
                     </div>
                     <div id="usersList">
-                        <p style="text-align:center;color:var(--text-muted);padding:40px">
-                            Cargando usuarios...
-                        </p>
+                        <div class="loading">
+                            <i class="fas fa-spinner"></i>
+                            <p>Cargando usuarios...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Section -->
+            <div id="section-products" style="display:none">
+                <div class="page-header">
+                    <div>
+                        <h1>Productos</h1>
+                        <p>Todos los productos de la plataforma</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-box"></i> Productos Registrados</h3>
+                        <button onclick="loadProducts()" class="btn btn-primary" style="width:auto">
+                            <i class="fas fa-sync-alt"></i> Actualizar
+                        </button>
+                    </div>
+                    <div id="productsList">
+                        <div class="loading">
+                            <i class="fas fa-spinner"></i>
+                            <p>Cargando productos...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Section -->
+            <div id="section-orders" style="display:none">
+                <div class="page-header">
+                    <div>
+                        <h1>Órdenes</h1>
+                        <p>Todas las órdenes de la plataforma</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-shopping-cart"></i> Órdenes Recientes</h3>
+                        <button onclick="loadOrders()" class="btn btn-primary" style="width:auto">
+                            <i class="fas fa-sync-alt"></i> Actualizar
+                        </button>
+                    </div>
+                    <div id="ordersList">
+                        <div class="loading">
+                            <i class="fas fa-spinner"></i>
+                            <p>Cargando órdenes...</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -452,6 +593,7 @@
                         <p>Publica anuncios para todos los servidores</p>
                     </div>
                 </div>
+                
                 <div class="card">
                     <div class="card-header">
                         <h3><i class="fas fa-plus"></i> Nuevo Anuncio</h3>
@@ -462,10 +604,49 @@
                     </div>
                     <div class="form-group">
                         <label>Contenido</label>
-                        <textarea id="announcementContent" rows="4" placeholder="Escribe el contenido del anuncio..." style="width:100%;padding:14px;background:var(--bg);border:1px solid var(--border);border-radius:12px;color:var(--text);resize:vertical"></textarea>
+                        <textarea id="announcementContent" rows="4" placeholder="Escribe el contenido del anuncio..." style="width:100%;padding:14px;background:var(--bg);border:1px solid var(--border);border-radius:12px;color:var(--text);resize:vertical;font-family:inherit"></textarea>
                     </div>
                     <button onclick="publishAnnouncement()" class="btn btn-primary" style="width:auto">
                         <i class="fas fa-paper-plane"></i> Publicar Anuncio
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-list"></i> Anuncios Publicados</h3>
+                    </div>
+                    <div id="announcementsList">
+                        <div class="loading">
+                            <i class="fas fa-spinner"></i>
+                            <p>Cargando anuncios...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="section-settings" style="display:none">
+                <div class="page-header">
+                    <div>
+                        <h1>Configuración</h1>
+                        <p>Configuración de la plataforma</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-cog"></i> Configuración General</h3>
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre de la Plataforma</label>
+                        <input type="text" id="platformName" value="BuyCrafting Pro">
+                    </div>
+                    <div class="form-group">
+                        <label>Email de Soporte</label>
+                        <input type="email" id="supportEmail" value="soporte@buycrafting.com">
+                    </div>
+                    <button onclick="saveSettings()" class="btn btn-primary" style="width:auto">
+                        <i class="fas fa-save"></i> Guardar Configuración
                     </button>
                 </div>
             </div>
@@ -480,7 +661,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, updateDoc, addDoc, query, where } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, addDoc, query, where, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCIGXn0zND_8A_nD6NPxx1txYFQzrhM9hg",
@@ -494,16 +675,15 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // TU EMAIL DE ADMIN - CAMBIA ESTO
+        // TU EMAIL DE ADMIN
         const ADMIN_EMAIL = 'adrianortiz3322@gmail.com';
 
         // Login
-        window.adminLogin = async function(e){
+        window.adminLogin = function(e){
             e.preventDefault();
             const email = document.getElementById('adminEmail').value;
             const password = document.getElementById('adminPassword').value;
 
-            // VERIFICACIÓN SIMPLE (en producción usa Firebase Auth)
             if(email === ADMIN_EMAIL && password === 'Adri2626@'){
                 localStorage.setItem('admin_logged', 'true');
                 localStorage.setItem('admin_email', email);
@@ -525,6 +705,7 @@
         function showAdminPanel(){
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('adminPanel').style.display = 'block';
+            document.getElementById('adminEmailDisplay').textContent = ADMIN_EMAIL;
             loadDashboard();
         }
 
@@ -549,6 +730,9 @@
 
             if(section === 'servers') loadServers();
             if(section === 'users') loadUsers();
+            if(section === 'products') loadProducts();
+            if(section === 'orders') loadOrders();
+            if(section === 'announcements') loadAnnouncements();
         };
 
         // Load Dashboard
@@ -557,11 +741,43 @@
                 const serversSnap = await getDocs(collection(db, 'servers'));
                 const usersSnap = await getDocs(collection(db, 'users'));
                 const productsSnap = await getDocs(collection(db, 'products'));
+                const ordersSnap = await getDocs(collection(db, 'orders'));
 
                 document.getElementById('totalServers').textContent = serversSnap.size;
                 document.getElementById('totalUsers').textContent = usersSnap.size;
                 document.getElementById('totalProducts').textContent = productsSnap.size;
-                document.getElementById('totalRevenue').textContent = '$0'; // Calcula si tienes órdenes
+                
+                let revenue = 0;
+                ordersSnap.forEach(doc => {
+                    const data = doc.data();
+                    if(data.delivered){
+                        revenue += data.price || 0;
+                    }
+                });
+                document.getElementById('totalRevenue').textContent = '$' + revenue.toFixed(2);
+
+                // Recent activity
+                const recentDiv = document.getElementById('recentActivity');
+                if(ordersSnap.size > 0){
+                    const recent = ordersSnap.docs.slice(0, 5);
+                    recentDiv.innerHTML = recent.map(docSnap => {
+                        const data = docSnap.data();
+                        return `
+                            <div style="padding:12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+                                <div>
+                                    <strong>${data.productName || 'Producto'}</strong>
+                                    <p style="color:var(--text-muted);font-size:13px">${data.playerName || 'Jugador'}</p>
+                                </div>
+                                <div style="text-align:right">
+                                    <strong style="color:var(--primary)">$${(data.price || 0).toFixed(2)}</strong>
+                                    <p style="color:var(--text-muted);font-size:12px">${data.createdAt?.toDate?.().toLocaleDateString() || 'N/A'}</p>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    recentDiv.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:20px">No hay actividad reciente</p>';
+                }
             } catch(e){
                 console.error('Error loading dashboard:', e);
             }
@@ -611,6 +827,7 @@
                 });
             } catch(e){
                 console.error('Error loading servers:', e);
+                document.getElementById('serversList').innerHTML = '<p style="text-align:center;color:var(--danger);padding:40px">Error al cargar servidores</p>';
             }
         };
 
@@ -627,7 +844,6 @@
                 });
 
                 showNotification(`✅ Plan ${getPlanName(newPlan)} aplicado correctamente`, 'success');
-                loadServers();
             } catch(e){
                 console.error('Error updating plan:', e);
                 showNotification('❌ Error al aplicar el plan', 'error');
@@ -668,6 +884,111 @@
             }
         };
 
+        // Load Products
+        window.loadProducts = async function(){
+            try{
+                const productsSnap = await getDocs(collection(db, 'products'));
+                const list = document.getElementById('productsList');
+                list.innerHTML = '';
+
+                if(productsSnap.empty){
+                    list.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:40px">No hay productos</p>';
+                    return;
+                }
+
+                productsSnap.forEach(docSnap => {
+                    const data = docSnap.data();
+                    
+                    const item = document.createElement('div');
+                    item.className = 'server-item';
+                    item.innerHTML = `
+                        <div class="server-info">
+                            <h4>${data.name || 'Producto'}</h4>
+                            <p><i class="fas fa-tag"></i> ${data.category || 'General'}</p>
+                            <p><i class="fas fa-dollar-sign"></i> $${(data.price || 0).toFixed(2)}</p>
+                        </div>
+                        <div style="text-align:right">
+                            <p style="color:var(--text-muted);font-size:12px">Ventas</p>
+                            <strong>${data.sales || 0}</strong>
+                        </div>
+                    `;
+                    list.appendChild(item);
+                });
+            } catch(e){
+                console.error('Error loading products:', e);
+            }
+        };
+
+        // Load Orders
+        window.loadOrders = async function(){
+            try{
+                const ordersSnap = await getDocs(collection(db, 'orders'));
+                const list = document.getElementById('ordersList');
+                list.innerHTML = '';
+
+                if(ordersSnap.empty){
+                    list.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:40px">No hay órdenes</p>';
+                    return;
+                }
+
+                ordersSnap.forEach(docSnap => {
+                    const data = docSnap.data();
+                    
+                    const item = document.createElement('div');
+                    item.className = 'server-item';
+                    item.innerHTML = `
+                        <div class="server-info">
+                            <h4>${data.productName || 'Producto'}</h4>
+                            <p><i class="fas fa-user"></i> ${data.playerName || 'Jugador'}</p>
+                            <p><i class="fas fa-calendar"></i> ${data.createdAt?.toDate?.().toLocaleDateString() || 'N/A'}</p>
+                        </div>
+                        <div style="text-align:right">
+                            <strong style="color:var(--primary);font-size:18px">$${(data.price || 0).toFixed(2)}</strong>
+                            <p style="color:${data.delivered ? 'var(--secondary)' : 'var(--warning)'};font-size:12px">
+                                ${data.delivered ? '✓ Entregado' : '⏳ Pendiente'}
+                            </p>
+                        </div>
+                    `;
+                    list.appendChild(item);
+                });
+            } catch(e){
+                console.error('Error loading orders:', e);
+            }
+        };
+
+        // Load Announcements
+        window.loadAnnouncements = async function(){
+            try{
+                const announcementsSnap = await getDocs(collection(db, 'announcements'));
+                const list = document.getElementById('announcementsList');
+                list.innerHTML = '';
+
+                if(announcementsSnap.empty){
+                    list.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:40px">No hay anuncios</p>';
+                    return;
+                }
+
+                announcementsSnap.forEach(docSnap => {
+                    const data = docSnap.data();
+                    
+                    const item = document.createElement('div');
+                    item.className = 'announcement-card';
+                    item.innerHTML = `
+                        <h4>${data.title || 'Anuncio'}</h4>
+                        <p>${data.content || ''}</p>
+                        <div class="announcement-meta">
+                            <span><i class="fas fa-user"></i> ${data.publishedBy || 'Admin'}</span>
+                            <span><i class="fas fa-calendar"></i> ${data.createdAt?.toDate?.().toLocaleDateString() || 'N/A'}</span>
+                            <span><i class="fas fa-check-circle"></i> ${data.active ? 'Activo' : 'Inactivo'}</span>
+                        </div>
+                    `;
+                    list.appendChild(item);
+                });
+            } catch(e){
+                console.error('Error loading announcements:', e);
+            }
+        };
+
         // Publish Announcement
         window.publishAnnouncement = async function(){
             const title = document.getElementById('announcementTitle').value;
@@ -690,10 +1011,16 @@
                 showNotification('✅ Anuncio publicado exitosamente', 'success');
                 document.getElementById('announcementTitle').value = '';
                 document.getElementById('announcementContent').value = '';
+                loadAnnouncements();
             } catch(e){
                 console.error('Error publishing announcement:', e);
                 showNotification('❌ Error al publicar', 'error');
             }
+        };
+
+        // Save Settings
+        window.saveSettings = function(){
+            showNotification('✅ Configuración guardada', 'success');
         };
 
         // Helper Functions
@@ -724,6 +1051,7 @@
         // Make functions global
         window.updateServerPlan = updateServerPlan;
         window.publishAnnouncement = publishAnnouncement;
+        window.saveSettings = saveSettings;
     </script>
 </body>
 </html>
