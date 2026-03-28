@@ -84,8 +84,80 @@
         .title-anim-pulse{animation:titlePulse 2s ease-in-out infinite}
         @keyframes titlePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
         
+        /* ======================================== */
+        /* ✅ PALOMITA DE VERIFICACIÓN ANIMADA */
+        /* ======================================== */
+        .verified-badge{
+            display:inline-flex;
+            align-items:center;
+            margin-left:8px;
+            cursor:help
+        }
+        .verified-icon{
+            color:#1da1f2;
+            font-size:18px;
+            animation:verifiedPulse 2s ease-in-out infinite, verifiedGlow 3s ease-in-out infinite;
+            filter:drop-shadow(0 0 8px rgba(29,161,242,0.6));
+            transition:transform 0.3s
+        }
+        .verified-icon:hover{
+            transform:scale(1.2)
+        }
+        @keyframes verifiedPulse{
+            0%,100%{transform:scale(1)}
+            50%{transform:scale(1.15)}
+        }
+        @keyframes verifiedGlow{
+            0%,100%{filter:drop-shadow(0 0 8px rgba(29,161,242,0.6))}
+            50%{filter:drop-shadow(0 0 20px rgba(29,161,242,1))}
+        }
+        
+        /* ======================================== */
+        /* ✅ BADGE DE PLAN */
+        /* ======================================== */
+        .plan-badge{
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
+            padding:6px 14px;
+            border-radius:20px;
+            font-size:12px;
+            font-weight:700;
+            margin-left:12px;
+            text-transform:uppercase;
+            letter-spacing:0.5px
+        }
+        .plan-badge.free{
+            background:rgba(107,114,128,0.2);
+            color:#9ca3af;
+            border:1px solid #6b7280
+        }
+        .plan-badge.premium{
+            background:rgba(99,102,241,0.2);
+            color:#818cf8;
+            border:1px solid #6366f1
+        }
+        .plan-badge.vip{
+            background:rgba(16,185,129,0.2);
+            color:#34d399;
+            border:1px solid #10b981
+        }
+        .plan-badge.enterprise{
+            background:rgba(245,158,11,0.2);
+            color:#fbbf24;
+            border:1px solid #f59e0b
+        }
+        
         .published-by{
-            font-size:14px;color:rgba(255,255,255,0.85);margin:8px 0 12px;font-weight:500
+            font-size:14px;
+            color:rgba(255,255,255,0.85);
+            margin:8px 0 12px;
+            font-weight:500;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:4px;
+            flex-wrap:wrap
         }
         .published-by i{margin-right:6px;color:var(--primary)}
         
@@ -946,6 +1018,7 @@
             .redeem-form{flex-direction:column}
             .product-name{font-size:20px}
             .product-price{font-size:24px}
+            .published-by{flex-direction:column;gap:8px}
         }
     </style>
 </head>
@@ -969,7 +1042,15 @@
         <header class="store-header" id="storeHeader">
             <div class="store-logo" id="storeLogo"><i class="fas fa-shopping-cart"></i></div>
             <h1 class="store-title" id="storeTitle">Mi Tienda</h1>
-            <p class="published-by" id="publishedBy"><i class="fas fa-user-check"></i>Publicado por <span id="publisherName">Tu Nombre</span></p>
+            <p class="published-by" id="publishedBy">
+                <i class="fas fa-user-check"></i>
+                Publicado por 
+                <span id="publisherName">Tu Nombre</span>
+                <span id="verifiedBadge" class="verified-badge" style="display:none">
+                    <i class="fas fa-check-circle verified-icon" title="Cuenta verificada"></i>
+                </span>
+                <span id="planBadge" class="plan-badge free">Gratis</span>
+            </p>
             <p class="store-desc" id="storeDesc">Bienvenido a nuestra tienda oficial</p>
             <div class="custom-buttons" id="customButtons"></div>
         </header>
@@ -1085,7 +1166,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, query, where, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCIGXn0zND_8A_nD6NPxx1txYFQzrhM9hg",
@@ -1148,6 +1229,9 @@
                 if(data.logo){
                     logoEl.innerHTML = `<img src="${data.logo}" alt="Logo" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-shopping-cart\\'></i>'">`;
                 }
+
+                // === BADGE DE PLAN Y VERIFICACIÓN ===
+                updatePlanAndVerification(data);
 
                 // === HEADER ===
                 const header = document.getElementById('storeHeader');
@@ -1214,10 +1298,52 @@
                 document.getElementById('storeContent').style.display = 'block';
                 document.title = `${data.name || 'Tienda'} - BuyCrafting`;
 
+                // Setup real-time listener for plan/verification changes
+                setupRealtimeListener();
+
             } catch(err){
                 console.error('❌ Error:', err);
                 showError('Error: ' + err.message);
             }
+        }
+
+        // Update Plan Badge and Verification
+        function updatePlanAndVerification(data){
+            const plan = data.plan || 'free';
+            const verified = data.verified || false;
+            
+            // Update plan badge
+            const planBadge = document.getElementById('planBadge');
+            if(planBadge){
+                const planNames = {
+                    'free': 'Gratis',
+                    'premium': 'Premium',
+                    'vip': 'VIP',
+                    'enterprise': 'Enterprise'
+                };
+                planBadge.className = `plan-badge ${plan}`;
+                planBadge.textContent = planNames[plan] || 'Gratis';
+            }
+            
+            // Update verification badge
+            const verifiedBadge = document.getElementById('verifiedBadge');
+            if(verifiedBadge){
+                verifiedBadge.style.display = verified ? 'inline-flex' : 'none';
+            }
+        }
+
+        // Real-time listener for changes
+        function setupRealtimeListener(){
+            if(!serverId) return;
+            
+            const storeRef = doc(db, 'stores', serverId);
+            onSnapshot(storeRef, (doc) => {
+                if(doc.exists()){
+                    const data = doc.data();
+                    updatePlanAndVerification(data);
+                    console.log('🔄 Datos actualizados en tiempo real:', { plan: data.plan, verified: data.verified });
+                }
+            });
         }
 
         // 🔥 CARGAR PRODUCTOS CON TAGS Y ESTILO PREMIUM
