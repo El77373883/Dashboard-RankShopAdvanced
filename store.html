@@ -153,7 +153,6 @@
 
         /* 🔥 TARJETA PREMIUM - FORZAR OSCURO */
         .product-card{
-            /* FORZAR fondo oscuro - SIN importar Firebase */
             background:linear-gradient(145deg, #1e293b 0%, #0f172a 100%) !important;
             border:2px solid rgba(99,102,241,0.2);
             border-radius:24px;
@@ -167,7 +166,6 @@
             backdrop-filter:blur(10px)
         }
 
-        /* Borde brillante superior */
         .product-card::before{
             content:'';
             position:absolute;
@@ -189,7 +187,6 @@
             100%{background-position:300% 50%}
         }
 
-        /* Hover épico */
         .product-card:hover{
             transform:translateY(-12px) scale(1.03);
             border-color:#6366f1;
@@ -199,7 +196,6 @@
             filter:brightness(1.1)
         }
 
-        /* Badge/Tag */
         .product-badge{
             position:absolute;
             top:16px;
@@ -236,7 +232,6 @@
             box-shadow:0 6px 20px rgba(139,92,246,0.5)
         }
 
-        /* Icono - SECCIÓN SUPERIOR OSCURA */
         .product-icon{
             width:100%;
             height:180px;
@@ -278,7 +273,6 @@
             transform:scale(1.1) rotate(3deg)
         }
 
-        /* Info - SECCIÓN INFERIOR */
         .product-info{
             padding:28px;
             flex:1;
@@ -305,7 +299,6 @@
             flex:1
         }
 
-        /* Footer */
         .product-footer{
             display:flex;
             justify-content:space-between;
@@ -328,7 +321,6 @@
             margin-right:2px
         }
 
-        /* Botón PREMIUM */
         .buy-btn{
             background:linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
             color:white;
@@ -373,7 +365,6 @@
             transform:translateX(3px)
         }
 
-        /* Brillo al hover */
         .product-card::after{
             content:'';
             position:absolute;
@@ -389,6 +380,350 @@
         }
         .product-card:hover::after{
             opacity:1
+        }
+        
+        /* ======================================== */
+        /* 💳 CHECKOUT MODAL - PROFESIONAL */
+        /* ======================================== */
+        .checkout-modal{
+            position:fixed;
+            top:0;
+            left:0;
+            right:0;
+            bottom:0;
+            z-index:9999;
+            display:none;
+            align-items:center;
+            justify-content:center;
+            padding:20px;
+            animation:modalFadeIn 0.3s ease-out
+        }
+        @keyframes modalFadeIn{
+            from{opacity:0}
+            to{opacity:1}
+        }
+        .checkout-overlay{
+            position:absolute;
+            top:0;
+            left:0;
+            right:0;
+            bottom:0;
+            background:rgba(0,0,0,0.85);
+            backdrop-filter:blur(8px)
+        }
+        .checkout-content{
+            position:relative;
+            background:linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
+            border:2px solid rgba(99,102,241,0.3);
+            border-radius:24px;
+            max-width:550px;
+            width:100%;
+            max-height:90vh;
+            overflow-y:auto;
+            box-shadow:0 25px 100px rgba(99,102,241,0.5), 0 0 60px rgba(99,102,241,0.3);
+            animation:modalSlideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)
+        }
+        @keyframes modalSlideUp{
+            from{
+                opacity:0;
+                transform:translateY(50px) scale(0.9)
+            }
+            to{
+                opacity:1;
+                transform:translateY(0) scale(1)
+            }
+        }
+        .checkout-close{
+            position:absolute;
+            top:16px;
+            right:16px;
+            width:40px;
+            height:40px;
+            border-radius:12px;
+            border:none;
+            background:rgba(255,255,255,0.1);
+            color:var(--text);
+            font-size:18px;
+            cursor:pointer;
+            transition:all 0.3s;
+            z-index:10;
+            display:flex;
+            align-items:center;
+            justify-content:center
+        }
+        .checkout-close:hover{
+            background:var(--danger);
+            transform:rotate(90deg) scale(1.1)
+        }
+        .checkout-header{
+            text-align:center;
+            padding:40px 24px 24px;
+            background:linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(168,85,247,0.15) 100%);
+            border-bottom:1px solid rgba(99,102,241,0.2)
+        }
+        .checkout-icon{
+            width:90px;
+            height:90px;
+            margin:0 auto 20px;
+            background:var(--gradient);
+            border-radius:50%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:42px;
+            color:white;
+            box-shadow:0 10px 40px rgba(99,102,241,0.5), 0 0 60px rgba(99,102,241,0.3);
+            animation:iconPulse 2s ease-in-out infinite
+        }
+        @keyframes iconPulse{
+            0%,100%{transform:scale(1); box-shadow:0 10px 40px rgba(99,102,241,0.5)}
+            50%{transform:scale(1.05); box-shadow:0 15px 50px rgba(99,102,241,0.7)}
+        }
+        .checkout-header h2{
+            font-size:28px;
+            margin-bottom:8px;
+            background:linear-gradient(135deg, #f8fafc 0%, #a855f7 100%);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+            font-weight:800
+        }
+        .checkout-header p{
+            color:var(--text-muted);
+            font-size:15px
+        }
+        .checkout-body{
+            padding:28px
+        }
+        .checkout-product{
+            background:linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(168,85,247,0.1) 100%);
+            border:2px solid rgba(99,102,241,0.3);
+            border-radius:16px;
+            padding:24px;
+            margin-bottom:28px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            box-shadow:0 8px 24px rgba(0,0,0,0.3)
+        }
+        .checkout-product-info h3{
+            font-size:20px;
+            margin-bottom:6px;
+            color:var(--text);
+            font-weight:700
+        }
+        .checkout-product-info p{
+            font-size:14px;
+            color:var(--text-muted)
+        }
+        .checkout-product-price{
+            font-size:32px;
+            font-weight:800;
+            background:var(--gradient);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+            white-space:nowrap
+        }
+        .checkout-form .form-group{
+            margin-bottom:22px
+        }
+        .checkout-form label{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            margin-bottom:10px;
+            font-size:14px;
+            color:var(--text-muted);
+            font-weight:600
+        }
+        .checkout-form label i{
+            color:var(--primary);
+            font-size:16px
+        }
+        .checkout-form input{
+            width:100%;
+            padding:16px 18px;
+            background:var(--bg);
+            border:2px solid var(--border);
+            border-radius:14px;
+            color:var(--text);
+            font-size:15px;
+            transition:all 0.3s;
+            font-family:inherit
+        }
+        .checkout-form input:focus{
+            outline:none;
+            border-color:var(--primary);
+            box-shadow:0 0 0 5px rgba(99,102,241,0.15);
+            background:rgba(99,102,241,0.05)
+        }
+        .checkout-form input::placeholder{
+            color:var(--text-muted)
+        }
+        .payment-methods{
+            margin:28px 0
+        }
+        .payment-methods h4{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            margin-bottom:18px;
+            font-size:15px;
+            color:var(--text);
+            font-weight:700
+        }
+        .payment-methods h4 i{
+            color:var(--primary)
+        }
+        .payment-options{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:14px
+        }
+        .payment-option{
+            cursor:pointer
+        }
+        .payment-option input{
+            display:none
+        }
+        .payment-card{
+            background:var(--bg);
+            border:2px solid var(--border);
+            border-radius:14px;
+            padding:20px 16px;
+            text-align:center;
+            transition:all 0.3s;
+            position:relative;
+            overflow:hidden
+        }
+        .payment-card::before{
+            content:'';
+            position:absolute;
+            top:0;
+            left:0;
+            right:0;
+            height:3px;
+            background:var(--gradient);
+            transform:scaleX(0);
+            transition:transform 0.3s
+        }
+        .payment-option input:checked + .payment-card{
+            border-color:var(--primary);
+            background:rgba(99,102,241,0.1);
+            box-shadow:0 8px 24px rgba(99,102,241,0.3)
+        }
+        .payment-option input:checked + .payment-card::before{
+            transform:scaleX(1)
+        }
+        .payment-card i{
+            font-size:32px;
+            margin-bottom:10px;
+            background:var(--gradient);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent
+        }
+        .payment-card span{
+            display:block;
+            font-size:14px;
+            font-weight:700;
+            color:var(--text)
+        }
+        .checkout-footer{
+            padding:28px;
+            background:rgba(0,0,0,0.3);
+            border-top:1px solid rgba(99,102,241,0.2)
+        }
+        .checkout-total{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:24px;
+            padding-bottom:24px;
+            border-bottom:2px solid var(--border)
+        }
+        .checkout-total span{
+            font-size:17px;
+            color:var(--text-muted);
+            font-weight:600
+        }
+        .checkout-total strong{
+            font-size:36px;
+            background:var(--gradient);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+            font-weight:800
+        }
+        .checkout-btn{
+            width:100%;
+            padding:20px;
+            background:var(--gradient);
+            border:none;
+            border-radius:16px;
+            color:white;
+            font-size:17px;
+            font-weight:800;
+            cursor:pointer;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:12px;
+            transition:all 0.3s;
+            box-shadow:0 10px 40px rgba(99,102,241,0.5), 0 0 60px rgba(99,102,241,0.3);
+            position:relative;
+            overflow:hidden
+        }
+        .checkout-btn::before{
+            content:'';
+            position:absolute;
+            top:0;
+            left:-100%;
+            width:100%;
+            height:100%;
+            background:linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition:left 0.6s
+        }
+        .checkout-btn:hover::before{
+            left:100%
+        }
+        .checkout-btn:hover{
+            transform:translateY(-3px);
+            box-shadow:0 15px 50px rgba(99,102,241,0.7), 0 0 80px rgba(99,102,241,0.4)
+        }
+        .checkout-btn:active{
+            transform:translateY(-1px)
+        }
+        .checkout-btn i{
+            font-size:20px
+        }
+        .checkout-security{
+            text-align:center;
+            margin-top:20px;
+            font-size:13px;
+            color:var(--text-muted);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:10px;
+            font-weight:500
+        }
+        .checkout-security i{
+            color:var(--secondary);
+            font-size:16px
+        }
+        @media(max-width:640px){
+            .checkout-content{
+                max-height:95vh
+            }
+            .payment-options{
+                grid-template-columns:1fr
+            }
+            .checkout-product{
+                flex-direction:column;
+                text-align:center;
+                gap:16px
+            }
+            .checkout-product-price{
+                font-size:28px
+            }
         }
         
         /* ======================================== */
@@ -671,6 +1006,83 @@
         </footer>
     </div>
 
+    <!-- ======================================== -->
+    <!-- 💳 CHECKOUT MODAL - PROFESIONAL -->
+    <!-- ======================================== -->
+    <div id="checkoutModal" class="checkout-modal">
+        <div class="checkout-overlay" onclick="closeCheckout()"></div>
+        <div class="checkout-content">
+            <button class="checkout-close" onclick="closeCheckout()">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="checkout-header">
+                <div class="checkout-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <h2>Finalizar Compra</h2>
+                <p>Completa tu compra de forma segura</p>
+            </div>
+            
+            <div class="checkout-body">
+                <div class="checkout-product">
+                    <div class="checkout-product-info">
+                        <h3 id="checkoutProductName">Producto</h3>
+                        <p class="checkout-product-desc" id="checkoutProductDesc">Descripción del producto</p>
+                    </div>
+                    <div class="checkout-product-price" id="checkoutProductPrice">$0.00</div>
+                </div>
+                
+                <div class="checkout-form">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Nombre de usuario en Minecraft</label>
+                        <input type="text" id="checkoutUsername" placeholder="Ej: Notch" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Correo electrónico</label>
+                        <input type="email" id="checkoutEmail" placeholder="tu@email.com" required>
+                    </div>
+                    
+                    <div class="payment-methods">
+                        <h4><i class="fas fa-credit-card"></i> Método de pago</h4>
+                        <div class="payment-options">
+                            <label class="payment-option active">
+                                <input type="radio" name="payment" value="paypal" checked>
+                                <div class="payment-card">
+                                    <i class="fab fa-paypal"></i>
+                                    <span>PayPal</span>
+                                </div>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="payment" value="card">
+                                <div class="payment-card">
+                                    <i class="fas fa-credit-card"></i>
+                                    <span>Tarjeta</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checkout-footer">
+                <div class="checkout-total">
+                    <span>Total a pagar:</span>
+                    <strong id="checkoutTotal">$0.00</strong>
+                </div>
+                <button class="checkout-btn" onclick="processPayment()">
+                    <i class="fas fa-lock"></i>
+                    Pagar Ahora
+                </button>
+                <p class="checkout-security">
+                    <i class="fas fa-shield-alt"></i>
+                    Pago 100% seguro y encriptado
+                </p>
+            </div>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
         import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
@@ -857,7 +1269,7 @@
                             <p class="product-desc">${p.description || 'Sin descripción'}</p>
                             <div class="product-footer">
                                 ${priceHtml}
-                                <button class="buy-btn" onclick="buyProduct('${p.id}','${p.name}',${p.price})">
+                                <button class="buy-btn" onclick="buyProduct('${p.id}','${p.name}',${p.price},'${p.description || ''}')">
                                     <i class="fas fa-cart-plus"></i>Comprar
                                 </button>
                             </div>
@@ -893,9 +1305,59 @@
             alert(`✅ Código "${code}" validado exitosamente`);
         };
 
-        window.buyProduct = function(id, name, price){
-            alert(`🛒 Agregado al carrito:\n\n"${name}"\nPrecio: $${price.toFixed(2)}\n\n💳 Integración de pagos próximamente`);
+        // ========================================
+        // 💳 CHECKOUT FUNCTIONS
+        // ========================================
+        let currentProduct = null;
+        
+        window.buyProduct = function(id, name, price, desc){
+            currentProduct = { id, name, price, desc };
+            
+            document.getElementById('checkoutProductName').textContent = name;
+            document.getElementById('checkoutProductDesc').textContent = desc || 'Producto premium';
+            document.getElementById('checkoutProductPrice').textContent = '$' + price.toFixed(2);
+            document.getElementById('checkoutTotal').textContent = '$' + price.toFixed(2);
+            
+            document.getElementById('checkoutModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
         };
+        
+        window.closeCheckout = function(){
+            document.getElementById('checkoutModal').style.display = 'none';
+            document.body.style.overflow = '';
+            currentProduct = null;
+        };
+        
+        window.processPayment = function(){
+            const username = document.getElementById('checkoutUsername').value.trim();
+            const email = document.getElementById('checkoutEmail').value.trim();
+            const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+            
+            if(!username){
+                alert('⚠️ Por favor ingresa tu nombre de usuario de Minecraft');
+                document.getElementById('checkoutUsername').focus();
+                return;
+            }
+            if(!email || !email.includes('@')){
+                alert('⚠️ Por favor ingresa un correo electrónico válido');
+                document.getElementById('checkoutEmail').focus();
+                return;
+            }
+            
+            const paymentText = paymentMethod === 'paypal' ? 'PayPal' : 'Tarjeta de Crédito/Débito';
+            
+            // Aquí iría la integración real con PayPal/Stripe
+            alert(`✅ ¡Gracias por tu compra!\n\n📦 Producto: ${currentProduct.name}\n👤 Usuario: ${username}\n📧 Email: ${email}\n💳 Método: ${paymentText}\n💰 Total: $${currentProduct.price.toFixed(2)}\n\nEn un entorno real, aquí se procesaría el pago con ${paymentText}.`);
+            
+            closeCheckout();
+        };
+        
+        // Cerrar modal al presionar ESC
+        document.addEventListener('keydown', function(e){
+            if(e.key === 'Escape' && currentProduct){
+                closeCheckout();
+            }
+        });
 
         function showError(msg){
             document.getElementById('loading').style.display = 'none';
